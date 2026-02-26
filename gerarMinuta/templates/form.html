@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerar Minutas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Painel de Geração de Minutas</h1>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-dark">
+                    <div class="card-header bg-dark text-white text-center">
+                        <h5 class="mb-0">Preencher Automaticamente com IA</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="form-ia" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row align-items-end">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-bold">Selecione um PDF para análise:</label>
+                                    <input type="file" name="arquivo_pdf" accept=".pdf" class="form-control">
+                                </div>
+                                <div class="col-md-4 mt-3 mt-md-0">
+                                    <button type="submit" name="btn_analisar_ia" id="btn-ia" class="btn btn-outline-dark w-100 fw-bold">
+                                        Analisar PDF
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            {% if mensagem_ia %}
+                                <div class="alert alert-{{ tipo_mensagem }} mt-3 mb-0 py-2 small text-center">
+                                    {{ mensagem_ia }}
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">Minuta de Edital</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="form-edital">
+                            {% csrf_token %}
+                            {{ form_edital.as_p }}
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" name="btn_gerar_edital" id="btn-edital" class="btn btn-primary">Gerar Edital</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white text-center">
+                        <h4 class="mb-0">Minuta de Contrato</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="form-contrato">
+                            {% csrf_token %}
+                            {{ form_contrato.as_p }}
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" name="btn_gerar_contrato" id="btn-contrato" class="btn btn-success">Gerar Contrato</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script>
+    function configurarLoading(formId, btnId, texto) {
+        var form = document.getElementById(formId);
+        var btn = document.getElementById(btnId);
+        
+        if(form && btn) {
+            form.addEventListener('submit', function(e) {
+                
+                // COMPORTAMENTO EXCLUSIVO DO BOTÃO DE IA
+                if(btnId === 'btn-ia'){
+                    var fileInput = form.querySelector('input[type="file"]');
+                    if(fileInput.files.length === 0) return;
+
+                    setTimeout(function() {
+                        btn.disabled = true;
+                        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + texto;
+                    }, 10);
+                } 
+                // COMPORTAMENTO DOS BOTÕES DE GERAR MINUTAS
+                else {
+                    // Apenas desativa temporariamente para evitar duplo clique (sem mudar o texto)
+                    setTimeout(function() {
+                        btn.disabled = true;
+                    }, 50);
+                    
+                    // Libera o botão novamente após 3 segundos (tempo suficiente para o download iniciar)
+                    setTimeout(function() {
+                        btn.disabled = false;
+                    }, 7000);
+                }
+            });
+        }
+    }
+
+    // Configurando os botões
+    configurarLoading('form-edital', 'btn-edital', '');
+    configurarLoading('form-edital', 'btn-ia', 'Analisando...');
+    configurarLoading('form-contrato', 'btn-contrato', '');
+</script>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerar Minutas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Painel de Geração de Minutas</h1>
+
+        <div class="row">
+            
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">Minuta de Edital</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form_edital.as_p }}
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" name="btn_gerar_edital" id="btn-edital" class="btn btn-primary">Gerar Edital</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white text-center">
+                        <h4 class="mb-0">Minuta de Contrato</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form_contrato.as_p }}
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" name="btn_gerar_contrato" id="btn-contrato" class="btn btn-success">Gerar Contrato</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script>
+    function configurarLoading(formId, btnId) {
+        var form = document.getElementById(formId);
+        var btn = document.getElementById(btnId);
+        
+        if(form && btn) {
+            form.addEventListener('submit', function() {
+                // O setTimeout dá tempo para o formulário ser enviado ANTES de desativar o botão
+                setTimeout(function() {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Gerando...';
+                }, 10);
+            });
+        }
+    }
+
+    // Ativa a função para os dois botões
+    configurarLoading('form-edital', 'btn-edital');
+    configurarLoading('form-contrato', 'btn-contrato');
+</script>
+</html> -->
