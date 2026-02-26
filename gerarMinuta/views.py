@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import MinutaContratoForm, MinutaEditalForm
@@ -9,8 +11,11 @@ from pypdf import PdfReader
 from google import genai
 import json
 from django.http import JsonResponse
+from dotenv import load_dotenv
 
-CHAVE_API = "x"
+load_dotenv()
+
+CHAVE_API = os.getenv("CHAVE_API")
 client = genai.Client(api_key=CHAVE_API)
 
 def pagina_minutas(request):
