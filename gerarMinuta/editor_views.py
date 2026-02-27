@@ -19,6 +19,7 @@ from .editor_forms import (
     build_values_form,
 )
 from .models import MinutaTemplate, PlaceholderField, Section, TemplatePlaceholder
+import io
 
 
 def _numbered_sections(template: MinutaTemplate) -> list[tuple[str, int, Section]]:
