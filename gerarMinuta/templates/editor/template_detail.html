@@ -1,0 +1,130 @@
+{% extends "editor/base.html" %}
+
+{% block title %}{{ template.name }} | Editor de Minutas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+        <h2 class="mb-1">{{ template.name }} <small class="text-muted">v{{ template.version }}</small></h2>
+        <div class="text-muted">
+            <span class="badge text-bg-light border">{{ template.get_kind_display }}</span>
+            <code class="ms-2">{{ template.slug }}</code>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{% url 'editor_template_edit' slug=template.slug %}">Editar</a>
+        <a class="btn btn-primary" href="{% url 'editor_template_generate' slug=template.slug %}">Gerar .docx</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Campos (placeholders)</h5>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'editor_placeholder_list' %}">Catálogo</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'editor_template_placeholder_add' slug=template.slug %}" class="row g-2 mb-3">
+                    {% csrf_token %}
+                    <div class="col-8">
+                        <select name="field" class="form-select" required>
+                            <option value="" selected disabled>Selecione um campo…</option>
+                            {% for f in fields %}
+                                <option value="{{ f.id }}">{{ f.key }} — {{ f.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <input type="number" name="order" class="form-control" value="0" min="0" />
+                    </div>
+                    <div class="col-2 d-grid">
+                        <button class="btn btn-outline-primary" type="submit">Add</button>
+                    </div>
+                </form>
+
+                <ul class="list-group">
+                    {% for p in placeholders %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <code>{{ p.field.key }}</code>
+                                <div class="small text-muted">{{ p.field.label }}</div>
+                            </div>
+                            <form method="post" action="{% url 'editor_template_placeholder_remove' slug=template.slug binding_id=p.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Remover</button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Nenhum campo associado ainda.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Seções</h5>
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'editor_section_create' slug=template.slug %}">Nova seção</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 110px;">Nº</th>
+                                <th>Título</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for number, level, s in numbered_sections %}
+                                <tr>
+                                    <td><code>{{ number }}</code></td>
+                                    <td>
+                                        <div>
+                                            <span class="badge text-bg-light border me-2">L{{ level }}</span>
+                                            {{ s.title|default:"(sem título)" }}
+                                        </div>
+                                        {% if s.body %}
+                                            <div class="small text-muted text-truncate" style="max-width: 680px;">
+                                                {{ s.body }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <form method="post" action="{% url 'editor_section_move' slug=template.slug section_id=s.id direction='up' %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-sm btn-outline-secondary" type="submit">↑</button>
+                                        </form>
+                                        <form method="post" action="{% url 'editor_section_move' slug=template.slug section_id=s.id direction='down' %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-sm btn-outline-secondary" type="submit">↓</button>
+                                        </form>
+                                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'editor_section_edit' slug=template.slug section_id=s.id %}">Editar</a>
+                                        <form method="post" action="{% url 'editor_section_delete' slug=template.slug section_id=s.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">Nenhuma seção criada ainda.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="small text-muted mt-2">
+                    Dica: use placeholders no corpo, por exemplo
+                    <code>&#123;&#123; porto &#125;&#125;</code>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

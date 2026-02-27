@@ -1,0 +1,30 @@
+{% extends "editor/base.html" %}
+
+{% block title %}Seção | {{ template.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h3 class="mb-0">{% if section %}Editar seção{% else %}Nova seção{% endif %}</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" type="submit">Salvar</button>
+                        <a class="btn btn-outline-secondary" href="{% url 'editor_template_detail' slug=template.slug %}">Voltar</a>
+                    </div>
+                </form>
+                <div class="small text-muted mt-3">
+                    Você pode usar placeholders como
+                    <code>&#123;&#123; leilao &#125;&#125;</code> no corpo.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

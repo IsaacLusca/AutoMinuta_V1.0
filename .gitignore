@@ -43,7 +43,7 @@ staticfiles/
 
 db.sqlite3
 
-MINUTA DE CONTRATO.docx
-MINUTA DE EDITAL.docx
+# MINUTA DE CONTRATO.docx
+# MINUTA DE EDITAL.docx
 
 .env

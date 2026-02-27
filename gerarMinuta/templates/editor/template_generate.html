@@ -1,0 +1,102 @@
+{% extends "editor/base.html" %}
+
+{% block title %}Gerar .docx | {{ template.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="mb-1">Gerar <code>.docx</code></h2>
+        <div class="text-muted">{{ template.name }} (<code>{{ template.slug }}</code>)</div>
+    </div>
+    <a class="btn btn-outline-secondary" href="{% url 'editor_template_detail' slug=template.slug %}">Gerenciar seções</a>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Preencher automaticamente com IA (PDF)</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" class="row g-2 align-items-end">
+            {% csrf_token %}
+            <div class="col-md-9">
+                <label class="form-label fw-bold mb-1">Selecione um PDF para análise</label>
+                <input type="file" name="arquivo_pdf" accept=".pdf" class="form-control" />
+            </div>
+            <div class="col-md-3 d-grid">
+                <button class="btn btn-outline-dark" type="submit" name="btn_analisar_ia">Analisar PDF</button>
+            </div>
+        </form>
+        {% if mensagem_ia %}
+            <div class="alert alert-{{ tipo_mensagem }} mt-3 mb-0 py-2 small text-center">
+                {{ mensagem_ia }}
+            </div>
+        {% endif %}
+        <div class="small text-muted mt-2">
+            A IA tenta preencher somente os campos associados a este template.
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Capítulos e seções</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">
+                    Capítulos (nível 1) são sempre incluídos. Desmarque seções para removê-las deste documento.
+                </p>
+                <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 70px;">Nº</th>
+                                <th>Seção</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for number, level, s in numbered_sections %}
+                                <tr>
+                                    <td><code>{{ number }}</code></td>
+                                    <td>
+                                        <span class="badge text-bg-light border me-2">L{{ level }}</span>
+                                        {{ s.title|default:"(sem título)" }}
+                                    </td>
+                                    <td class="text-end">
+                                        {% if s.parent %}
+                                            <input type="checkbox" name="section_ids" value="{{ s.id }}" checked />
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">Nenhuma seção definida para este template.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="small text-muted mt-2">
+                    Para adicionar/mover seções em qualquer posição, use o botão “Gerenciar seções” acima.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Valores dos campos</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ values_form.as_p }}
+                    <button class="btn btn-primary" type="submit">Gerar e baixar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

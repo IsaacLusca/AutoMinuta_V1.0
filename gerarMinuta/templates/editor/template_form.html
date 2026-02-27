@@ -1,0 +1,31 @@
+{% extends "editor/base.html" %}
+
+{% block title %}Template | Editor de Minutas{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h3 class="mb-0">
+                    {% if mode == "create" %}Novo template{% else %}Editar template{% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" type="submit">Salvar</button>
+                        <a class="btn btn-outline-secondary" href="{% url 'editor_template_list' %}">Voltar</a>
+                        {% if template %}
+                            <a class="btn btn-outline-primary ms-auto" href="{% url 'editor_template_generate' slug=template.slug %}">Gerar .docx</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
