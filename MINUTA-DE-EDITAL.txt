@@ -1,0 +1,1601 @@
+
+
+
+
+UNIÃO
+
+
+
+
+
+AGÊNCIA NACIONAL DE TRANSPORTES AQUAVIÁRIOS - ANTAQ
+
+
+
+EDITAL
+
+
+
+
+LEILÃO Nº{{ leilao| default('[•] [•] [•]', true) }} ANTAQ, PARA O DE ÁREA E INFRAESTRUTURA PÚBLICA PARA A MOVIMENTAÇÃO E ARMAZENAGEM DE {{ perfil_da_carga  | default('[•] [•] [•]', true) }} , ESPECIALMENTE {{ cargas_no_mme | default('[•] [•] [•]', true) }}, LOCALIZADA DENTRO DO PORTO ORGANIZADO DE {{ porto | default('[•] [•] [•]', true) }} , DENOMINADA {{ codigo_area | default('[•] [•] [•]', true) }}
+
+SUMÁRIO
+
+SUMÁRIO	2
+PREÂMBULO	7
+CAPÍTULO 1 -	DAS DISPOSIÇÕES INICIAIS	9
+Seção I - Das Definições	9
+Seção II - Do Objeto	15
+Seção III - Do Acesso aos Documentos da Licitação	16
+Seção IV - Dos Esclarecimentos sobre o Edital	17
+Seção V - Das Visitas Técnicas	19
+Seção VI - Da Impugnação ao Edital	19
+Seção VII - Das Disposições Gerais	20
+CAPÍTULO 2 -	DA COMISSÃO PERMANENTE DE LICITAÇÃO DE CONCESSÕES E ARRENDAMENTOS PORTUÁRIOS DA ANTAQ	23
+CAPÍTULO 3 -	DA PARTICIPAÇÃO NO LEILÃO	24
+Seção I - Da Participação de Empresa Estrangeira	24
+Seção II - Da Participação em Consórcio	26
+Seção III - Das Limitações à Participação	28
+CAPÍTULO 4 -	DA DOCUMENTAÇÃO	30
+Seção I - Volume 1 - Declarações Preliminares, Representantes Credenciados, Participantes Credenciados e Garantia de Proposta	31
+Subseção I - Das Declarações Preliminares	31
+Subseção II - Dos Representantes Credenciados	31
+Subseção III - Dos Participantes Credenciados	33
+Subseção IV - Da Garantia de Proposta	34
+Seção II - Volume 2 - Da Proposta pelo Arrendamento	40
+Seção III - Volume 3 - Da Habilitação	41
+Subseção I - Da Habilitação Jurídica	41
+Subseção II - Da Habilitação Econômico-Financeira	46
+Subseção III - Da Habilitação Fiscal, Social e Trabalhista	48
+Subseção IV - Da Habilitação Técnica	50
+CAPÍTULO 5 -	DAS ETAPAS DO LEILÃO	52
+Seção I - Da Apresentação dos Documentos	52
+Seção II - Da Análise das Declarações Preliminares, Documentos de Representação e Garantia de Proposta	57
+Seção III - Da Sessão Pública do Leilão	58
+Seção IV - Da Análise dos Documentos de Habilitação	61
+Seção V - Dos Recursos Administrativos	63
+Seção VI - Da Adjudicação do Objeto e da Homologação do Leilão	64
+Seção VII - Das Obrigações Prévias à Celebração do Contrato	65
+Seção VIII - Da Celebração do Contrato de Arrendamento	68
+Seção IX - Das Disposições Gerais do Contrato de Arrendamento	70
+CAPÍTULO 6 -	DO CRONOGRAMA DOS EVENTOS	71
+CAPÍTULO 7 -	DAS SANÇÕES	73
+CAPÍTULO 8 -	DAS DISPOSIÇÕES FINAIS	76
+CAPÍTULO 9 -	DOS APÊNDICES	78
+Apêndice 1 - Modelo de Procuração	81
+Apêndice 2 - Modelo de Procuração (Proponentes em Consórcio)	83
+Apêndice 3 - Modelo de Carta de Apresentação de Garantia de Proposta	85
+Apêndice 4 - Termos e Condições Mínimas do Seguro-Garantia	86
+Apêndice 5 - Modelo de Fiança Bancária	88
+Apêndice 6 - Modelo de Declaração de Elaboração Independente de Proposta pelo Arrendamento	90
+Apêndice 7 - Modelo de Carta de Apresentação dos Documentos de Habilitação	92
+Apêndice 8 - Modelo de Declaração de Ciência dos Termos do Edital e Ausência de Impedimento de Participação no Leilão	93
+Apêndice 9 - Modelo de Carta de Declaração de Inexistência de Falência Decretada	94
+Apêndice 10 - Modelo de Declaração Formal de Expressa Submissão à Legislação Brasileira e de Renúncia de Reclamação por Via Diplomática	95
+Apêndice 11 - Modelo de Declaração de Capacidade Financeira	96
+Apêndice 12 - Modelo de Declaração de Regularidade ao Artigo 7º, XXXIII, da Constituição Federal	97
+Apêndice 13 - Modelo de Declaração de Reserva de Cargos para Pessoa com Deficiência ou para Reabilitado da Previdência Social	98
+Apêndice 14 - Instruções para formalização do termo de compromisso de constituição de Sociedade de Propósito Específico	99
+Apêndice 15 - Modelo de Atestado de Visita Técnica	100
+Apêndice 16 - Modelo de Declaração de Pleno Conhecimento	101
+Apêndice 17 - Modelo de Declaração de Equivalência	102
+Apêndice 18 - Modelo de Declaração de Inexistência de Documento Equivalente	103
+Apêndice 19 - Modelo de Compromisso de Pré-qualificação como Operador Portuário ou de Contratação de Operador Portuário Pré-Qualificado	104
+Apêndice 20 - Modelo de Declaração de Atendimento às Prerrogativas Legais de Preferência estabelecidas no art. 60, §1º da Lei nº 14.133, de 1º de abril de 2021.	105
+Apêndice 21 - Instruções para formalização do termo de compromisso de constituição de constituição de unidade operacional ou de negócios, quer como filial, sucursal ou assemelhada	107
+Apêndice 22 - Modelo de Apresentação de Proposta pelo Arrendamento	110
+Apêndice 23 - Modelo de Ratificação da Proposta pelo Arrendamento	112
+
+
+
+PREÂMBULO
+
+	A AGÊNCIA NACIONAL DE TRANSPORTES AQUAVIÁRIOS - ANTAQ informa ao público e a quem possa interessar que realizará licitação, na modalidade Leilão {{ modalidade_leilao | default('[•] [•] [•]', true) | upper }} , conforme procedimento descrito neste Edital e no Manual de Procedimentos, objetivando a seleção de proposta mais vantajosa, adotando-se o(s) critério(s) de {{ tipo_criterio | default('[•] [•] [•]', true) }}, para a celebração de Contrato de Arrendamento de área e infraestrutura públicas localizadas dentro de Porto Organizado.  A licitação observará o que dispõem a Lei nº. 12.815, de 5 de junho de 2013, e o Decreto nº. 8.033, de 27 de junho de 2013, adotará e observará subsidiariamente o disposto na Lei nº. 8.987, de 13 de fevereiro de 1995, na Lei nº 10.233, de 5 de junho de 2001, e na Lei nº. 14.133, de 1º de abril de 2021.
+	
+	O aviso sobre este Edital será publicado no Diário Oficial da União. Ressalte-se que todas as publicações posteriores, relativas ao certame, serão feitas nos sítios eletrônicos do Poder Concedente, https://www.gov.br/portos-e-aeroportos/pt-br, e da ANTAQ, https://www.gov.br/antaq/pt-br, com exceção da declaração da Proponente vencedora e das alterações no Edital, que será publicada também no Diário Oficial da União.
+
+	O Edital e os demais documentos que dele fazem parte estarão disponíveis para consulta pela Internet, a partir do dia {{ data_publicacao_edital | default('[•] [•] [•]', true) }}, nos sítios eletrônicos do Poder Concedente e da ANTAQ, sem necessidade de registro ou de identificação para acesso. O instrumento convocatório também poderá ser obtido na sede da ANTAQ, localizada no SEPN, Quadra 514, Conjunto "E", Edifício ANTAQ, Brasília, Distrito Federal, CEP 70760-545. 
+
+	O Volume 1 - Documentos de Representação, Declarações Preliminares, Garantia de Proposta e o Volume 2 - Proposta pelo Arrendamento relativos ao Leilão serão recebidos somente no dia {{ data_secao_recebimento_volume | default('[•] [•] [•]', true) }}, das 09h às 11h e 59 minutos, na B3, na Rua XV de Novembro, nº 275, Centro - São Paulo/SP.
+
+	A Sessão Pública do Leilão e abertura das Propostas pelo Arrendamento das Proponentes ocorrerá no dia {{ data_secao_publica | default('[•] [•] [•]', true) }} , a partir das 14h, na B3, na Rua XV de Novembro, nº 275, Centro - São Paulo/SP.
+
+	A Licitação foi precedida de Audiência Pública, nos termos do art. 21 da Lei nº 14.133/2021, bem como do art. 11, § 3º, do Decreto nº 8.033, de 2013, tendo sido devidamente divulgada no Diário Oficial da União de {{ data_publicacao_dou_audiencia | default('[•] [•] [•]', true) }} e realizada no dia {{ data_realizacao_audiencia | default('[•] [•] [•]', true) }}, bem como de Consulta Pública, preconizada pelo art. 34-A, §1º, da Lei nº 10.233, de 2001, realizada entre os dias {{ data_consulta_publica | default('[•] [•] [•]', true) }}, igualmente divulgada no Diário Oficial da União, na data de {{ data_publicacao_dou_consulta_publica | default('[•] [•] [•]', true) }}.
+
+Brasília/DF,{{ data_publicacao_edital_extenso | default('[•] [•] [•]', true) }}
+CAPÍTULO 1 - 
+DAS DISPOSIÇÕES INICIAIS
+
+Seção I - Das Definições
+
+1.1. Para os fins do presente Edital, e sem prejuízo de outras definições aqui estabelecidas, as expressões a seguir são assim conceituadas:
+
+1.1.1. Adjudicatária: Proponente vencedora do certame à qual for adjudicado o objeto do Leilão; 
+
+1.1.2. ANTAQ: Agência Nacional de Transportes Aquaviários, entidade criada pela Lei nº 10.233/2001, responsável pela realização do presente procedimento licitatório;
+
+1.1.3. Área do Porto Organizado: área delimitada por ato do Poder Executivo, compreendendo as instalações portuárias e a infraestrutura de proteção e de acesso ao Porto Organizado;
+
+1.1.4. Arrendamento: cessão onerosa de área e infraestrutura públicas localizadas dentro do Porto Organizado, conforme descrito neste Edital e no Contrato e seus respectivos Apêndices, para exploração por prazo determinado; 
+
+1.1.5. Arrendatária: titular da cessão onerosa de área e infraestrutura públicas localizadas dentro do Porto Organizado em que está localizado o Arrendamento, para exploração por prazo determinado;
+
+1.1.6. Atividades: atividades portuárias a serem exploradas pela Arrendatária dentro da área indicada no Contrato e seus Apêndices e na forma neles descrita;
+
+1.1.7. Autoridade Portuária: pessoa jurídica encarregada da administração do Porto Organizado em que está localizado o Arrendamento, por delegação ou concessão do Poder Concedente, ou a União diretamente, nos casos de Portos não delegados e não concedidos.
+
+1.1.8. B3: B3 S.A. - Brasil, Bolsa Balcão, com sede na Praça Antônio Prado, nº 48 - Centro - São Paulo/SP;
+
+1.1.9. CADE: Conselho Administrativo de Defesa Econômica;
+
+1.1.10. Coligadas: sociedades submetidas à influência significativa de outra sociedade que detém ou exerce o poder de participar nas decisões das políticas financeira ou operacional, sem controlá-la. 
+
+1.1.10.1. É presumida a existência de influência significativa quando houver a titularidade de 20% (vinte por cento) ou mais do capital votante da sociedade, sem controlá-la;
+
+
+1.1.11. Consórcio: grupo de empresas, solidariamente responsáveis pelo cumprimento integral e tempestivo das obrigações decorrentes do presente Edital, vinculadas por meio de Termo de Compromisso de Constituição de Sociedade de Propósito Específico, nos moldes do Apêndice 14 deste Edital; 
+
+1.1.12. Contrato: Instrumento a ser celebrado entre o Poder Concedente e a Arrendatária, nos termos da Minuta do Contrato de Arrendamento;
+
+1.1.13. Controlada: sociedade na qual a Controladora, diretamente ou por meio de outras Controladas ou Coligadas, é titular de direitos de sócio que lhe assegurem, de modo permanente, a maioria dos votos nas deliberações sociais, o poder de eleger a maioria dos administradores da sociedade e o uso efetivo de seu poder para dirigir as  atividades sociais e orientar o funcionamento dos órgãos da sociedade;
+
+1.1.14. Controladora: pessoa, natural ou jurídica, ou o grupo de pessoas vinculadas por acordo de voto, ou sob controle comum, que:
+
+1.1.14.1. É titular de direitos de sócio que lhe assegurem, de modo permanente, a maioria dos votos nas deliberações da assembleia-geral e o poder de eleger a maioria dos administradores da companhia; e
+
+1.1.14.2. Usa efetivamente seu poder para dirigir as atividades sociais e orientar o funcionamento dos órgãos da companhia.
+
+
+1.1.15. CPLA: Comissão Permanente de Licitação de Concessões e Arrendamentos Portuários da ANTAQ, instituída pela ANTAQ, responsável por processar e julgar as licitações referentes à concessão de portos organizados e à exploração de áreas e infraestruturas portuárias públicas;
+
+1.1.16. Data para Recebimento dos Volumes: Data em que as Proponentes deverão entregar, perante a CPLA, na B3, todos os documentos necessários à sua participação no Leilão, quais sejam, aqueles apontados no item 5.1;
+
+1.1.17. Documentos de Habilitação: conjunto de documentos arrolados no Edital, que constitui o Volume 3, destinado a comprovar a respectiva regularidade jurídica, fiscal, social, trabalhista, técnica e econômico-financeira;
+
+1.1.18. Edital: é o presente documento, suas condições específicas todos seu Apêndices, que estipulam as regras do Leilão;
+
+1.1.19. Empresa Líder do Consórcio: empresa indicada pelos participantes do certame na qualidade de consorciados, responsável perante o Poder Concedente e a ANTAQ pelo cumprimento das obrigações contidas neste Edital, sem prejuízo da responsabilidade solidária das demais empresas consorciadas;
+
+
+1.1.20. Garantia de Proposta: garantia pecuniária prestada pelas Proponentes que poderá ser executada pelo Poder Concedente ou pela ANTAQ, nos termos do Edital;
+
+1.1.21. IPCA: Índice de Preços ao Consumidor Amplo, divulgado pelo Instituto Brasileiro de Geografia e Estatística - IBGE;
+
+1.1.22. Leilão: modalidade de licitação para a seleção da Proponente que, por sua vez, constituirá a Arrendatária responsável pela execução do objeto do Contrato;
+
+1.1.23. Manual de Procedimentos: documento divulgado pela B3 na sua página da Internet, previamente aprovado pela ANTAQ, consignando orientações e regras da Sessão Pública do Leilão, bem como os procedimentos de prestação de Garantia de Proposta;
+
+
+1.1.24. Mitigação: mudanças e substituições tecnológicas que reduzam o uso de recursos e as emissões por unidade de produção, bem como a implementação de medidas que reduzam as emissões de gases de efeito estufa e aumentem os sumidouros;
+
+
+1.1.25. Operador Portuário: pessoa jurídica pré-qualificada para movimentar e armazenar cargas/mercadorias, destinadas ou provenientes de transporte aquaviário, dentro da Área do Porto Organizado;
+
+1.1.26. Participante Credenciado: instituição relacionada em http://www.b3.com.br/pt_br/produtos-e-servicos/participantes/busca-de-participantes/participantes/, que deverá ser contratada pela Proponente para representá-la em todos os atos relacionados ao Leilão junto à B3;
+
+
+1.1.27. Poder Concedente: a União, por intermédio do Ministério de Portos e Aeroportos;
+
+1.1.28. Porto Organizado: bem público construído e aparelhado para atender a necessidades de navegação, de movimentação de passageiros ou de movimentação e armazenagem de mercadorias, cujo tráfego e operações portuárias estejam sob jurisdição da  Autoridade Portuária;
+
+1.1.29. Proponente: pessoa(s) jurídica(s), fundo(s) de investimento e entidade(s) de previdência complementar participante(s) do Leilão, individualmente ou em Consórcio;
+
+
+1.1.30. Proposta pelo Arrendamento: documento contendo o lance inicialmente ofertado pela Proponente no Leilão, o qual poderá ser eventualmente alterado em razão da realização da etapa de Viva-Voz;
+
+1.1.31. Representantes Credenciados: pessoas autorizadas a representar as Proponentes em todos os documentos e sessões relacionadas ao Leilão, exceto nos atos praticados junto à B3;
+
+1.1.32. Sessão Pública do Leilão: sessão pública presencial para abertura e classificação das Propostas pelo Arrendamento entregues pelas Proponentes, bem como para a etapa de viva-voz, se aplicável;
+
+
+1.1.33. Usuários: todas as pessoas físicas e jurídicas que sejam tomadoras das Atividades prestadas pela Arrendatária, ou por terceiro por ela indicado, na Área do Porto Organizado; 
+
+1.1.34. Valor do Arrendamento: valor devido pela Arrendatária à Autoridade Portuária, em função da exploração do Arrendamento, nos termos da Minuta do Contrato de Arrendamento; e
+
+1.1.35. Valor da Outorga: valor ofertado pela Proponente para obter a outorga da exploração do Arrendamento, nos termos da Minuta do Contrato de Arrendamento.
+
+1.2. Exceto quando o contexto não permitir tal interpretação, as definições do Edital serão igualmente aplicadas em suas formas singular e plural.
+
+Seção II - Do Objeto
+
+1.3. A finalidade do presente Leilão é o Arrendamento localizado no Porto Organizado de {{ municipio | default('[•] [•] [•]', true) }}, no Estado de {{ estado | default('[•] [•] [•]', true) }}, para a realização das Atividades, conforme especificações e requisitos estabelecidos no Edital e na Minuta de Contrato de Arrendamento. 
+
+1.3.1. A área total do Arrendamento, cujo código de identificação é {{ codigo_area | default('[•] [•] [•]', true) }}, possui {{ area_m2 | default('[•] [•] [•]', true) }}  {{ area_m2_extenso | default('[•] [•] [•]', true) }}, sendo constituída pelos terrenos nos quais estão e serão implantados os equipamentos e edificações a serem utilizados.
+
+1.4. A descrição completa das áreas, infraestruturas e instalações portuárias encontra-se na Minuta do Contrato de Arrendamento.
+
+1.5. As Atividades a serem desempenhadas pela Arrendatária no Arrendamento consistem na movimentação e armazenagem de {{ perfil_da_carga | default('[•] [•] [•]', true) }}, nos termos e condições previstas na minuta de Contrato e em seus respectivos Apêndices.
+        
+1.6. A remuneração da Arrendatária dar-se-á por meio de valores cobrados diretamente dos Usuários das Atividades que prestar, conforme previsto no Contrato.
+
+1.7. O Arrendamento vigorará pelo prazo de {{ prazo_arrendamento | default('[•] [•] [•]', true) }} {{ prazo_arrendamento_extenso | default('[•] [•] [•]', true) }} anos, com possibilidade de prorrogação contratual, nos termos da Cláusula 4 da Minuta do Contrato de Arrendamento, a critério do Poder Concedente.
+
+Seção III - Do Acesso aos Documentos da Licitação
+
+1.8. O Edital da presente licitação, a Minuta do Contrato de Arrendamento, bem como todas as informações, estudos e projetos disponíveis poderão ser obtidos:
+
+1.8.1. No sítio eletrônico do Poder Concedente e da ANTAQ, a partir da data de publicação do Edital definida pelo cronograma do item 6.1.1, incidindo sobre a disponibilização destes estudos e informações as regras previstas neste Edital e na Minuta do Contrato de Arrendamento; e
+
+1.8.2. Na sede da ANTAQ, localizada no SEPN, Quadra 514, Conjunto "E", Edifício ANTAQ, Brasília, Distrito Federal, CEP 70760-545, a partir da data de publicação do Edital definida pelo cronograma do item 6.1.1.
+
+1.9. Os interessados deverão obter os documentos descritos no item 1.8 pelos meios acima especificados, como forma de garantir a autenticidade dos textos e de assegurar que estão em seu poder todos os documentos que compõem o instrumento convocatório.
+
+1.10. A ANTAQ não se responsabiliza pelo texto dos documentos descritos no item 1.8 obtidos de forma ou em locais diversos daqueles indicados neste instrumento convocatório.
+
+1.11. A obtenção dos documentos descritos no item 1.8  não será condição para participação no Leilão, sendo suficiente, para tanto, o conhecimento e aceitação, pela Proponente, de todos os seus termos e condições.
+
+Seção IV - Dos Esclarecimentos sobre o Edital
+
+1.12. Compete à CPLA prestar esclarecimentos sobre o Edital e Minuta do Contrato de Arrendamento, de ofício ou a requerimento dos interessados, tendo tais esclarecimentos, devidamente lavrados em ata conforme item 1.15, caráter vinculante para fins de interpretação de suas regras.
+
+1.13. Eventuais pedidos de esclarecimentos deverão ser apresentados no prazo definido pelo cronograma do item 6.1.1, por meio eletrônico no sítio da ANTAQ, em formulário próprio que será disponibilizado em área própria do Leilão.
+
+1.13.1. Excepcionalmente, em casos de período de indisponibilidade do sistema, a CPLA poderá, por meio de comunicado, determinar que os pedidos de esclarecimentos sejam apresentados de forma distinta àquela indicada no item 1.13, observados os itens 1.30 e 1.31.
+
+1.14. A CPLA não prestará esclarecimentos a pedidos:
+
+1.14.1. apresentados em formato diverso ao previsto nos itens 1.13 e 1.13.1;
+
+1.14.2. que não tenham relação direta com o conteúdo do Edital e Minuta do Contrato de Arrendamento; e
+
+1.14.3. que tenham por objeto informações, estudos, pesquisas, investigações, levantamentos, projetos, planilhas e demais documentos ou dados, que não constem expressamente do Edital e Minuta do Contrato de Arrendamento;
+
+1.15. Todas as respostas da CPLA aos pedidos de esclarecimentos realizados nos termos desta seção constarão de ata, a qual será parte integrante do procedimento licitatório.
+
+1.15.1. As atas serão divulgadas no sítio eletrônico do Poder Concedente e da ANTAQ no prazo definido pelo cronograma do item 6.1.1, sem identificação das fontes dos questionamentos.
+
+1.15.2. Os interessados poderão, também, retirar cópia da ata de esclarecimentos na sede da ANTAQ, mediante o pagamento das taxas correspondentes à sua reprodução reprográfica.
+
+Seção V - Das Visitas Técnicas
+
+1.16. A realização de visita técnica à área do Arrendamento é facultativa. 
+1.17. Os interessados poderão realizar até 2 (duas) visitas técnicas destinadas à obtenção de informações suplementares sobre a atual área, infraestrutura e instalações públicas objeto do Arrendamento, ocasião em que poderão também avaliar eventuais questões ambientais e realizar inspeções, estudos e observações mais criteriosos, tais como batimetrias e sondagens do solo, dentre outros, desde que não prejudique a operação portuária existente e sejam compatíveis com o projeto e dispositivos legais e regulamentares vigentes, sem prejuízo de outras instruções complementares a serem divulgadas pela CPLA e demais órgãos competentes.
+
+
+1.18. A Proponente deverá apresentar em seus Documentos de Habilitação declaração emitida nos moldes do Apêndice 15 - Modelo de Atestado de Visita Técnica ou do Apêndice 16 - Modelo de Declaração de Pleno Conhecimento, declarando que tem pleno conhecimento da área, infraestrutura e instalações públicas em que serão desenvolvidas as Atividades, assim como das condições que possam afetar sua execução, dos acessos à área, dos materiais e equipamentos a serem utilizados, bem como das demais informações necessárias para a consecução do objeto do Arrendamento, sendo de sua responsabilidade a ocorrência de eventuais prejuízos em virtude de sua omissão na verificação do objeto.
+
+1.19. As visitas técnicas deverão ser agendadas diretamente com a Autoridade Portuária, através do responsável {{ contato_visita_nome | default('[•] [•] [•]', true) }} - {{ contato_visita_cargo | default('[•] [•] [•]', true) }}, estabelecido na {{ contato_visita_endereco | default('[•] [•] [•]', true) }}, e-mail: {{ contato_visita_email | default('[•] [•] [•]', true) }}.
+
+Seção VI - Da Impugnação ao Edital
+
+1.20. Eventual impugnação ao Edital deverá ser protocolada no prazo definido pelo cronograma do item 6.1.1, sob pena de decadência desse direito.
+
+1.21. A impugnação ao Edital será dirigida ao presidente da CPLA e entregue em meio eletrônico, no sítio eletrônico da ANTAQ em área própria do Leilão.
+
+1.22. A impugnação feita tempestivamente não impedirá a participação do interessado no Leilão até a decisão da CPLA.
+
+1.23. A CPLA deverá julgar e responder às eventuais impugnações no prazo definido pelo cronograma do item 6.1.1.
+
+1.23.1. O julgamento e as respostas da CPLA às eventuais impugnações realizadas nos termos deste item constarão de ata, a qual será parte integrante do procedimento licitatório;
+
+1.23.2. As atas serão divulgadas no sítio eletrônico do Poder Concedente e da ANTAQ; 
+1.23.3. Os interessados poderão, também, retirar cópia da ata de julgamento das impugnações na sede da ANTAQ, mediante o pagamento das taxas correspondentes à sua reprodução reprográfica.
+
+Seção VII - Das Disposições Gerais
+
+1.24. Em caso de conflito, os termos, disposições e condições do Edital prevalecem sobre as disposições dos Apêndices do Edital.
+
+1.25. Todos os documentos da licitação, incluindo as correspondências trocadas entre as Proponentes e a CPLA, deverão ser redigidos em língua portuguesa, sendo toda a documentação consultada e interpretada de acordo com este idioma.
+
+1.26. Exceto nos casos descritos no item 1.27, não serão considerados, para efeitos de avaliação e julgamento das Propostas pelo Arrendamento, documentos de origem estrangeira apresentados em outras línguas sem a autenticação dos respectivos consulados brasileiros ou sem a tradução juramentada para a língua portuguesa, bem como não serão considerados aqueles em desacordo com as exigências da legislação vigente no que tange aos requisitos necessários à confirmação de sua validade jurídica.
+
+1.27. Para empresas dos países signatários da Convenção sobre a Eliminação da Exigência de Legalização de Documentos Estrangeiros, firmada pela República Federativa do Brasil, em 5 de outubro de 1961, e promulgada pelo Decreto nº 8.660, de 29 de janeiro de 2016, não haverá a exigência de legalização diplomática ou consular de documentos públicos estrangeiros, desde que observado e atendido o disposto na referida convenção.
+
+1.28. Exceto quando expressamente autorizado neste Edital, os documentos deverão observar os modelos constantes do instrumento convocatório, se existir.
+
+1.29. Todas as menções a horário no presente Edital referem-se à hora oficial de Brasília.
+
+1.30. As correspondências relacionadas ao Edital e enviadas à CPLA serão consideradas como entregues na data de seu respectivo recebimento, mediante protocolo ou outra forma de confirmação de recebimento de mensagens, em caso de correspondência eletrônica.
+
+1.31. As correspondências recebidas após as 18h, inclusive aquelas dirigidas a endereço eletrônico, serão consideradas como recebidas no dia útil imediatamente posterior.
+
+1.32. Qualquer alteração no Edital será divulgada no sítio eletrônico do Poder Concedente e da ANTAQ e comunicada no Diário Oficial da União.
+
+1.33. As informações, estudos, pesquisas, investigações, levantamentos, projetos, planilhas e demais documentos ou dados disponibilizados no sítio eletrônico da ANTAQ foram realizados e obtidos para fins exclusivos de precificação do Leilão, não possuindo qualquer caráter vinculativo que responsabilize a ANTAQ e/ou o Poder Concedente perante as Proponentes e/ou perante a futura Arrendatária.
+
+1.34. As Proponentes são responsáveis pela análise direta das condições da respectiva área, infraestrutura e instalações públicas do Arrendamento e de todos os dados e informações sobre sua exploração, bem como pelo exame de todas as instruções, condições, exigências, leis, decretos, normas, especificações e regulamentações aplicáveis ao Leilão, ao Arrendamento e ao Porto Organizado, devendo arcar com seus respectivos custos e despesas e com eventuais prejuízos decorrentes, inclusive no tocante à realização de estudos, investigações, visita técnica, levantamentos, projetos e investimentos.
+
+1.35. A prática de atos pelas Proponentes em cada etapa do Leilão está sujeita à preclusão, sendo vedado o exercício de faculdades referentes a etapas já consumadas do Leilão, salvo nas hipóteses admitidas no Edital.
+
+1.36. A participação no Leilão implica integral e incondicional aceitação de todos os termos, disposições e condições do Edital e seus Apêndices, da minuta do Contrato de Arrendamento e seus respectivos Apêndices, do Manual de Procedimentos, bem como das demais normas aplicáveis ao Leilão.
+
+1.37. Observadas as regras específicas do presente Edital, os valores previstos no Edital serão reajustados pela aplicação do IPCA a cada 12 (doze) meses contados a partir da respectiva data-base.. 
+
+1.38. Todos os valores presentes no Edital e seus respectivos Apêndices estão referenciados a {{ data_base | default('[•] [•] [•]', true) }}, exceto quando expressamente indicado.
+
+1.39. Integram o presente Edital a Minuta do Contrato de Arrendamento e seus respectivos Apêndices.
+
+CAPÍTULO 2 - DA COMISSÃO PERMANENTE DE LICITAÇÃO DE CONCESSÕES E ARRENDAMENTOS PORTUÁRIOS DA ANTAQ
+
+2.1. O Leilão será processado e julgado pela CPLA, cabendo-lhe conduzir os trabalhos necessários à realização do certame.
+
+2.1.1. No desempenho de suas funções, a CPLA contará com o auxílio da B3.
+
+2.2. A CPLA poderá solicitar informações de quaisquer órgãos e entidades envolvidos nesta licitação, bem como de todos aqueles integrantes da Administração Pública Federal, Estadual e Municipal.
+
+2.3. Além das prerrogativas que decorrem implicitamente de sua função legal, a CPLA poderá:
+
+2.3.1. Solicitar às Proponentes, a qualquer momento, diligências destinadas a apurar, esclarecer e sanar qualquer questão relativa aos documentos apresentados, incluindo, mas sem limitação, falhas formais, divergências de informações, versões e/ou traduções, vedado saneamento que altere a substância da Proposta pelo Arrendamento;
+
+2.3.2. Adotar critérios de saneamento de falhas e defeitos de caráter formal e complementação de insuficiências no curso do Leilão, vedado saneamento que altere a substância da Proposta pelo Arrendamento;
+
+2.3.3. Promover diligência destinada a esclarecer ou a complementar a instrução do Leilão, vedada expressamente a inclusão posterior de documento ou informação que deveria constar originariamente dos volumes descritos no item 5.1 apresentados pela Proponente;
+
+2.3.4. Prorrogar os prazos de que trata o Edital em caso de interesse público, caso fortuito ou força maior, sem que caiba às Proponentes direito à indenização ou reembolso de custos e despesas a qualquer título; e
+
+2.3.5. Na hipótese de mudança que afete, de forma inequívoca, a elaboração das Propostas pelo Arrendamento, alterar a Data para Recebimento dos Volumes e da Sessão Pública do Leilão.
+
+2.4. A recusa em fornecer esclarecimentos e documentos ou em cumprir as exigências solicitadas pela CPLA, nos prazos por ela determinados e de acordo com os termos deste Edital, ensejará a desclassificação da Proponente, com a consequente execução da Garantia de Proposta.
+
+CAPÍTULO 3 - DA PARTICIPAÇÃO NO LEILÃO
+
+3.1. Poderão participar do Leilão, nos termos deste Edital, pessoas jurídicas brasileiras ou estrangeiras, entidades de previdência complementar e fundos de investimento, isoladamente ou em Consórcio.
+
+3.2. As Proponentes serão representadas no Leilão, necessariamente, por Representantes Credenciados e Participantes Credenciados.
+
+Seção I - Da Participação de Empresa Estrangeira
+
+3.3. As Proponentes pessoas jurídicas estrangeiras que não funcionem no Brasil deverão apresentar, tanto para a participação isolada quanto em Consórcio, documentos equivalentes àqueles exigidos das Proponentes brasileiras para fins de habilitação, conforme o disposto nos itens 1.26 e 1.27 deste Edital.
+
+3.4. As Proponentes pessoas jurídicas estrangeiras que não funcionem no Brasil deverão apresentar declaração, conforme Apêndice 17 - Modelo de Declaração de Equivalência deste Edital, certificando a correlação entre os documentos administrativo-legais normalmente exigidos em licitações no Brasil e os correspondentes no país de origem, indicando, também, a correlação das respectivas validades.
+
+3.5. Os Documentos de Habilitação equivalentes devem ser apresentados de forma a possibilitar a análise, pela CPLA, de sua validade e exigibilidade.
+
+3.6. Na hipótese de inexistência de documentos equivalentes aos solicitados neste Edital ou, então, de órgão(s) no país de origem que os autentique(m), deverá a Proponente apresentar declaração informando tal fato, consoante Apêndice 18 - Modelo de Declaração de Inexistência de Documento Equivalente  deste Edital.
+
+3.6.1. Caso algum dos documentos exigidos no Capítulo 4, Seção III, Subseção III do presente Edital se enquadre na hipótese do item anterior, a declaração de inexistência de documento equivalente deverá ser acrescida da correspondente declaração de inexistência de débitos de natureza tributária e trabalhista. 
+
+3.7. Considera-se representante legal da Proponente estrangeira a pessoa domiciliada no Brasil, legalmente credenciada por meio de procuração conforme Apêndice 1 - Modelo de Procuração, com firma reconhecida como verdadeira por notário, de acordo com a legislação aplicável aos documentos, com poderes expressos para receber citação e responder administrativa e judicialmente pela Proponente no Brasil, bem como para representar a Proponente pessoa jurídica estrangeira em todas as fases do processo licitatório, observado o disposto no item 1.25.
+
+3.8. As Proponentes pessoas jurídicas estrangeiras que estejam autorizadas a funcionar no Brasil deverão apresentar os documentos exigidos para as pessoas jurídicas constituídas sob as leis brasileiras. 
+
+3.9. Serão aceitos atestados ou outros documentos hábeis emitidos por entidades estrangeiras quando acompanhados de tradução para o português, salvo se comprovada a inidoneidade da entidade emissora.
+
+Seção II - Da Participação em Consórcio
+
+3.10. Em se tratando de Consórcio, as seguintes regras deverão ser observadas pelas Proponentes, sem prejuízo de outras existentes no Edital e na legislação aplicável:
+
+3.10.1. Cada consorciado deverá atender, individualmente, às exigências previstas no Edital relativas às declarações preliminares, à Proposta pelo Arrendamento e aos Documentos de Habilitação. 
+
+
+3.10.2. A desclassificação de qualquer consorciado acarretará a automática desclassificação do Consórcio.
+
+3.10.3. No termo de compromisso de constituição de Sociedade de Propósito Específico de que dispõem os itens 1.1.11 e 4.29.4 deste Edital deverá constar, obrigatoriamente, cláusula de responsabilidade solidária dos consorciados.
+
+3.10.4. Não há limite de participantes para a constituição de Consórcio.
+
+3.10.5. Não será admitida a inclusão, a retirada, a exclusão ou, ainda, a alteração nos percentuais de participação dos membros consorciados, a partir da Data para Recebimento dos Volumes descrita no item 5.1 até a assinatura do Contrato.
+
+3.10.6. É permitida a participação de Consórcio formado exclusivamente por empresas estrangeiras.
+
+3.10.7. Em um mesmo Leilão, cada pessoa jurídica pode participar de apenas um Consórcio, restrição que se estenderá às suas Controladas, Coligadas, Controladoras e entidades sujeitas ao mesmo controle comum, mesmo com porcentagens distintas, sob pena de desclassificação do certame, não importando a fase em que vier a ser revelado.
+
+3.10.8. Caso uma Proponente participe de um Consórcio, ficará ela também impedida de participar isoladamente do Leilão, restrição que compreenderá igualmente suas Controladas, Controladoras, Coligadas e entidades sujeitas ao mesmo controle comum.
+
+3.10.9. A responsabilidade solidária dos consorciados cessará, para fins das obrigações assumidas em virtude do Leilão: 
+
+3.10.9.1. No caso de o Consórcio ter sido a Proponente vencedora, na data da celebração do Contrato de Arrendamento pela Sociedade de Propósito Específico; ou 
+
+3.10.9.2. No caso de o Consórcio não ter sido a Proponente vencedora, 15 (quinze) dias depois da data de celebração do Contrato pela vencedora do certame ou da data em que for declarada fracassada a licitação.
+
+3.10.10. A permissão de formação de Consórcio, especialmente entre concorrentes, para participar de processo licitatório não afasta a competência do CADE de apurar a conformidade do Consórcio com base na Lei nº 12.529, de 30 novembro de 2011 (Lei da Defesa da Concorrência) e, dessa forma, investigar eventuais ilícitos concorrenciais.
+
+Seção III - Das Limitações à Participação
+
+3.11. Não poderão participar deste Leilão pessoas jurídicas (brasileiras ou estrangeiras), entidades de previdência complementar e fundos de investimento, isoladamente ou em Consórcio, que:
+
+3.11.1. Tenham sido declaradas inidôneas por ato do Poder Público, estejam suspensas ou impedidas de participar de licitações ou de contratar com o Poder Concedente e a ANTAQ, nos termos da Lei nº 14.133, de 1º de abril de 2021, ou da Lei nº 8.666, de 21 de junho de 1993, se a condenação se deu com fundamento nessa última, antes da entrada em vigor da Lei nº 14.133, de 2021;
+
+3.11.1.1. O impedimento de que trata o item 3.11.1 será também aplicado à Proponente que atue em substituição a outra pessoa, física ou jurídica, com o intuito de burlar a efetividade da sanção a ela aplicada, inclusive a sua Controladora, Controlada ou Coligada, desde que devidamente comprovado o ilícito ou a utilização fraudulenta da personalidade jurídica da Proponente.
+
+3.11.2. Tenham sido condenadas, por sentença transitada em julgado, à pena de interdição de direitos devido à prática de crimes ambientais, conforme disciplinado no art. 10 da Lei nº 9.605, de 12 de fevereiro de 1998;
+
+3.11.3. Tenham sido condenadas, por decisão administrativa transitada em julgado, à pena prevista no art. 38, II, da Lei nº 12.529, de 30 novembro de 2011;
+
+3.11.4. Possuam dirigentes ou responsáveis técnicos que sejam ou tenham sido ocupantes de cargo comissionado, cargo efetivo ou emprego nos órgãos ou entidades estruturadoras, contratantes ou responsáveis pelos estudos e pela licitação, nos últimos 180 (cento e oitenta) dias anteriores à data da publicação do Edital;
+
+3.11.5. Sejam empresas Controladoras, Controladas ou Coligadas, nos termos da Lei nº 6.404, de 15 de dezembro de 1976, concorrendo entre si;
+
+3.11.6. Sejam pessoas físicas ou jurídicas que nos 5 (cinco) anos anteriores à divulgação do Edital tenham sido condenadas judicialmente, com trânsito em julgado, por exploração de trabalho infantil, por submissão de trabalhadores a condições análogas às de escravo ou por contratação de adolescentes nos casos vedados pela legislação trabalhista;
+
+3.11.7. Possuam dirigentes ou responsáveis técnicos que tenham condenações cíveis por ato de improbidade administrativa transitadas em julgado, nos termos da Lei nº 8.429, de 02 de junho de 1992;
+
+3.11.8. Possuam dirigentes ou responsáveis técnicos que se enquadrem em qualquer uma das hipóteses previstas na alínea "e" do inciso I do art. 1º da Lei Complementar nº 64, de 18 de maio de 1990, exceto nos casos de crimes de ação penal privada, culposos ou aqueles definidos em lei como de menor potencial ofensivo; e/ou
+
+3.11.9. Estejam em processo de recuperação judicial/extrajudicial ou concordata remanescente, insolvência civil, sob concurso de credores, em dissolução ou em liquidação, ou ainda que tenha decretada a sua falência.
+
+3.11.9.1. Caso a Proponente esteja em processo de recuperação judicial ou extrajudicial, o impedimento à participação no Leilão não se aplica caso haja acolhimento judicial do seu plano de recuperação ou certidão emitida pela instância judicial competente que ateste que a interessada está apta econômica e financeiramente a cumprir as condições do Edital e do Contrato de Arrendamento.
+
+3.12. Para a verificação das ocorrências constantes nos itens 3.11.1 e 3.11.77, serão obrigatoriamente consultados pela CPLA: o Sistema de Cadastramento Unificado e Fornecedores - SICAF; o Cadastro Nacional de Empresas Inidôneas e Suspensas - CEIS da Controladoria Geral da União - CGU; o Portal da Transparência; o Portal do Conselho Nacional de Justiça - CNJ; e a lista de inidôneos do Tribunal de Contas da União, condenados com base no art. 46 da Lei nº 8.443/1992 c/c art. 271 do Regimento Interno do TCU.
+
+CAPÍTULO 4 - DA DOCUMENTAÇÃO
+
+4.1. As Proponentes deverão apresentar 1 (uma) via física de todos os documentos.
+
+4.2. Com exceção das Garantias de Proposta, que devem estar obrigatoriamente em sua forma original no Volume 1 descrito no item 5.1.1, todos os demais documentos serão apresentados em sua forma original ou por meio de cópia, e rubricado por 1 (um) dos Representantes Credenciados.
+
+4.2.1. As certidões que não consignarem seu prazo de validade serão aceitas se tiverem sido emitidas até 90 (noventa) dias antes da Data para Recebimento dos Volumes.
+
+4.2.2. As certidões obtidas por via eletrônica em que seja possível consultar a autenticação digital constante no documento serão consideradas como válidas.
+
+4.3. Todos os documentos apresentados pelas Proponentes que estiverem lacrados ficarão sob guarda da B3, que poderá devolvê-los às Proponentes, mediante autorização da CPLA, após o prazo de 15 (quinze) dias a contar da assinatura do Contrato ou da data em que for declarada fracassada a licitação.
+
+4.3.1. A Garantia de Proposta será devolvida pela ANTAQ, com o auxílio da B3, às Proponentes no prazo de 10 (dez) dias úteis, contado da assinatura do Contrato ou da data em que for declarada fracassada a licitação.
+
+4.3.2. Decorridos 30 (trinta) dias do recebimento da notificação da assinatura do Contrato ou da data em que for declarada fracassada a licitação referidas no item 4.33, a B3 inutilizará os documentos lacrados não retirados pelas Proponentes.
+
+Seção I - Volume 1 - Declarações Preliminares, Representantes Credenciados, Participantes Credenciados e Garantia de Proposta
+
+ Subseção I - Das Declarações Preliminares
+
+4.4. As Proponentes deverão apresentar declarações preliminares, conforme tabela do CAPÍTULO 9 - DOS APÊNDICES deste Edital. 
+
+ Subseção II - Dos Representantes Credenciados
+
+4.5. Cada Proponente, seja individual ou Consórcio, poderá ter até 2 (dois) Representantes Credenciados.
+
+4.6. A comprovação dos poderes dos Representantes Credenciados dar-se-á:
+
+4.6.1. Mediante instrumento de procuração que comprove poderes para praticar, em nome da Proponente, todos os atos referentes ao Leilão (incluindo os poderes de receber citação, representar a Proponente administrativa e judicialmente, fazer acordos e renunciar a direitos), conforme Apêndice 1 - Modelo de Procuração, com firma reconhecida e acompanhado dos documentos que comprovem os poderes do(s) outorgante(s) (conforme última alteração arquivada no registro empresarial ou civil competente);
+
+4.6.2. No caso de Proponentes em Consórcio, o instrumento de procuração mencionado no item 4.6.1 deverá ser outorgado pela Empresa Líder do Consórcio, com firma reconhecida, seguindo o Apêndice 2 - Modelo de Procuração (Proponentes em Consórcio), e será acompanhado de:
+
+4.6.2.1. indicação da Empresa Líder do Consórcio como responsável pelos atos praticados pelo Consórcio perante o Poder Concedente e a ANTAQ;
+
+4.6.2.2. procurações outorgadas pelos consorciados à Empresa Líder do Consórcio, nos moldes do Apêndice 2 - Modelo de Procuração (Proponentes em Consórcio), conferindo-lhe poderes expressos, irretratáveis e irrevogáveis para concordar com condições, transigir, compromissar-se, assinar quaisquer papéis, documentos e instrumentos de contratação relacionados com o objeto do Leilão; e
+
+4.6.2.3. documentos que comprovem os poderes de todos os outorgantes (conforme última alteração arquivada no registro empresarial ou civil competente). 
+
+4.6.3. No caso de Proponente empresa estrangeira, por meio da apresentação de instrumento de procuração outorgado a representante legal residente e domiciliado no Brasil, nos moldes do Apêndice 1 - Modelo de Procuração, que comprove poderes para praticar, em nome da Proponente, todos os atos referentes ao Leilão, com poderes expressos para receber citação, representar a Proponente administrativa e judicialmente e fazer acordos e renunciar a direitos e, se for o caso, substabelecimento dos poderes apropriados para os Representantes Credenciados, acompanhada de documentos que comprovem os poderes dos outorgantes, com a(s) assinatura(s) devidamente reconhecida(s) como verdadeira(s) por notário ou outra entidade de acordo com a legislação aplicável, reconhecidos pela representação consular brasileira mais próxima, devidamente traduzidos ao português por tradutor público juramentado e registrados em Cartório de Títulos e Documentos (conforme última alteração arquivada no registro empresarial, civil competente ou exigência equivalente do país de origem), observada a exceção estabelecida no item 1.27 deste Edital.
+
+4.7. Pelo menos 1 (um) dos Representantes Credenciados deverá assinar todas as declarações e documentos de livre elaboração referidos neste Edital.
+
+4.8. Cada Representante Credenciado poderá exercer a representação de uma única Proponente.
+
+4.9. Não obstante o disposto nesta subseção, não será permitido aos Representantes Credenciados intervir nem praticar atos junto à B3, tendo em vista que tal representação será exercida exclusivamente pelas Participantes Credenciados.
+
+ Subseção III - Dos Participantes Credenciados
+
+4.10. Os Participantes Credenciados deverão representar as Proponentes junto à B3, na entrega de todos os documentos requeridos neste Edital, especialmente a Garantia de Proposta, a Proposta pelo Arrendamento e os Documentos de Habilitação, e nos atos da Sessão Pública do Leilão.
+
+4.11. O contrato de intermediação entre o Participante Credenciado e a Proponente terá o conteúdo mínimo especificado no Manual de Procedimentos e deverá ser apresentado no Volume 1, devidamente assinado, com as firmas reconhecidas e acompanhado do ato societário e/ou procuração comprovando os poderes das pessoas que firmaram tal contrato.
+
+4.12. Cada Participante Credenciado poderá exercer a representação de uma única Proponente, e cada Proponente poderá estar representada e participar do Leilão por meio de um único Participante Credenciado.
+
+Subseção IV - Da Garantia de Proposta
+
+4.13. A Garantia de Proposta fica estabelecida no valor de {{ valor_garantia | default('[•] [•] [•]', true) }} ({{ valor_garantia_extenso | default('[•] [•] [•]', true) }}, com data-base referenciada no item 1.38 deste Edital.
+
+4.13.1. Nos termos do item 1.37 deste Edital, o valor da Garantia de Proposta será reajustado pela variação do IPCA, pelo período entre a data-base definida como a Data para Recebimento dos Volumes e o último índice divulgado oficialmente no mês anterior da Sessão Pública do Leilão.
+
+4.13.2. Cabe à CPLA a divulgação do valor reajustado da Garantia de Proposta no sítio eletrônico da ANTAQ em área própria para o Leilão.
+
+4.14. Para aportar a Garantia de Proposta, deverão as Proponentes entregar Carta de Apresentação de Garantia de Proposta, seguindo o Apêndice 3 - Modelo de Carta de Apresentação de Garantia de Proposta, bem como observar as regras descritas no Manual de Procedimentos do Leilão, sem prejuízo das diretrizes constantes da presente subseção. 
+
+4.15. A Garantia de Proposta poderá ser prestada em dinheiro, títulos da dívida pública federal, seguro-garantia, fiança bancária ou título de capitalização, podendo ser utilizada a combinação das modalidades para composição do valor, observando-se as seguintes condições:
+
+4.15.1. A Garantia de Proposta apresentada nas modalidades seguro-garantia e fiança bancária deverá atender às informações mínimas indicadas no Apêndice 4 - Termos e Condições Mínimas do Seguro-Garantia e no Apêndice 5 - Modelo de Fiança Bancária e ser apresentada em suas vias originais; 
+
+4.15.1.1. Não serão aceitas cópias de qualquer espécie, admitida apresentação da via digital das apólices de seguro-garantia certificadas pela Superintendência de Seguros Privados - SUSEP, podendo a assinatura ser realizada eletronicamente.
+
+4.15.1.2. A Garantia de Proposta nessas modalidades deverá ter seu valor expresso em reais, assinatura dos administradores da sociedade emitente, podendo ser assinatura com certificação digital no caso de apólice emitida dessa forma, devendo observar o cadastramento das seguradoras conforme estabelecido no Manual de Procedimentos do Leilão.
+
+4.15.1.3. Somente serão admitidas cartas de fiança emitidas por banco comercial, de investimento e/ou múltiplo autorizado a funcionar no Brasil, classificado no primeiro ou segundo pisos, A ou B, da escala rating de longo prazo de uma das agências de classificação do risco, Fitch Ratings, Moody's ou Standard & Poors.
+
+4.15.2. Nos casos em que a Garantia de Proposta for apresentada na modalidade título de capitalização, a ser custeada por pagamento único, com resgaste pelo valor total, deverão ser observados o regulamento do Decreto-Lei nº 261, de 1967, da Resolução CNSP nº 384, de 2020, e da Circular Susep nº 656, de 2022.
+
+
+4.15.2.1. O contrato do título de capitalização, a ser celebrado entre a Proponente e uma Sociedade de Capitalização, regularmente autorizada a operar pela Superintendência de Seguros Privados - SUSEP, deve ser estruturada nos moldes do Instrumento de Garantia.
+
+4.15.2.2. As obrigações decorrentes do contrato celebrado devem estar garantidas mediante a constituição de provisões técnicas, na forma estabelecida pelo Conselho Nacional de Seguros Privados (CNSP).
+ 
+4.15.2.3. Serão cláusulas obrigatórias ao contrato a ser celebrado aquelas com a finalidade da garantia e com o estabelecimento de pagamento único pelo valor total do título.
+
+4.15.2.4. Não serão admitidos contratos com previsão de pagamento parcelado (seja do prêmio ou da cota).
+
+4.15.3. Na hipótese de a Garantia de Proposta ser prestada em títulos da dívida pública, aceitar-se-ão apenas Letras do Tesouro Nacional - LTN, Letras Financeiras do Tesouro - LFT, Notas do Tesouro Nacional - série C - NTN-C, Notas do Tesouro Nacional Série B (NTN-B), Notas do Tesouro Nacional Série B Principal (NTN-B Principal) ou Notas do Tesouro Nacional - série F - NTN-F.
+
+4.15.3.1. Os títulos da dívida pública deverão ser emitidos sob a forma escritural, mediante registro em sistema centralizado de liquidação e custódia autorizado pelo Banco Central do Brasil e avaliados pelos seus valores econômicos, conforme definido pelo Ministério da Fazenda.
+
+4.15.4. Em caso de caução em dinheiro, o depósito deverá ser feito em conta-caução aberta em agência da Caixa Econômica Federal (CEF) definida pela própria Proponente, tendo como favorecido a Agência Nacional de Transportes Aquaviários (ANTAQ) - CNPJ é 04.903.587/0001-08, com base no art. 82 do Decreto nº 93.872, de 23 de dezembro de 1986, e na Lei nº 14.973, de 16 de setembro de 2024, devendo ser incluído no Volume 1 o comprovante do depósito e a via original do formulário do Recibo de Caução devidamente preenchido e assinado, comprovando a disponibilidade dos recursos na conta-caução na Data para Recebimento dos Volumes.
+
+4.16. Se a Proponente participar isoladamente, a Garantia de Proposta deverá ser apresentada em nome próprio.
+
+4.17. Se a Proponente for Consórcio, a Garantia de Proposta será apresentada em nome de um ou mais consorciados e deverá indicar, expressamente, o nome do Consórcio e de todos os seus membros com as respectivas participações percentuais, independentemente de a Garantia de Proposta ter sido prestada por um ou mais participantes. 
+
+4.17.1. No caso do item 4.17, é ainda admissível o aporte do montante total segregado entre os consorciados, que poderão optar isoladamente por uma das modalidades de garantia previstas no item 4.15, sem prejuízo da escolha, pelos demais membros, de modalidade diversa.
+
+4.18. A Garantia de Proposta terá a ANTAQ como beneficiária e a Proponente como tomadora, e prazo mínimo de validade de 1 (um) ano a contar da Data para Recebimento dos Volumes, devendo ser renovada pela Proponente antes de sua expiração caso o certame não esteja concluído nesse prazo.
+
+4.18.1. A validade da Garantia de Proposta será prorrogada de acordo com a necessidade, pelo menos 30 (trinta) dias antes de seu vencimento, às expensas das próprias Proponentes, pelo prazo mínimo de 1 (um) ano, caso a Garantia de Proposta expire antes da conclusão do certame, sob pena de execução da Garantia de Proposta e consequente desclassificação.
+
+4.18.2. A Proponente vencedora deverá manter a Garantia de Proposta até a assinatura do Contrato.
+
+4.19. No caso de renovação, a Garantia de Proposta será reajustada pela variação do IPCA.
+
+4.19.1. A data-base (data inicial) para atualização monetária em caso de renovação deverá ser o mês da Data para Recebimento dos Volumes e a data final, o último índice divulgado antes da notificação para renovação da Garantia de Proposta, que poderá ser o mês imediatamente anterior ao mês de término da vigência, ou este próprio, se já tiver sido divulgado. 
+
+4.19.2. Em havendo a necessidade de outra renovação, a data-base será a do mês correspondente ao início de vigência da Garantia de Proposta renovada, sendo que a data final será aquela correspondente ao mês em que findar-se sua vigência. 
+
+4.20. As Garantias de Proposta poderão ser executadas pela ANTAQ, mediante prévio processo legal administrativo, sem prejuízo das demais penalidades previstas no Edital e na legislação aplicável, incluindo, mas não se limitando, às seguintes hipóteses:
+
+4.20.1. Inadimplemento total ou parcial, por parte da Proponente, das obrigações por ela assumida em virtude de sua participação no Leilão;
+
+4.20.2. Apresentação, pela Proponente, de Proposta pelo Arrendamento que não atenda à totalidade das exigências estabelecidas na legislação aplicável e no Edital;
+
+4.20.3. Retirada, pela Proponente, da Proposta pelo Arrendamento dentro do respectivo prazo de validade;
+
+4.20.4. Apresentação, pela Proponente vencedora, dos Documentos de Habilitação em desconformidade com o estabelecido pelo Edital;
+4.20.5. ;
+
+4.20.6. Descumprimento, pela Adjudicatária, das obrigações prévias à celebração do Contrato;
+
+4.20.7. Recusa da Adjudicatária em celebrar o Contrato;
+
+4.20.8. Prática, pela Proponente, de atos visando a frustrar os objetivos do certame; e
+
+4.20.9. Para cobertura de multas, penalidades e indenizações eventualmente devidas pelas Proponentes à ANTAQ ou ao Poder Concedente, em virtude de sua participação no Leilão, sem prejuízo da aplicação de outras penalidades e da responsabilização residual pelo valor que extrapolar a Garantia de Proposta.
+
+
+
+4.21. É vedada qualquer modificação nos termos e condições da Garantia de Proposta após a sua apresentação à CPLA, salvo se aprovado pela CPLA nas hipóteses de perda de valor financeiro, alteração da qualidade ou necessidade de sua substituição.
+
+4.22. A Garantia de Proposta não poderá conter cláusula excludente de quaisquer responsabilidades contraídas pelo tomador relativamente à participação no Leilão, salvo as excludentes expressamente previstas para o seguro-garantia na regulamentação da SUSEP.
+
+Seção II - Volume 2 - Da Proposta pelo Arrendamento
+
+4.23. A Proponente deverá apresentar sua Proposta pelo Arrendamento conforme Apêndice 22 - Modelo de Apresentação de Proposta pelo Arrendamento, observando as regras constantes do Manual de Procedimentos, sem prejuízo das diretrizes estabelecidas na presente seção.
+
+4.24. A Proponente deverá indicar, na sua Proposta pelo Arrendamento, o Valor da Outorga em reais a ser pago à Autoridade Portuária com, no máximo, 2 (duas) casas decimais, sendo vedada a apresentação de montante inferior a R$ 1,00 (um real).
+
+4.24.1. Nos termos do item 1.37 deste Edital, o Valor de Outorga será reajustado pela variação do IPCA, pelo período entre a data-base definida como a Data para Recebimento dos Volumes e o último índice divulgado oficialmente no mês anterior da Sessão Pública do Leilão.
+
+4.25. A Proposta pelo Arrendamento terá a mesma validade da Garantia de Proposta, qual seja, no mínimo 1 (um) ano a contar da Data para Recebimento dos Volumes de que trata o item 5.1, podendo este prazo ser prorrogado, por igual período, mediante solicitação da CPLA, da ANTAQ ou do Poder Concedente.
+
+4.25.1. No caso de renovação, nos termos do item 1.37 deste Edital, o Valor da Outorga constante da Proposta pelo Arrendamento será reajustado pela variação do IPCA, pelo período compreendido entre a Data para Recebimento dos Volumes e o último índice divulgado oficialmente antes da renovação da Proposta pelo Arrendamento.
+ 
+4.26. As Propostas pelo Arrendamento deverão ser incondicionais, irretratáveis e irrevogáveis, e deverão considerar que todos os valores indicados neste Edital estão referenciados a {{ data_base | default('[•] [•] [•]', true) }} com exceção do Valor da Outorga e da Garantia de Proposta. 
+
+
+Seção III - Volume 3 - Da Habilitação
+
+4.27. Os Documentos de Habilitação deverão conter Carta de Apresentação, conforme Apêndice 7 - Modelo de Carta de Apresentação dos Documentos de Habilitação.
+
+4.28. As Proponentes pessoas jurídicas estrangeiras que não funcionem no Brasil deverão apresentar, tanto no caso de participação isolada quanto em Consórcio, os documentos equivalentes àqueles exigidos nesse Edital, conforme instruções constantes nos itens 3.3, 3.4, 3.5, 3.6, 3.7, 3.8 e 3.9.
+
+Subseção I - Da Habilitação Jurídica
+
+4.29. A Proponente deverá apresentar, tanto no caso de participação isolada quanto em Consórcio, quando houver:
+
+4.29.1. Estatuto ou Contrato Social, acompanhado de prova dos administradores em exercício, devidamente registrados na Junta Comercial ou Cartório de Registro competente, sendo dispensado o registro do Consórcio na Junta Comercial;
+
+4.29.2. Certidão expedida pela Junta Comercial ou Cartório de Registro competente, com as informações atualizadas sobre o registro da empresa, admitida a apresentação dessa certidão para fins de prova dos administradores, nos termos do item 4.29.1;
+
+4.29.3. Estrutura societária, indicando as participações diretas e indiretas em seu capital até o seu último nível, bem como a exibição dos acordos de sócios ou acionistas ou a declaração de sua inexistência, ressalvada a possibilidade de requerer, com a devida fundamentação legal, que o acesso a eventual acordo de sócios ou acionistas seja restrito à CPLA.
+
+4.29.3.1. Para fins do atendimento ao disposto no Item 4.29.3, a Proponente deve considerar todo tipo de participação, inclusive minoritária, superior a 5% do capital, votante ou não, inclusive para os fundos de investimentos.
+
+4.29.4. No caso de empresa que participar de forma isolada e opte pela constituição de Sociedade de Propósito Específico ou no caso de Consórcio ou pessoa jurídica estrangeira, comprovante do compromisso público ou particular de constituição de Sociedade de Propósito Específico, na forma do Apêndice 14 - Instruções para formalização do termo de compromisso de constituição de Sociedade de Propósito Específico;
+
+4.29.4.1. Caso a empresa que participe de forma isolada não opte pela constituição de Sociedade de Propósito Específico, deverá apresentar comprovante do compromisso público ou particular de constituição de unidade operacional ou de negócios, quer como filial, sucursal ou assemelhada, procedendo com sistema de escrituração descentralizada, contendo registros contábeis que permitam a identificação das transações de cada uma dessas unidades, na forma e no grau de detalhamento previsto no art. 3º da Resolução nº 49, de 23 de julho de 2021, da ANTAQ, nas Normas Brasileiras de Contabilidade ITG 2000, aprovadas pela Resolução nº 1330/2011 do Conselho Federal de Contabilidade - CFC, em especial em seus itens 20 a 25, ou nas normas contábeis que as sucederem, na forma do Apêndice 21 - Instruções para formalização do termo de compromisso de constituição de constituição de unidade operacional ou de negócios, quer como filial, sucursal ou assemelhada.
+
+4.30. Quando a Proponente for entidade aberta ou fechada de previdência complementar, deverá apresentar, adicionalmente à documentação descrita no item 4.29:
+
+4.30.1. Comprovante de autorização expressa e específica quanto à sua constituição e funcionamento, concedida pelo órgão fiscalizador competente; 
+
+4.30.2. Declaração de que os planos e benefícios por ela operados não estão sob liquidação ou intervenção da Superintendência Nacional de Previdência Complementar vinculada ao Ministério da Fazenda; e
+
+4.30.3. Comprovante do compromisso público ou particular de constituição de Sociedade de Propósito Específico, na forma do Apêndice 14 - Instruções para formalização do termo de compromisso de constituição de Sociedade de Propósito Específico.
+
+4.31. Quando a Proponente for fundo de investimento, deverá apresentar:
+
+4.31.1. Ato constitutivo com última alteração arquivada perante o órgão competente;
+
+4.31.2. Comprovante de registro do fundo de investimento na Comissão de Valores Mobiliários;
+
+4.31.3. Regulamento consolidado do fundo de investimento (com suas posteriores alterações, se houver);
+
+4.31.4. Comprovante de registro do regulamento do fundo de investimento perante o Registro de Títulos e Documentos competente ou na Comissão de Valores Mobiliários, nos termos do Ofício-Circular CVM/SIN 12/19;
+
+4.31.5. Comprovante de registro do administrador e, se houver, do gestor do fundo de investimento perante a Comissão de Valores Mobiliários; 
+
+4.31.6. Comprovação de que o fundo de investimento se encontra devidamente autorizado a participar do certame, através da Ata de Assembleia Geral que autoriza a participação do fundo de investimento no processo licitatório ou outro documento equivalente; 
+
+4.31.7. Ata de Assembleia Geral que nomeou o administrador do fundo de investimento, bem como instrumento de procuração específica de representação do administrador perante o fundo de investimento, inclusive para todos os atos e para todos os efeitos do Leilão, assumindo em nome do fundo de investimento todas as obrigações e direitos que decorram de sua participação no certame;
+
+4.31.8. Certidão negativa de falência da administradora e gestora do fundo, expedida pelo(s) cartório(s) de distribuição da sede da(s) mesma(s), com data de até 60 (sessenta) dias corridos anteriores à Data para Recebimento dos Envelopes; e
+
+4.31.9. Comprovante do compromisso público ou particular de constituição de Sociedade de Propósito Específico, na forma do Apêndice 14 - Instruções para formalização do termo de compromisso de constituição de Sociedade de Propósito Específico.
+
+4.32. No caso dos itens 4.31.2, 4.31.4 e 4.31.5, o fundo de investimentos estrangeiro deverá apresentar documento análogo ao registro na Comissão de Valores Mobiliários, do país de origem, nos termos do art. 70, parágrafo único, da Lei nº 14.133/2021.
+
+4.33. No caso de pessoas jurídicas estrangeiras em funcionamento no Brasil, será exigido, adicionalmente, decreto de autorização e ato de registro ou autorização para funcionamento expedido pelo órgão competente, quando a atividade assim o exigir.
+
+4.34. A pessoa jurídica estrangeira que não funcione no Brasil deverá fornecer a documentação prevista nesta subseção, em conformidade com a legislação de seu país de origem, devendo apresentar, adicionalmente, procuração que comprove a representação legal no Brasil e declaração expressa de que se submete à legislação brasileira e de que renuncia a qualquer reclamação por via diplomática, conforme previsto no Apêndice 10 - Modelo de Declaração Formal de Expressa Submissão à Legislação Brasileira e de Renúncia de Reclamação por Via Diplomática.
+
+4.34.1. Na hipótese mencionada no item 4.34, a Proponente deverá apresentar ainda comprovante do compromisso público ou particular de constituição de Sociedade de Propósito Específico, conforme previsto no Apêndice 14 - Instruções para formalização do termo de compromisso de constituição de Sociedade de Propósito Específico.
+
+
+
+Subseção II - Da Habilitação Econômico-Financeira
+
+4.35. A Proponente e, no caso do Consórcio, cada um de seus membros, deverá apresentar documento demonstrativo do balanço patrimonial, de resultado de exercício e demais demonstrações contábeis dos 2 (dois) últimos exercícios sociais;
+
+4.35.1. Os documentos referidos no item 4.35 limitar-se-ão ao último exercício no caso de a pessoa jurídica ter sido constituída há menos de 2 (dois) anos;
+
+4.35.2. As empresas criadas no exercício financeiro da licitação deverão atender a todas as exigências e ficarão autorizadas a substituir os demonstrativos contábeis pelo balanço de abertura.
+
+4.36. A Proponente deverá apresentar, tanto no caso de participação isolada quanto em Consórcio, quando houver:
+
+4.36.1. Para sociedades empresárias: Certidão Negativa de Pedido de Falência, concordata remanescente, recuperação judicial e extrajudicial, expedida pelo distribuidor judicial da comarca (varas cíveis) da cidade em que a empresa estiver sediada, com data de, no máximo, 90 (noventa) dias anteriores à Data para Recebimento dos Volumes, acompanhada de certidão comprobatória dos cartórios distribuidores da comarca da Proponente. 
+
+4.36.1.1. Havendo ação judicial distribuída em nome da Proponente ou ajuizada contra si tendo por objeto pedido de recuperação judicial, deverá ser juntada certidão narrativa do feito que aponte a situação atualizada do processo, compreendendo o período de 90 (noventa) dias antes da Data para Recebimento dos Volumes, assim como os documentos solicitados no item 3.11.9.1 deste Edital.
+
+4.36.2. Para sociedades simples: certidão expedida pelo distribuidor judicial das varas cíveis em geral (Execução Patrimonial) da comarca em que a Proponente está sediada, com data de, no máximo, 90 (noventa) dias anteriores à Data para Recebimento dos Volumes, acompanhada de certidão comprobatória dos cartórios distribuidores da comarca da Proponente. 
+
+4.36.2.1. Em havendo ação judicial distribuída, deverá ser juntada certidão narrativa do feito que aponte a situação atualizada do processo, compreendendo o período de 90 (noventa) dias anteriores da Data para Recebimento dos Volumes, assim como os documentos solicitados no subitem 3.11.9.1 deste Edital. 
+
+4.37. Na hipótese de a Proponente ser fundo de investimento, deverá apresentar, adicionalmente a comprovação de que dispõe os subitens 4.36.1 e 4.36.2, também em relação à administradora e gestora do fundo, expedida pelos correspondentes distribuidores judiciais e cartórios das comarcas onde sediadas a administradora e gestora do fundo, com data de até 90 (noventa) dias anteriores à Data para Recebimento dos Volumes.
+
+4.38. Em se tratando de entidade aberta ou fechada de previdência complementar, a comprovação do patrimônio, considerando as normas legais vigentes, corresponderá ao somatório das contas do Passivo do Exigível Atuarial e das Reservas e dos Fundos.
+
+4.39. A Proponente e, no caso de Consórcio, cada um de seus membros, proporcionalmente à sua participação no Consórcio, deverá declarar que dispõe de recursos financeiros próprios ou de terceiros, como financiamentos, suficientes para cumprir as obrigações de aporte necessárias à consecução do objeto do Arrendamento, nos termos do Apêndice 11 - Modelo de Declaração de Capacidade Financeira.
+
+Subseção III - Da Habilitação Fiscal, Social e Trabalhista
+
+4.40. A Proponente deverá apresentar os documentos a seguir listados, tanto no caso de participação isolada quanto em Consórcio, quando houver:
+
+4.40.1. Prova de inscrição no Cadastro Nacional das Pessoas Jurídicas do Ministério da Fazenda - CNPJ.
+
+4.40.1.1. No caso de fundo de investimentos, deverá também ser apresentada prova de inscrição no CNPJ do administrador;
+
+4.40.2. Certificado de Regularidade perante o Fundo de Garantia por Tempo de Serviço - FGTS, que esteja dentro do prazo de validade nele atestado;
+
+4.40.3. Prova de regularidade fiscal perante a Fazenda Nacional, mediante a apresentação de certidão expedida conjuntamente pela Secretaria da Receita Federal do Brasil (RFB) e pela Procuradoria-Geral da Fazenda Nacional (PGFN), referente a todos os créditos tributários federais e à Dívida Ativa da União (DAU) por elas administrados, inclusive os créditos tributários relativos às contribuições sociais previstas nas alíneas "a" a "d" do parágrafo único do art. 11 da Lei nº 8.212, de 24 de julho de 1991, às contribuições instituídas a título de substituição, e às contribuições devidas, por lei, a terceiros, inclusive inscritas em DAU;
+
+4.40.4. Prova de regularidade fiscal perante as Fazendas Estadual e Municipal, referentes ao respectivo domicílio da sede da Proponente e com prazo de, no máximo, 90 (noventa) dias anteriores à Data para Recebimento dos Volumes, prevalecendo o prazo de validade nelas atestados. 
+
+4.40.4.1. Caso a Proponente não possua inscrição estadual e/ou municipal, deverá apresentar certidão que comprove a situação de não inscrita;
+
+4.40.5. Certidão Negativa de Débitos Trabalhistas, conforme disposto na Lei nº 12.440, de 7 de julho de 2011;
+
+4.40.6. Prova da inexistência de débitos junto à ANTAQ, através da emissão de certidão negativa de dívida ativa ou de certidão positiva com efeito negativo, emitidas pela unidade interna competente.
+
+4.40.6.1. A certidão descrita no item 4.40.6 deverá ser solicitada à [superintendência responsável] junto à ANTAQ, por meio de [forma de solicitação], encaminhando o Contrato Social da Empresa e a última alteração, se for o caso, bem como os documentos do seu representante legal. 
+
+4.40.6.2. Caso o pedido seja feito por Procurador, deve ser encaminhado também o respectivo Mandato com poderes específicos para representação junto à ANTAQ. 
+
+4.40.6.3. Em caso de empresa internacional, há a necessidade de envio da referida documentação traduzida e juramentada;
+
+4.40.7. Declaração de que não emprega, a qualquer título, menores de dezoito anos em trabalho noturno, perigoso ou insalubre e menores de dezesseis em qualquer trabalho, salvo na condição de aprendiz, a partir de quatorze anos, nos termos do Apêndice 12 - Modelo de Declaração de Regularidade ao Artigo 7º, XXXIII, da Constituição Federal; e
+
+4.40.8. Declaração de cumprimento das exigências de reserva de cargos para pessoa com deficiência, para reabilitado da Previdência Social e para aprendiz, previstas em lei e em outras normas específicas, nos termos Apêndice 13 - Modelo de Declaração de Reserva de Cargos para Pessoa com Deficiência ou para Reabilitado da Previdência Social..
+
+4.41. Para o caso de fundos de investimentos, a documentação exigida nos itens 4.40.2 a 4.40.6 deverá ser apresentado em nome do administrador.
+
+4.42. Caso alguma certidão apresentada em conformidade com os itens desta Subseção seja positiva, ou nela não esteja consignada a situação atualizada do(s) débito(s), deverá ser apresentada prova de quitação e/ou certidões que apontem a situação atualizada das ações judiciais e/ou dos procedimentos administrativos arrolados, datada de, no máximo, 90 (noventa) dias anteriores à Data para Recebimento dos Envelopes.
+
+4.43. Não serão aceitos comprovantes de solicitação de certidões.
+
+Subseção IV - Da Habilitação Técnica
+
+4.44. A Proponente deverá apresentar os documentos a seguir listados, tanto no caso de participação isolada quanto em Consórcio, quando houver:
+
+4.44.1. Atestado de Visita Técnica ou Declaração de Pleno Conhecimento, constante no item 1.18, nos termos dos modelos constantes do Apêndice 15 - Modelo de Atestado de Visita Técnica/ Apêndice 16 - Modelo de Declaração de Pleno Conhecimento;
+
+4.45. Compromisso de, sob as penas da lei, obter, nas hipóteses não dispensadas pela legislação, a pré-qualificação como operadora portuária junto à Autoridade Portuária, ou contratar Operador Portuário pré-qualificado, caso venha a se sagrar vencedora do certame, nos termos dos modelos constantes do Apêndice 19 - Modelo de Compromisso de Pré-qualificação como Operador Portuário ou de Contratação de Operador Portuário Pré-Qualificado.
+
+4.46. 
+
+CAPÍTULO 5 - DAS ETAPAS DO LEILÃO
+
+Seção I - Da Apresentação dos Documentos
+
+5.1. Todas as Proponentes deverão apresentar, em data, hora e local conforme indicado no cronograma do item 6.1.1 deste Edital:
+
+5.1.1. Invólucro único, contendo 1 (uma) via física relativa ao Volume 1 - declarações preliminares, documentos de representação, Garantia de Proposta, lacrado e identificado em sua capa da seguinte forma:  
+LEILÃO Nº {{ leilao | default('[•] [•] [•]', true) }}- Arrendamento DE ÁREA E INFRAESTRUTURA PÚBLICAS LOCALIZADAS DENTRO DE PORTO ORGANIZADO
+
+Arrendamento [•]
+
+DENOMINAÇÃO SOCIAL DA PROPONENTE OU DO Consórcio
+PARTICIPANTE CREDENCIADA
+NOME, TELEFONE E E-MAIL DOS REPRESENTANTES
+VOLUME 1 - DECLARAÇÕES PRELIMINARES, DOCUMENTOS DE REPRESENTAÇÃO E GARANTIA DE PROPOSTA
+
+5.1.2. Invólucro único, contendo 1 (uma) via física relativa ao Volume 2 - Proposta pelo Arrendamento, conforme modelo previsto no Apêndice 22 - Modelo de Apresentação de Proposta pelo Arrendamento, lacrado e identificado em sua capa da seguinte forma: 
+LEILÃO Nº {{ leilao | default('[•] [•] [•]', true) }} - Arrendamento DE ÁREA E INFRAESTRUTURA PÚBLICAS LOCALIZADAS DENTRO DE PORTO ORGANIZADO
+
+Arrendamento [•]
+
+DENOMINAÇÃO SOCIAL DA PROPONENTE OU DO Consórcio
+PARTICIPANTE CREDENCIADA
+NOME, TELEFONE E E-MAIL DOS REPRESENTANTES
+VOLUME 2 - PROPOSTA PELO ARRENDAMENTO
+
+5.1.2.1. A Proposta pelo Arrendamento deve estar devidamente assinada.
+
+5.2. A Proponente vencedora deverá entregar, na data estabelecida no cronograma do item 6.1.1, invólucro único, contendo 1 (uma) via física do Volume 3 - Documentos de Habilitação, lacrado e identificado em sua capa da seguinte forma:
+LEILÃO Nº {{ leilao | default('[•] [•] [•]', true) }} - Arrendamento DE ÁREA E INFRAESTRUTURA PÚBLICAS LOCALIZADAS DENTRO DE PORTO ORGANIZADO
+
+Arrendamento [•]
+
+DENOMINAÇÃO SOCIAL DA PROPONENTE OU DO Consórcio
+PARTICIPANTE CREDENCIADA
+NOME, TELEFONE E E-MAIL DOS REPRESENTANTES
+VOLUME 3 - DOCUMENTOS DE HABILITAÇÃO
+
+5.3. Após a entrega dos documentos para habilitação, não será permitida a substituição ou a apresentação de novos documentos, salvo em sede de diligência, para complementação de informações acerca dos documentos já apresentados pelas Proponentes e desde que necessária para apurar fatos existentes à época da abertura do certame, ou para atualização de documentos cuja validade tenha expirado após a data de recebimento das Propostas pelo Arrendamento.
+
+
+
+
+
+5.4. Os volumes deverão ser encadernados separadamente, com todas as páginas numeradas sequencialmente, inclusive as páginas de separação, catálogos, desenhos ou similares, se houver, independentemente de ser mais de um caderno, da primeira à última página, de forma que a numeração da última página do último caderno reflita a quantidade de páginas de cada volume, não sendo permitidas emendas, rasuras, entrelinhas ou ressalvas, sendo que cada volume deve ter um termo de encerramento numerado indicando o número de páginas.
+
+
+
+5.5. Um dos Representantes Credenciados deverá inserir sua rubrica sobre o lacre de cada um dos volumes especificados nos itens 5.1 e 5.2, indicando ao lado da rubrica, de próprio punho, a data e a hora do momento do lacre.
+
+5.6. Na Data para Recebimento dos Volumes, a Proponente apresentará declaração, dentro do Volume 1 e conforme Apêndice 20 - Modelo de Declaração de Atendimento às Prerrogativas Legais de Preferência estabelecidas no art. 60, §1º da Lei nº 14.133, de 1º de abril de 2021, na qual destacará em quais prerrogativas referentes aos critérios de preferência estabelecidos nos art. 60, §1º da Lei nº 14.133, de 2021, se enquadra e, caso se sagre vencedora a partir da aplicação das referidas prerrogativas, deverá comprovar seu atendimento mediante entrega de documentos em via única para análise da CPLA, em prazo a ser por ela estabelecido.
+
+5.6.1. Em caso de participação de Proponentes em Consórcio, serão considerados os critérios de desempate declarados pela Empresa Líder do Consórcio, os quais aproveitarão a todo o Consórcio para efeito do exercício das prerrogativas de desempate de que trata o item 5.6.
+
+5.7. Será admitida a utilização de assinaturas eletrônicas, no grau de assinatura avançada ou superior, nos termos do art. 5º, II do Decreto nº 10.543, de 13 de novembro de 2020.
+
+5.7.1. No caso da utilização de assinaturas eletrônicas, fica dispensado o reconhecimento de firma.
+
+5.8. A documentação poderá ser apresentada em original ou por cópia simples.
+
+Seção II - Da Análise das Declarações Preliminares, Documentos de Representação e Garantia de Proposta
+
+5.9. A participação de Proponente na Sessão Pública do Leilão estará condicionada à apresentação prévia, em conformidade com os requisitos constantes do Edital, dos seguintes documentos:
+
+5.9.1. Declarações preliminares, referidas Capítulo 4, Seção I, Subseção I do Edital;
+
+5.9.2. Documentos de representação, referidos no Capítulo 4, Seção I, Subseção II e III do Edital; e
+
+5.9.3. Garantia de Proposta, referidos no Capítulo 4, Seção I, Subseção IV do Edital.
+
+
+
+5.10. A CPLA analisará a regularidade das declarações preliminares, dos documentos de representação e das garantias apresentadas, com o auxílio da B3.
+
+Seção III - Da Sessão Pública do Leilão
+
+5.11. A licitação do Arrendamento regida por este Edital ocorrerá em Sessão Pública de Leilão presencial, que compreenderá a abertura das Propostas pelo Arrendamento, a classificação das Proponentes e, se for o caso, o Leilão em viva-voz, observadas as regras do Manual de Procedimentos.
+
+
+5.12. O critério de julgamento do Leilão é o de maior Valor da Outorga a ser pago à Autoridade Portuária pela cessão onerosa da área do Arrendamento, devendo o montante ser apresentado em reais, com no máximo 2 (duas) casas decimais.
+
+5.13. Abertas as Propostas pelo Arrendamento, essas serão ordenadas por meio do critério de maior Valor da Outorga.
+
+5.14. As Proponentes classificadas serão aquelas cuja Proposta pelo Arrendamento atenda à totalidade das exigências estabelecidas na legislação aplicável e ainda esteja submetida às condições e termos previstos neste Edital.
+
+5.15. No caso de o Arrendamento receber Proposta pelo Arrendamento de apenas uma Proponente classificada, essa será considerada vencedora do Arrendamento.
+
+5.16. Caso o Arrendamento receba 2 (duas) ou mais Propostas pelo Arrendamento, será realizado o Leilão em viva-voz.
+
+5.17. Participarão do Leilão em viva-voz as Proponentes classificadas cuja oferta atenda a pelo menos uma das seguintes condições:
+
+5.17.1. Esteja entre as 03 (três) maiores ofertas pelo Arrendamento; ou
+
+5.17.2. O valor da oferta seja igual ou superior a 90% (noventa por cento) do Valor da Outorga, ofertado pela Proponente cuja Proposta pelo Arrendamento corresponda à maior oferta pelo Arrendamento.
+
+5.18. As Proponentes apenas poderão apresentar lances na etapa viva-voz caso suas ofertas satisfaçam os termos do item 5.17.
+
+5.19. Cada lance deverá superar o montante da oferta da própria Proponentepara o Arrendamento, considerando que o lance:
+
+5.19.1. Deverá respeitar o intervalo mínimo entre lances, que será determinado pelo Diretor da Sessão Pública do Leilão e que deverá tomar como referência a última Proposta pelo Arrendamento ofertada pela Proponente;
+
+5.19.2. Deverá respeitar o tempo máximo entre lances fixado pelo Diretor da Sessão Pública do Leilão;
+
+5.19.3. Deverá alterar a classificação da Proponente; e
+
+5.19.4. Não poderá ter valor idêntico ao lance de outra Proponente.
+
+5.20. O Diretor da Sessão Pública do Leilão declarará o encerramento do Leilão quando, terminado o prazo dado para a oferta de novos lances, nenhuma Proponente se manifestar com novo lance segundo as condições estabelecidas no item 5.19.
+
+5.21. Imediatamente após o encerramento do Leilão, havendo oferta de lances à viva-voz, todas as Proponentes deverão ratificar as suas Propostas pelo Arrendamento finais mediante a assinatura de carta a ser emitida pela CPLA, conforme modelo constante no Apêndice 23 - Modelo de Ratificação da Proposta pelo Arrendamento, contendo a sua oferta final.
+
+5.22. Em caso de empate entre Propostas pelo Arrendamento, não sendo resolvido mediante apregoação à viva-voz nos termos dos itens 5.16 e 5.17, e respectivos subitens, o desempate ocorrerá mediante a reapresentação de Propostas pelo Arrendamento escritas, sagrando-se vencedora a Proponente que apresentar a maior Proposta pelo Arrendamento escrita.
+
+5.22.1. As Propostas pelo Arrendamento escritas a serem reapresentadas deverão observar, no que couber, as disposições do item 5.19.
+
+5.22.2. Em não sendo resolvido o desempate na forma do item 5.22, aplicar-se-ão os critérios legais de preferência, na forma do art. 60, §1º da Lei nº 14.133, de 2021, e não sendo resolvido dessa forma, por sorteio, a ser realizado na mesma Sessão Pública do Leilão, conforme item 5.6 e nos termos do Manual de Procedimentos.
+
+
+Seção IV - Da Análise dos Documentos de Habilitação
+
+5.23. A análise dos Documentos de Habilitação será realizada em ambiente reservado.
+
+5.24. Será desclassificada do certame a Proponente que apresentar os Documentos de Habilitação em desconformidade com o exigido neste Edital, excetuado os casos descritos no item 5.25 e seus subitens. 
+
+5.25. Eventuais falhas na entrega ou defeitos formais nos documentos poderão ser sanadas, nos termos do item 2.3 deste Edital, conforme procedimento e prazo a ser definido pela CPLA. 
+
+5.25.1. Considera-se falha ou defeito formal aquele que não desnature o objeto substancial do documento apresentado, e que não impeça a aferição, com a devida segurança, da informação constante da documentação.
+
+5.26. Caso ocorra a inabilitação da Proponente declarada vencedora do certame, a CPLA convocará as demais Proponentes, por ordem de classificação, para que apresentem seus Documentos de Habilitação (Volume 3) no prazo de até 3 (três) dias úteis a partir do ato de convocação, até que uma seja declarada habilitada. 
+
+5.26.1. Será considerada para fins de celebração do Contrato a Proposta pelo Arrendamento da Proponente que tenha sido habilitada.
+
+
+5.27. A inabilitação da Proponente que tenha sido considerada a vencedora do certame, garantida a ampla defesa e o contraditório, ensejará a fixação de multa, equivalente ao valor da Garantia de Proposta, a qual será integralmente executada para quitação do débito.
+
+5.28. A Proponente obriga-se a comunicar à CPLA, imediatamente após sua ocorrência, qualquer fato ou circunstância superveniente que altere ou comprometa suas condições de habilitação.
+
+Seção V - Dos Recursos Administrativos
+
+5.29. Após o término da fase de habilitação, haverá a fase recursal única, em que as Proponentes que participarem do Leilão poderão recorrer de todas as decisões da CPLA.
+
+5.29.1. A intenção de recorrer de decisões da CPLA relativas a julgamento de Propostas pelo Arrendamento e a habilitação ou inabilitação de Proponente deverá ser manifestada imediatamente, sob pena de preclusão.
+
+5.29.2. Caso nenhuma Proponentes manifeste a intenção de recorrer, o processo licitatório será submetido à homologação imediatamente após a publicação da ata de julgamento da licitação. 
+
+5.30. Os recursos deverão ser apresentados por meio eletrônico, no sítio eletrônico da ANTAQ em área própria para o Leilão, no prazo de 3 (três) dias úteis, contados da publicação da decisão que julgar a habilitação devendo ser dirigidos à Diretoria da ANTAQ, por meio da CPLA.
+
+5.30.1. A interposição dos recursos deverá observar o horário limite de 18h do último dia do prazo. 
+
+5.30.2. O prazo para apresentar contrarrazões será de 3 (três) dias úteis, tendo início a partir do encerramento do prazo recursal, respeitado o horário limite de 18h do último dia do prazo.
+
+5.30.3. A CPLA poderá, de ofício ou mediante provocação, reconsiderar sua decisão no prazo de até 3 (três) dias úteis após decurso do prazo das contrarrazões, ou nesse mesmo prazo, encaminhar o recurso à Diretoria da ANTAQ devidamente instruído.
+
+5.30.4. A Diretoria da ANTAQ deverá proferir sua decisão no prazo de 10 (dez) dias úteis, contado da data de seu recebimento.
+
+5.30.5. Eventuais interposições de Recursos Administrativos serão comunicadas no sítio eletrônico do Poder Concedente e da ANTAQ até o 3º dia útil do prazo recursal constante no item 5.30, com a publicação do inteiro teor dos Recursos Administrativos.
+
+5.31. Os recursos somente serão admitidos quando subscritos por representante(s) legal(is), Representantes Credenciados ou por procurador com poderes específicos, munido(s) do(s) instrumento(s) que demonstre(m) poderes para tanto, e serão assim identificados:
+
+RECURSO ADMINISTRATIVO
+LEILÃO Nº {{ leilao | default('[•] [•] [•]', true) }} - Arrendamento DE ÁREA E INFRAESTRUTURA LOCALIZADAS DENTRO DE PORTO ORGANIZADO
+Att. Sr. Presidente da CPLA
+
+5.32. O resultado do julgamento de recursos eventualmente interpostos será publicado no Diário Oficial da União, bem como no sítio eletrônico do Poder Concedente e da ANTAQ.
+
+Seção VI - Da Adjudicação do Objeto e da Homologação do Leilão
+
+5.33. Constatado o atendimento, pela Proponente declarada vencedora, das condições de habilitação e classificação, a ANTAQ encaminhará todo o processo licitatório ao Poder Concedente, que poderá: 
+
+5.33.1. Determinar o retorno dos autos para saneamento de irregularidades que forem supríveis; 
+
+5.33.2. Anular o procedimento, no todo ou em parte, por vício insanável; 
+
+5.33.3. Revogar o procedimento por motivo de conveniência e oportunidade; ou 
+
+5.33.4. Adjudicar o objeto e homologar o resultado do certame.
+
+Seção VII - Das Obrigações Prévias à Celebração do Contrato
+
+5.34. As obrigações previstas na presente seção, mais precisamente no Item 5.35, devem ser cumpridas pela Adjudicatária em até 45 (quarenta e cinco) dias a contar da publicação do ato de homologação e adjudicação, prorrogáveis, justificadamente, a critério do Poder Concedente.
+
+5.35. Caberá à Adjudicatária apresentar ao Poder Concedente os seguintes documentos:
+
+5.35.1. Comprovante de recolhimento da remuneração à B3 no valor de {{ remuneracao_b3 | default('[•] [•] [•]', true) }} ({{ remuneracao_b3_extenso | default('[•] [•] [•]', true) }}, referenciado a valores atuais, não sendo aplicável correção monetária, cujo pagamento deverá ser efetuado no prazo previsto no Manual de Procedimentos;
+
+5.35.2. Comprovante de pagamento à Autoridade Portuária do montante correspondente aos 25% (vinte e cinco por cento) do Valor da Outorga proposto pela Proponente Vencedora, sendo o restante do Valor da Outorga pago em cinco parcelas anuais, nas condições previstas na Minuta do Contrato de Arrendamento;
+
+5.35.3. Comprovante de pagamento às empresas encarregadas da realização dos estudos que deram origem a este Edital, conforme autorizado pelo art. 21, da Lei nº 8.987, de 1995, de acordo com orientação a ser emitida pela ANTAQ, no valor total de {{ remuneracao_estruturadora | default('[•] [•] [•]', true) }} {{ remuneracao_estruturadora_extenso | default('[•] [•] [•]', true) }}) à Infra S.A, e de {{ remuneracao_ap | default('[•] [•] [•]', true) }} ({{ remuneracao_ap_extenso | default('[•] [•] [•]', true) }} à Autoridade Portuária.
+
+5.35.4. Quando for o caso, ata da assembleia geral de constituição da Arrendatária como uma Sociedade de Propósito Específico (SPE) e o respectivo estatuto social, com a correspondente certidão da Junta Comercial e inscrição no CNPJ (Cadastro Nacional de Pessoas Jurídicas), em que conste:
+
+5.35.4.1. a indicação de sua composição societária, até o nível das pessoas físicas, com a descrição dos tipos de ações e da participação dos acionistas por tipo de ação. 
+
+5.35.4.1.1. Em caso de a Controladora da SPE ser fundo de participação em investimentos, o atendimento ao item deverá considerar a existência de cotistas majoritários, ou de órgão e respectivos membros, com poder de influência para alterar o estatuto do fundo, detentores dos poderes análogos àqueles referidos na Lei nº 6.404, de 1976, para fins de identificação do controlador;
+
+5.35.4.2. seus órgãos de administração; 
+
+5.35.4.3. compromisso com princípios de governança corporativa na gestão da SPE, conforme regulamentação específica; e
+
+5.35.4.4. que a sua finalidade exclusiva será explorar o objeto do Arrendamento.
+
+5.35.5. Comprovação da subscrição de capital social inicial mínimo no valor R$ {{ valor_capital_social | default('[•] [•] [•]', true) }} ({{ valor_capital_social_extenso | default('[•] [•] [•]', true) }}, bem como da integralização de, pelo menos, 50% (cinquenta por cento) desse capital social em moeda corrente nacional.
+
+5.35.6. {{ data_base | default('[•] [•] [•]', true) }}O Plano Básico de Implantação (PBI) dos investimentos exigidos na Minuta do Contrato de Arrendamento; e
+
+5.35.7. Certidão hábil a comprovar a adimplência perante a Autoridade Portuária e à ANTAQ, referente a si própria e às pessoas jurídicas que, direta ou indiretamente, sejam Controladoras, Controladas, Coligadas ou possuam controlador comum com a Adjudicatária.
+
+5.35.8. Nas hipóteses não dispensadas pela legislação, comprovar que se pré-qualificou como operadora portuária junto à Autoridade Portuária ou de que contratou Operador Portuário pré-qualificado pela Autoridade Portuária, no mesmo prazo previsto no Item 5.34 deste Edital.
+
+
+Seção VIII - Da Celebração do Contrato de Arrendamento
+
+5.36. O Arrendamento corresponderá a um Contrato, conforme Minuta do Contrato de Arrendamento.
+
+5.37. Cumpridas as exigências dos itens anteriores, a Adjudicatária será convocada, no prazo de até 150 (cento e cinquenta) dias contados a partir do cumprimento integral das obrigações prévias à celebração do Contrato, exceto no caso previsto no item 1.1, para assinar, com o Poder Concedente, o Contrato referente ao respectivo Arrendamento.
+
+5.37.1. Na hipótese de o Poder Concedente, injustificadamente, não convocar a Adjudicatária para a assinatura do Contrato de Arrendamento dentro do prazo previsto no item 5.37, a Adjudicatária estará desobrigada de celebrar o Contrato de Arrendamento, caso convocada em momento posterior, bem como de cumprir as demais obrigações decorrentes de sua participação no Leilão.
+
+
+5.38. A recusa da Adjudicatária em assinar o Contrato, em até 5 (cinco) dias úteis, contados da respectiva convocação, sem justificativa aceita pelo Poder Concedente, observados os termos do item 7.4, ocasionará:
+
+5.38.1. a aplicação de multa, correspondente ao valor integral da Garantia de Proposta, a título de ressarcimento pelos prejuízos causados, e a imediata execução da Garantia de Proposta pela ANTAQ ou pelo Poder Concedente;
+
+5.38.2. o impedimento de a Adjudicatária individual, ou, no caso de Consórcio, de todos os seus membros, participar de novas licitações e de contratar com o Poder Concedente pelo prazo de 24 (vinte e quatro) meses; 
+
+5.38.3. a convocação, a critério do Poder Concedente, das Proponentes remanescentes, na ordem de classificação, para fazê-lo nos prazos e nas condições ofertados pela Adjudicatária;
+
+5.38.4. na hipótese de nenhuma das Proponentes aceitar a contratação nos termos do subitem 5.38.3, o Poder Concedente poderá convocar as Proponentes remanescentes, na ordem de classificação, para a celebração do Contrato nas condições ofertada por esses, desde que observado o valor mínimo estabelecido neste Edital.
+
+5.39. Caso haja impossibilidade no cumprimento dos requisitos necessários para a assinatura do Contrato, por fatos imputáveis ao Poder Concedente, a Adjudicatária não será penalizada.
+
+Seção IX - Das Disposições Gerais do Contrato de Arrendamento
+
+5.40. O exercício social da Arrendatária e o exercício financeiro do Contrato coincidirão com o ano civil.
+
+5.41. Os bens reversíveis vinculados ao Arrendamento são todos aqueles indicados na Minuta do Contrato de Arrendamento. 
+
+5.42. A lei aplicável ao Contrato será a brasileira, com os seus princípios informadores, não sendo admitida qualquer menção a direito estrangeiro ou internacional, nem mesmo como meio de interpretação.
+
+5.42.1. Durante toda a execução do Contrato, é vedada a subcontratação de pessoa física ou jurídica, se essa ou os dirigentes dessa mantiverem vínculo de natureza técnica, comercial, econômica, financeira, trabalhista ou civil com dirigente do Poder Concedente ou da ANTAQ ou com agente público que desempenhe função na licitação ou atue na fiscalização ou na gestão do Contrato, ou se deles forem cônjuge, companheiro ou parente em linha reta, colateral, ou por afinidade, até o terceiro grau.
+
+CAPÍTULO 6 - DO CRONOGRAMA DOS EVENTOS
+
+6.1. O desenvolvimento das etapas do Leilão observará a ordem de eventos e cronograma indicados na tabela descrita neste Capítulo.
+
+6.1.1. Eventuais modificações de datas serão divulgadas no sítio eletrônico do Poder Concedente e da ANTAQ.
+
+Eventos
+Descrição dos Eventos
+Data
+1
+Publicação do Edital
+{{ data_publicacao_edital | default('[•] [•] [•]', true) }}
+2
+Período para solicitação de esclarecimentos ao Edital
+De {{ inicio_esclarecimentos | default('[•] [•] [•]', true) }} a {{ fim_esclarecimentos | default('[•] [•] [•]', true) }}
+3
+Período para pedido de impugnação por irregularidade na aplicação da Lei nº 14.133/2021
+De {{ inicio_impugnacao | default('[•] [•] [•]', true) }} a {{ fim_impugnacao | default('[•] [•] [•]', true) }}
+4
+Resposta à impugnação ou à solicitação de esclarecimentos ao Edital
+Até 3 (três) dias úteis contados da data de recebimento do pedido/solicitação
+5
+Divulgação da ata consolidada com todos os esclarecimentos ao Edital e resultado do julgamento das impugnações ao Edital
+{{ data_divulgacao_ata_impugnacao | default('[•] [•] [•]', true) }}
+6
+Recebimento, pela CPLA e pela B3, de todas as vias dos Volumes relativos: (i) às Declarações Preliminares, Documentos de Representação e Garantia de Proposta (Volume 1); e (ii) Proposta pelo Arrendamento (Volume 2).
+{{ data_secao_recebimento_volume | default('[•] [•] [•]', true) }} das 09h às 11h e 59 minutos na B3, situada na Rua XV de Novembro, nº 275, Centro, São Paulo - SP.
+7
+Divulgação da decisão motivada da CPLA sobre eventual não aceitação dos documentos contidos no Volume 1 - Declarações Preliminares, Documentos de Representação e Garantia de Proposta.
+{{ prazo_divulgacao_decisao_cpla | default('[•] [•] [•]', true) }}
+8
+Sessão Pública do Leilão, a ser realizada na B3, com Abertura e classificação das propostas pelo Arrendamento - Volume 2, bem como a etapa de viva-voz, se aplicável.
+{{ data_secao_publica | default('[•] [•] [•]', true) }} às 14h na B3, situada na Rua XV de Novembro, nº 275, Centro, São Paulo - SP.
+9
+Divulgação, no sítio eletrônico do Poder Concedente e da ANTAQ, da ordem de classificação das Propostas pelo Arrendamento.
+{{ data_divulgacao_resultado_final_leilao | default('[•] [•] [•]', true) }}
+10
+Recebimento, pela CPLA e pela B3, dos Documentos de Habilitação da Proponente Vencedora (Volume 3).
+{{ data_secao_recebimento_volume | default('[•] [•] [•]', true) }} das 10h às 13h na B3 S.A. - BRASIL, BOLSA, BALCÃO
+11
+Publicação da ata de julgamento relativa à análise dos Documentos de Habilitação da Proponente vencedora.
+{{ publicacao_ata_julgamento | default('[•] [•] [•]', true) }}
+12
+Abertura de prazo para interposição de recursos
+{{ prazo_interposicao_recursos | default('[•] [•] [•]', true) }}
+13
+Divulgação do resultado dos recursos interpostos
+{{ resultado_interposicao_recursos | default('[•] [•] [•]', true) }}
+14
+Adjudicação do objeto e Homologação do resultado pelo Poder Concedente.
+A critério do Poder Concedente
+15
+Prazo final para comprovação de atendimento, pela Proponente vencedora, das obrigações previstas na Seção VII do Capítulo 5 deste Edital.
+Em até 45 dias a contar da publicação do ato de adjudicação e homologação, prorrogáveis, justificadamente, a critério do Poder Concedente 
+16
+Convocação da Adjudicatária para celebração do Contrato de Arrendamento.
+A critério do Poder Concedente
+
+
+
+ 
+6.2. O Poder Concedente e a ANTAQ poderão, a qualquer tempo, adiar quaisquer das etapas do Leilão, nos termos da legislação aplicável, sem que caiba às Proponentes direito a indenização ou reembolso de custos e despesas a qualquer título.
+
+CAPÍTULO 7 - DAS SANÇÕES
+
+7.1. Sem prejuízo da execução da Garantia de Proposta, o descumprimento de qualquer condição estabelecida neste Edital, especialmente a prática dos atos listados nos incisos I a XII do art. 155 da Lei nº 14.133/2021, possibilitará ao Poder Concedente e à ANTAQ aplicar às Proponentes e à Adjudicatária as seguintes sanções:
+
+7.1.1. Advertência;
+
+7.1.2. Multa; e
+
+7.1.3. Suspensão temporária do direito de contratar e/ou de participar de licitações, bem como impedimento de contratar com o Poder Concedente e/ou a ANTAQ por prazo máximo de 3 (três) anos.
+
+7.2. Sem prejuízo das sanções previstas no item 7.1, ficam a Proponentes e a Adjudicatária sujeitas à declaração de inidoneidade, pela autoridade competente, para licitar ou contratar com a Administração Pública pelo prazo mínimo de 3 (três) anos e máximo de 6 (seis) anos.
+
+7.3. A pena de multa pode ser aplicada cumulativamente com as demais sanções.
+
+7.4. A aplicação das sanções previstas nos itens 7.1 e 7.2 não exclui, em hipótese alguma, a obrigação de reparação integral do dano causado à Administração Pública, bem como o pagamento de valor remanescente, em caso de a soma do valor das multas aplicadas for superior ao valor da garantia aportada.
+
+7.5. O procedimento de aplicação das sanções observará o disposto na Lei nº 9.784, de 29 de janeiro de 1999 e no art. 166 da Lei nº 14.133, de 2021.
+
+7.6. O somatório das sanções de multa ou a sanção de multa isolada por infrações cometidas no decorrer do procedimento licitatório não poderá ser inferior a 0,5% (cinco décimos por cento) nem superior a 30% (trinta por cento) do valor global estimado do Contrato.
+
+7.7. O descumprimento de qualquer condição antecedente e necessária ao Arrendamento, em especial a de aporte de Garantia de Proposta no prazo estabelecido, configurará recusa da Proponente ou Adjudicatária em celebrar o Contrato, sujeitando-a às sanções tipificadas neste capítulo, sem prejuízo das demais sanções previstas em lei, sempre mediante processo administrativo instaurado especialmente para esse fim, assegurado o contraditório e ampla defesa.
+
+7.8. Caberá recurso da aplicação das sanções previstas no item 7.1 no prazo de 15 (quinze) dias úteis, contado da data da intimação.
+
+7.8.1. O recurso de que trata este item será dirigido à Diretoria Colegiada da ANTAQ, a qual deverá proferir sua decisão no prazo máximo de 20 (vinte) dias úteis, contado do recebimento do recurso.
+
+7.9. Da sanção de declaração de inidoneidade para licitar ou contratar, caberá apenas pedido de reconsideração, que deverá ser apresentado no prazo de 15 (quinze) dias úteis, contado da data da intimação, e decidido no prazo máximo de 20 (vinte) dias úteis, contado do seu recebimento.
+
+7.10. O recurso e o pedido de reconsideração terão efeito suspensivo do ato ou da decisão recorrida até que sobrevenha decisão final da autoridade competente.
+
+CAPÍTULO 8 - DAS DISPOSIÇÕES FINAIS
+
+8.1. Na hipótese de a ANTAQ e/ou o Poder Concedente tomarem conhecimento, a qualquer momento, de que qualquer documentação apresentada por uma Proponente é falsa ou inválida à época da apresentação, essa será desclassificada sem que lhe caiba direito a indenização ou reembolso de despesas a qualquer título, sem prejuízo de eventual indenização devida ao Poder Concedente, da execução da Garantia de Proposta, conforme o momento da identificação da ilegalidade, bem assim sem prejuízo das demais sanções administrativas e/ou criminais, conforme o caso. 
+
+8.2. Sem prejuízo do disposto no item 8.1, o Leilão somente poderá ser revogado, pelo Poder Concedente, por razões de interesse público decorrentes de fato superveniente devidamente comprovado, pertinente e suficiente para justificar tal revogação.
+
+8.3. O Poder Concedente, de ofício ou por provocação de terceiros, deverá anular o Leilão se verificada qualquer ilegalidade que não possa ser sanada.
+
+8.4. A nulidade do Leilão implica a nulidade do Contrato, não gerando obrigação de indenizar por parte do Poder Concedente, salvo na situação prevista no art. 149 da Lei nº 14.133, de 2021.
+
+8.5. O foro competente para a resolução de quaisquer litígios relativos a esta licitação será o da Seção Judiciária do Distrito Federal.
+
+Brasília-DF, {{ data_publicacao_edital_extenso | default('[•] [•] [•]', true) }}.
+
+[TITULAR NA CPLA]
+PRESIDENTE DA COMISSÃO PERMANENTE DE LICITAÇÃO DE CONCESSÕES E ARRENDAMENTOS PORTUÁRIOS DA ANTAQ
+CAPÍTULO 9 - 
+DOS APÊNDICES
+
+9.1. Os modelos constantes neste Apêndice deverão compor, quando aplicável, os seguintes volumes de documentos:
+MODELO
+VOLUME
+Apêndice 1 - Modelo de Procuração
+Volume 1
+Apêndice 2 - Modelo de Procuração (Proponentes em Consórcio)
+Volume 1
+Apêndice 3 - Modelo de Carta de Apresentação de Garantia de Proposta
+Volume 1
+Apêndice 4 - Termos e Condições Mínimas do Seguro-Garantia
+Volume 1
+Apêndice 5 - Modelo de Fiança Bancária
+Volume 1
+Apêndice 6 - Modelo de Declaração de Elaboração Independente de Proposta
+Volume 1
+Apêndice 7 - Modelo de Carta de Apresentação dos Documentos de Habilitação
+Volume 3
+Apêndice 8 - Modelo de Declaração de Ciência dos Termos do Edital e Ausência de Impedimento de Participação no Leilão
+Volume 1
+Apêndice 9 - Modelo de Carta de Declaração de Inexistência de Falência Decretada 
+Volume 1
+Apêndice 10 - Modelo de Declaração Formal de Expressa Submissão à Legislação Brasileira e de Renúncia de Reclamação por via Diplomática 
+Volume 3
+Apêndice 11 - Modelo de Declaração de Capacidade Financeira
+Volume 3
+Apêndice 12 - Modelo de Declaração de Regularidade ao Artigo 7º, XXXIII, da Constituição Federal
+Volume 3
+Apêndice 13 - Modelo de Declaração de Reserva de Cargos para Pessoa com Deficiência ou para Reabilitado da Previdência Social
+Volume 3
+Apêndice 14 - Instruções para Formalização do Termo de Compromisso de Constituição de Sociedade de Propósito Específico
+Volume 3
+Apêndice 15 - Modelo de Atestado de Visita Técnica
+Volume 3
+Apêndice 16 - Modelo de Declaração de Pleno Conhecimento
+Volume 3
+Apêndice 17 - Modelo de Declaração de Equivalência
+Volume 3
+Apêndice 18 - Modelo de Declaração de Inexistência de Documentos Equivalente
+Volume 3
+Apêndice 19 - Modelo de Compromisso de Pré-Qualificação como Operador Portuário ou de Contratação de Operador Portuário Pré-Qualificado
+Volume 3
+Apêndice 20 - Modelo de Declaração de Atendimento às Prerrogativas Legais de Desempate estabelecidas no art. 60 §1º da Lei nº 14.133, de 2021.
+Volume 1
+Apêndice 21 - Instruções para formalização do termo de compromisso de constituição de unidade operacional ou de negócios, quer como filial, sucursal ou assemelhada
+Volume 3
+
+
+
+
+Apêndice 22 - Modelo de Apresentação de Proposta pelo Arrendamento
+Volume 2
+Apêndice 23 - Modelo de Ratificação da Proposta pelo Arrendamento
+Volume 2 (caso necessário, a ser elaborado pela própria CPLA)
+
+
+
+
+
+
+
+
+
+
+Apêndice 1 - Modelo de Procuração
+
+Pelo presente instrumento de mandato, [Proponente], [qualificação], doravante denominada "Outorgante", nomeia e constitui, de modo irrevogável e irretratável, seus bastantes procuradores, os Srs. [•], [qualificação], para, em conjunto ou isoladamente, independentemente da ordem de nomeação, praticar os seguintes atos na República Federativa do Brasil, em juízo e fora dele:
+(a) representar a Outorgante perante quaisquer entidades, órgãos ou departamentos governamentais, sociedades abertas ou fechadas e quaisquer agências governamentais, incluindo a Agência Nacional de Transportes Aquaviários - ANTAQ e o Ministério de Portos e Aeroportos, para estabelecer e manter entendimentos com referidas entidades, agências, órgãos ou departamentos, para receber citação, notificação e intimação de qualquer natureza, para requerer e/ou promover consultas, para requerer certificados e outros documentos e para praticar os atos necessários durante a realização do certame licitatório descrito no Leilão nº {{ leilao | default('[•] [•] [•]', true) }}, inclusive para interpor recursos e renunciar ao direito de interpor recursos;
+(b) assumir compromissos e/ou obrigações em nome da Outorgante e de qualquer forma contratar, fazer acordos, renunciar a direitos, dar e receber quitação em nome da Outorgante;
+(c) representar a Outorgante na defesa de seus interesses em Juízo, em qualquer instância e perante qualquer Juízo ou Tribunal, inclusive mediante a contratação de advogados, com poderes especiais para confessar, transigir, desistir, fazer acordos, dar e receber quitação;
+(d) receber citação para ações judiciais; e
+(e) a seu critério, substabelecer, no todo ou em parte, com reserva de poderes, qualquer dos poderes aqui conferidos, nas condições que julgar ou que julgarem apropriadas.
+Esta procuração tem prazo de validade durante o procedimento da licitação.
+
+[local], [•] de [•] de 20[•]
+[Proponente]
+[representante]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+Apêndice 2 - Modelo de Procuração (Proponentes em Consórcio)
+
+Pelo presente instrumento de mandato, [Consorciada], [qualificação], doravante denominada "Outorgante", nomeia e constitui, de modo irrevogável e irretratável, sua bastante procuradora, a [qualificação], Empresa Líder do Consórcio [Nome do Consórcio], [qualificação], para praticar os seguintes atos ou outorgá-los a Representantes Credenciados, mediante procuração específica:
+(a) representar a Outorgante perante quaisquer entidades, órgãos ou departamentos governamentais, sociedades abertas ou fechadas e quaisquer agências governamentais, incluindo a Agência Nacional de Transportes Aquaviários - ANTAQ e o Ministério de Portos e Aeroportos, para estabelecer e manter entendimentos com referidas entidades, agências, órgãos ou departamentos, para receber citação, notificação e intimação de qualquer natureza, para requerer e/ou promover consultas, para requerer certificados e outros documentos e para praticar os atos necessários durante a realização do certame licitatório descrito no Leilão nº {{ leilao | default('[•] [•] [•]', true) }}, inclusive para interpor recursos e renunciar ao direito de interpor recursos;
+(b) assumir compromissos e/ou obrigações em nome da Outorgante e de qualquer forma contratar, fazer acordos, renunciar a direitos, dar e receber quitação em nome da Outorgante; 
+(c) representar a Outorgante na defesa de seus interesses em Juízo, em qualquer instância e perante qualquer Juízo ou Tribunal, inclusive mediante a contratação de advogados, com poderes especiais para confessar, transigir, desistir, fazer acordos, dar e receber quitação;
+(d) receber citação para ações judiciais; e
+(e) a seu critério, substabelecer, no todo ou em parte, com reserva de poderes, qualquer dos poderes aqui conferidos, nas condições que julgar ou que julgarem apropriadas.
+Esta procuração tem prazo de validade durante o procedimento da licitação.
+
+[local], [•] de [•] de 20[•]
+[Proponente]
+[representante]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+Apêndice 3 - Modelo de Carta de Apresentação de Garantia de Proposta
+Se títulos da dívida pública federal nacional, indicar o nome dos papeis aportados
+[local], [•] de [•] de 20[•]
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }}- Apresentação da Garantia de Proposta
+
+Prezados Senhores,
+[Proponente], por seu(s) representante(s) legal(is), nos termos do Edital em referência, esclarece pelo presente instrumento as modalidades e valores da(s) Garantia(s) da Proposta apresentadas, que deverá(ão) totalizar o valor de [preencher conforme o valor aplicável]:
+
+Garantia(s) Depositada(s)
+
+Nº               Modalidade                         Valor
+1
+
+
+2
+
+
+N
+
+
+
+Atenciosamente,
+[Proponente]
+[representante]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+Apêndice 4 - Termos e Condições Mínimas do Seguro-Garantia
+
+Se Consórcio, a garantia deverá ser prestada por membro devidamente constituído, bem como discriminar a composição do Consórcio.
+Se fundo de investimento, a garantia deverá ser prestada por seus administradores.
+1. Tomador
+1.1. Proponente
+2. Segurado
+2.1. ANTAQ
+3. Objeto do Seguro
+3.1. Garantir a indenização, no montante de até R$ (Valor em Reais), no caso de a Proponente incorrer nas hipóteses de execução da Garantia de Proposta previstas no Edital.
+4. Instrumento
+4.1. Apólice de Seguro-Garantia emitida por seguradora devidamente constituída e autorizada a operar pela Superintendência de Seguros Privados - SUSEP, observando os termos dos atos normativos da SUSEP.
+5. Valor da Garantia
+5.1. A Apólice de Seguro-Garantia deverá prever o montante de indenização de R$ (Preencher o valor em algarismos) [preencher o valor por extenso].
+6. Prazo.
+6.1. A Apólice de Seguro-Garantia deverá ter prazo mínimo de vigência de 1 (um) ano a contar da Data para Recebimento dos Volumes, renováveis nas hipóteses previstas no Edital. Ou seja, deverá vigorar de [•].[•].[•] a [•].[•].[•], incluindo-se as datas de início e de fim da vigência.
+7. Disposições Adicionais
+7.1 A Apólice de Seguro-Garantia deverá conter as seguintes disposições adicionais: (i) declaração da Seguradora de que conhece e aceita os termos e condições do Edital; (ii) declaração da Seguradora de que efetuará o pagamento dos montantes aqui previstos no prazo máximo de 30 (trinta) dias, contados a partir da data de entrega de todos os documentos relacionados pela Seguradora como necessários à caracterização e à regulação do sinistro; e (iii) confirmado o descumprimento pela Proponente das obrigações cobertas pela Apólice de Seguro-Garantia, o Segurado terá direito de exigir da Seguradora a indenização devida, quando resultar infrutífera a notificação feita ao Tomador.
+Os termos que não tenham sido expressamente definidos nesta Apólice terão os significados a eles atribuídos no Edital.
+Ratificam-se os termos que não tenham sido alterações pelas presentes Condições Especiais e Particulares.
+
+Apêndice 5 - Modelo de Fiança Bancária
+Se Consórcio, a garantia deverá ser prestada por membro devidamente constituído, bem como discriminar a composição do Consórcio.
+Se fundo de investimento, a garantia deverá ser prestada por seus administradores.
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{leilao | default('[•] [•] [•]', true) }} - Carta de Fiança Bancária nº. [•] ("Carta de Fiança") 
+
+1. Pela presente Carta de Fiança, o Banco [•], com sede em [•], inscrito no CNPJ sob nº [•] ("Banco Fiador"), diretamente por si e por seus eventuais sucessores, obriga-se perante a ANTAQ como fiador solidário do(a) [•], com sede em [•], inscrita no CNPJ sob nº [•] ("Afiançada"), com expressa renúncia dos direitos previstos nos artigos 827, 835, 837, 838 e 839 da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil Brasileiro) e art. 794 da Lei nº 13.105, 16 de março de 2015 (Código de Processo Civil), pelo fiel cumprimento de todas as obrigações assumidas pela Afiançada no procedimento licitatório descrito no Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} da ANTAQ, cujos termos, disposições e condições o Banco Fiador declara expressamente conhecer e aceitar.
+Em caso de Consórcio, incluir também o texto a seguir:
+A Proponente é consorciada do Consórcio [denominação do Consórcio], composto pelas consorciadas: [informar Razão Social, CNPJ, e participação no Consórcio de cada consorciada]. 
+2. Obriga-se o Banco Fiador a pagar à ANTAQ valor total de até R$ (Preencher o valor em algarismos) [preencher o valor por extenso] ("Fiança") no caso de a Proponente incorrer nas hipóteses de execução da Garantia de Proposta previstas no Edital.
+3. Obriga-se, ainda, o Banco Fiador, no âmbito do valor acima identificado, pelos prejuízos causados pela Afiançada, incluindo, mas não se limitando a multas aplicadas pela ANTAQ relacionadas ao certame licitatório, comprometendo-se a efetuar os pagamentos oriundos desses prejuízos quando lhe forem exigidos, no prazo máximo de 48 (quarenta e oito) horas, contado a partir do recebimento, pelo banco fiador, da notificação escrita encaminhada pela ANTAQ.
+4. O Banco Fiador não alegará nenhuma objeção ou oposição da afiançada ou por ela invocada para o fim de se escusar do cumprimento da obrigação assumida perante a ANTAQ, salvo quando houver manifestação formal da ANTAQ que desobrigue o respectivo pagamento, ou na existência de decisão judicial que impeça ou suspenda o pagamento.
+5. Na hipótese de a ANTAQ ingressar em juízo para demandar o cumprimento da obrigação a que se refere a presente Carta de Fiança, fica o banco fiador obrigado ao pagamento de até 50% (cinquenta) por cento do valor afiançado a título de despesas arbitrais, judiciais e multas.
+6. A Fiança vigorará pelo prazo de 1 (um) ano, contados da Data para Recebimento dos Volumes, conforme as condições mencionadas no Edital. Ou seja, deverá vigorar de [•].[•].[•] a [•].[•].[•], incluindo-se as datas de início e de fim.
+7. Declara o Banco Fiador que:
+7.1. a presente Carta de Fiança está devidamente contabilizada, observando integralmente os regulamentos do Banco Central do Brasil atualmente em vigor, além de atender aos preceitos da Legislação Bancária aplicável;
+7.2. os signatários deste instrumento estão autorizados a prestar a Fiança em seu nome e em sua responsabilidade; e
+7.3. seu capital social é de R$ [•] ([•]), estando autorizado pelo Banco Central do Brasil a expedir Cartas de Fiança, e que o valor da presente Carta de Fiança, no montante de R$ (Valor em Reais), encontra-se dentro dos limites que lhe são autorizados pelo Banco Central do Brasil.
+8. Os termos que não tenham sido expressamente definidos nesta Carta de Fiança terão os significados a eles atribuídos no Edital.
+
+[assinatura dos representantes legais com firma reconhecida]
+Testemunha
+Testemunha
+
+Apêndice 6 - Modelo de Declaração de Elaboração Independente de Proposta pelo Arrendamento
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }}- Declaração de Elaboração Independente de Proposta pelo Arrendamento
+
+[Proponente], por meio de seu Representante Credenciado, declara, para fins do disposto no Edital em referência, sob as penas da lei, em especial o art. 299 do Código Penal Brasileiro, que:
+a) elaborou a Proposta pelo Arrendamento de maneira independente, e que seu conteúdo não foi, no todo ou em parte, direta ou indiretamente, informado a, discutido com ou recebido de qualquer outro participante potencial ou de fato da presente licitação, por qualquer meio ou por qualquer pessoa;
+b) a intenção de apresentar a Proposta pelo Arrendamento não foi informada a, discutida com ou recebida de qualquer outro participante potencial ou de fato da presente licitação, por qualquer meio ou por qualquer pessoa;
+c) não tentou, por qualquer meio ou por qualquer pessoa, influir na decisão de qualquer outro participante potencial ou de fato da presente licitação quanto a participar ou não dela;
+d) o conteúdo da Proposta pelo Arrendamento não será, no todo ou em parte, direta ou indiretamente, comunicado a ou discutido com qualquer outro participante potencial ou de fato da presente licitação antes da adjudicação do seu objeto;
+e) o conteúdo da Proposta pelo Arrendamento não foi, no todo ou em parte, direta ou indiretamente, informado a, discutido com ou recebido de qualquer integrante de órgão do Poder Concedente antes da abertura oficial das Propostas pelo Arrendamento; e
+f) está plenamente ciente do teor e da extensão desta declaração e que detém plenos poderes e informações para firmá-la.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+Apêndice 7 - Modelo de Carta de Apresentação dos Documentos de Habilitação
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Apresentação dos Documentos de Habilitação
+
+Prezados Senhores,
+[Proponente] ("Proponente"), por seu(s) Representantes Credenciados, apresenta os documentos para sua qualificação no certame licitatório em referência, nos termos do Edital em referência, organizados consoante a ordem ali estabelecida, refletida no índice.
+A Proponente declara expressamente que tem pleno conhecimento dos termos do Edital em referência e que os aceita integralmente, em especial, no que tange às faculdades conferidas à Comissão Permanente de Licitação de Concessões e Arrendamentos Portuários da ANTAQ de conduzir diligências especiais para verificar a veracidade dos documentos apresentados e buscar quaisquer esclarecimentos necessários para elucidar as informações neles contidas.
+A Proponente declara expressamente que atendeu a todos os requisitos e critérios para qualificação e apresentou os Documentos de Habilitação, conforme definido no Edital.
+A Proponente declara, ainda, que os Documentos de Habilitação ora apresentados são completos, verdadeiros e corretos em cada detalhe.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 8 - Modelo de Declaração de Ciência dos Termos do Edital e Ausência de Impedimento de Participação no Leilão
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de Ciência dos Termos do Edital e Ausência de Impedimento de Participação no Leilão
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, sob as penas da legislação aplicável, que tem ciência dos termos do presente Edital e que não incorre em qualquer das situações de impedimento previstas no subitem 3.112 do Edital.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+
+Apêndice 9 - Modelo de Carta de Declaração de Inexistência de Falência Decretada
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de inexistência falência decretada
+
+Prezados Senhores,
+Em atendimento ao Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, sob as penas da legislação aplicável, por si, por seus sucessores e cessionários, que não se encontra com a falência decretada.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+
+Apêndice 10 - Modelo de Declaração Formal de Expressa Submissão à Legislação Brasileira e de Renúncia de Reclamação por Via Diplomática
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração Formal de Expressa Submissão à Legislação Brasileira e de Renúncia de Reclamação por Via Diplomática
+
+Prezados Senhores,
+Em atendimento ao Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, para os devidos fins, sua formal e expressa submissão à legislação brasileira e renúncia integral de reclamar, por quaisquer motivos de fato ou de direito, por via diplomática.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 11 - Modelo de Declaração de Capacidade Financeira
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de Capacidade Financeira
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, sob as penas da legislação aplicável, que dispõe ou tem capacidade de obter recursos financeiros suficientes para cumprir as obrigações de aporte de recursos próprios e de terceiros necessários à consecução do objeto do Arrendamento. Declara, além disso, que (i) tem condições de contratar todos os seguros necessários à consecução do objeto do Arrendamento e (ii) dispõe ou tem capacidade de obter os recursos para a integralização mínima do capital social exigido no Edital no prazo de até 45 (quarenta e cinco) dias após a publicação do ato de homologação e adjudicação da licitação.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 12 - Modelo de Declaração de Regularidade ao Artigo 7º, XXXIII, da Constituição Federal
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de Regularidade ao Artigo 7º, XXXIII, da Constituição Federal
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, sob as penas da legislação aplicável, por si, por seus sucessores e cessionários, para fins do disposto no inciso VI do art. 68 da Lei nº 14.133, de 1º de abril de 2021, acrescido pela Lei nº 9.854, de 27 de outubro de 1999, que não emprega, a qualquer título, menor de dezoito anos em trabalho noturno, perigoso ou insalubre e menores de dezesseis em qualquer trabalho, salvo na condição de aprendiz, a partir de quatorze anos.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 13 - Modelo de Declaração de Reserva de Cargos para Pessoa com Deficiência ou para Reabilitado da Previdência Social
+
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+Ref.: Edital de Leilão n° [•]/20[•] - Declaração de Reserva de Cargos para Pessoa com Deficiência ou para Reabilitado da Previdência Social
+
+Prezados Senhores,
+Em atendimento ao Edital em referência, a [Proponente], por seu(s) representante(s) legal(is) abaixo assinado(s), declara, sob as penas da legislação aplicável que, cumpre a reserva de cargos prevista em lei para pessoa com deficiência ou para reabilitado da Previdência Social e que atende às regras de acessibilidade previstas na legislação, conforme disposto no art. 93 da Lei nº 8.213, de 24 de julho de 1991.
+
+
+[Proponente] 
+[Representante Credenciado]
+
+
+Apêndice 14 - Instruções para formalização do termo de compromisso de constituição de Sociedade de Propósito Específico
+
+O Termo de compromisso de constituição de sociedade de propósito específico deverá conter no mínimo as seguintes informações:
+i.	denominação da Proponente;
+ii.	qualificação da(s) Proponente(s);
+iii.	a composição da SPE, indicando, se for o caso, o percentual de participação de cada membro consorciado no seu capital;
+iv.	órgãos de administração da SPE;
+v.	em caso de Consórcio, a indicação da Empresa Líder como responsável pelos atos praticados pelo Consórcio perante a ANTAQ; e
+vi.	declaração expressa de todos a(s) Proponente(s) de aceitação de responsabilidade solidária, nos termos do inciso V, do art. 15, da Lei nº 14.133, de 1º de abril de 2021, no tocante ao objeto deste Leilão, cobrindo integralmente todas as obrigações assumidas no presente Leilão, a partir da Data para Recebimento dos Volumes até o prazo previsto no Edital como termo final para devolução da Garantia de Proposta à Proponente.
+
+
+Apêndice 15 - Modelo de Atestado de Visita Técnica
+OBJETO: [conforme o Arrendamento]
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Atestado de Visita Técnica
+
+Atestamos pela presente que o representante da empresa abaixo discriminada compareceu nesta data ao local do Arrendamento [especificar] a fim de vistoriar as condições da área, infraestrutura e instalações públicas existentes.
+
+Empresa: 
+Nome do representante: 
+Cargo/Função: 
+Documento de identidade: 
+
+[local], [•] de [•] de 20[•]
+
+Autoridade Portuária
+Representante
+Proponente
+Representante
+
+
+
+Apêndice 16 - Modelo de Declaração de Pleno Conhecimento
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de Pleno Conhecimento
+
+Em atendimento ao disposto no Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, pela presente, que tem pleno conhecimento da área, infraestrutura e instalações públicas em que serão desenvolvidas as Atividades pertinentes ao Arrendamento, assim como das condições que possam afetar sua execução, dos acessos à área, dos materiais e equipamentos a serem utilizados, bem como das demais informações necessárias para a consecução do objeto do Arrendamento.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 17 - Modelo de Declaração de Equivalência
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de Equivalência
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, sob as penas da legislação aplicável, que os documentos abaixo indicados do país de origem da empresa [nome], [qualificação], são equivalentes aos documentos exigidos no Edital de Leilão n° [•]/20[•]:
+
+Descrição do documento do país de origem
+Documento exigido no Edital
+Item do Edital em que o documento é exigido
+
+
+
+
+
+
+
+
+
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 18 - Modelo de Declaração de Inexistência de Documento Equivalente
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração de Inexistência de Documento Equivalente
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital em referência, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, sob as penas da legislação aplicável, que os documentos abaixo indicados exigidos no Edital de Leilão n° [•]/20[•] não possuem documento equivalente no país de origem da empresa [nome], [qualificação].
+
+Documento exigido no Edital que não possui documento equivalente no país de origem.
+Item do Edital em que o documento é exigido
+
+
+
+
+
+
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 19 - Modelo de Compromisso de Pré-qualificação como Operador Portuário ou de Contratação de Operador Portuário Pré-Qualificado
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Compromisso de Pré-qualificação como Operador Portuário ou de Contratação de Operador Portuário Pré-Qualificado
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital, a [Proponente], por seu(s) representante(s) abaixo assinado(s), assume o compromisso de, sob as penas da lei, obter a pré-qualificação da Sociedade de Propósito Específico a ser constituída como Operador Portuário, ou de contratar Operador Portuário pré-qualificado, caso venha a se sagrar vencedora do certame.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+Apêndice 20 - Modelo de Declaração de Atendimento às Prerrogativas Legais de Preferência estabelecidas no art. 60, §1º da Lei nº 14.133, de 1º de abril de 2021.
+[local], [•] de [•] de [•]/20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão nº {{ leilao | default('[•] [•] [•]', true) }} - Declaração Formal acerca do atendimento às prerrogativas referentes aos critérios de preferência estabelecidos no art. 60, §1º da Lei nº 14.133, de 1º de abril de 2021.
+
+Prezados Senhores,
+Em atendimento ao disposto no Edital, a [Proponente], por seu(s) representante(s) abaixo assinado(s), declara, para os devidos fins, que atende aos seguintes itens estabelecidos no art. 60, §1º da Lei nº 14.133, de 2021:
+
+Atendimento
+Inciso
+Critério
+?
+II
+Empresas brasileiras.
+?
+III
+Empresas que invistam em pesquisa e no desenvolvimento de tecnologia no País. 
+?
+IV
+Empresas que comprovem a prática de Mitigação, nos termos da Lei nº 12.187, de 29 de dezembro de 2009.
+?
+N/A
+Atendimento de nenhum item.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 21 - Instruções para formalização do termo de compromisso de constituição de constituição de unidade operacional ou de negócios, quer como filial, sucursal ou assemelhada
+O Termo de compromisso de constituição de unidade operacional ou de negócios, quer como filial, sucursal ou assemelhada deverá conter no mínimo as seguintes informações:
+i.	denominação da Proponente;
+ii.	qualificação da Proponente; e
+iii.	órgãos de administração da Proponente;
+iv.	declaração expressa que procederá com sistema de escrituração descentralizada, contendo registros contábeis que permitam a identificação das transações de cada uma dessas unidades, na forma e no grau de detalhamento previsto no art. 7º da Resolução Antaq nº 49, de 2021, nas Normas Brasileiras de Contabilidade ITG 2000, aprovadas pela Resolução nº 1330/2011 do Conselho Federal de Contabilidade - CFC, em especial em seus itens 20 a 25, ou nas normas contábeis que as sucederem.
+
+
+
+
+
+
+
+
+
+
+
+Apêndice 22 - Modelo de Apresentação de Proposta pelo Arrendamento
+[local], [•] de [•] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão n° {{ leilao | default('[•] [•] [•]', true) }} - Proposta pelo Arrendamento
+
+Prezados Senhores,
+1. Em atendimento ao disposto no Edital, a [Proponente], por seu(s) representante(s) abaixo assinado(s), apresenta sua Proposta pelo Arrendamento para o Arrendamento [indicar o código do Arrendamento pleiteado].
+2. Propõe-se, em caráter irrevogável e irretratável, o Valor da Outorga de R$ [•] ([•] reais), referenciada à data-base dos demais valores deste Contrato, para o Arrendamento objeto da Proposta pelo Arrendamento, de acordo com os termos e condições contemplados no Edital e na Minuta de Contrato de Arrendamento.
+3. A [Proponente] declara, expressamente, que:
+3.1. a presente Proposta pelo Arrendamento foi realizada levando em conta todas as condições de pagamento aplicáveis ao Valor da Outorga e ao Valor do Arrendamento (fixo e variável), nos exatos termos do Edital e na Minuta do Contrato de Arrendamento;
+3.2. a presente Proposta pelo Arrendamento é válida por 1 (um) ano, contado da Data para Recebimento dos Volumes 1 e 2, podendo ser prorrogada por igual período, conforme especificado no Edital;
+3.3. concorda, integralmente e sem qualquer restrição, com as condições e obrigações constantes do Edital e da Minuta do Contrato de Arrendamento;
+3.4. reconhece que eventual prorrogação do prazo de vigência do Contrato de Arrendamento é uma decisão cuja faculdade cabe exclusivamente ao Poder Concedente e que não há qualquer direito subjetivo a tal prorrogação;
+3.5. confirma que tem pleno conhecimento do objeto do Arrendamento, das Atividades a serem prestadas, das condições de apresentação desta Proposta pelo Arrendamento e da execução dos trabalhos;
+
+3.6. assume, desde já, a integral responsabilidade pela realização das Atividades em conformidade com o disposto no Contrato de Arrendamento e em seus respectivos Apêndices, pelos regulamentos da ANTAQ e do Porto Organizado em que está localizado o Arrendamento, e por outros diplomas legais aplicáveis; e
+
+3.7. cumpre integralmente todas as obrigações e requisitos contidos no Edital e na Minuta do Contrato de Arrendamento.
+4. Os termos iniciados em letras maiúsculas contidos nesta Proposta pelo Arrendamento e não definidos de outra forma terão os significados a eles atribuídos no Edital.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+Apêndice 23 - Modelo de Ratificação da Proposta pelo Arrendamento
+[local], [--] de [--] de 20[•]
+
+À Agência Nacional de Transportes Aquaviários - ANTAQ
+
+Ref.: Edital de Leilão n° {{ leilao | default('[•] [•] [•]', true) }} - Área: [referência do Arrendamento] - Carta de Ratificação da Proposta pelo Arrendamento.
+
+Prezados Senhores, 
+Em atendimento ao disposto no Edital, a [Proponente], [qualificação], por seu(s) representante(s) abaixo assinado(s), vem, pela presente, ratificar a sua Proposta pelo Arrendamento feita no Leilão, propondo, em caráter irrevogável e irretratável, o Valor da Outorga de R$ [•] ([•] reais), nas condições previstas no Edital e na Minuta do Contrato de Arrendamento.
+
+Atenciosamente,
+[Proponente]
+[Representante Credenciado]
+Responsável para contato: [•]
+Telefone: [•]
+Endereço eletrônico: [•]
+
+
+
+
+
+
+
+
+1.1. 
+
+
+1
+
+

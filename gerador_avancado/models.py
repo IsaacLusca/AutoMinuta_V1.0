@@ -19,7 +19,7 @@ class BlocoPadrao(models.Model):
     bloco_pai = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='sub_blocos')
     ordem_padrao = models.PositiveIntegerField(default=0, help_text="Ordem de exibição dos blocos. Blocos com ordem menor aparecem primeiro.")
 
-    # obrigatorio = models.BooleanField(default=False, help_text="Indica se o bloco é obrigatório (não pode ser removido da minuta).")
+    obrigatorio = models.BooleanField(default=False, help_text="Indica se o bloco é obrigatório (não pode ser removido da minuta).")
 
     class Meta:
         ordering = ['ordem_padrao']
