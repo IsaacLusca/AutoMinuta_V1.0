@@ -1,4 +1,7 @@
+import uuid
+
 from django.db import models
+from ckeditor.fields import RichTextField
 
 class TipoBloco(models.TextChoices):
     CAPITULO = 'CA', 'Capítulo'
@@ -10,11 +13,13 @@ class BlocoPadrao(models.Model):
     # Parte da esquerda, opções de seção, subseção, cláusula
     tipo = models.CharField(max_length=2, choices=TipoBloco.choices)
     titulo = models.CharField(max_length=255, blank=True, null=True, help_text="Ex: DAS DISPOSIÇÕES INICIAIS")
-    conteudo = models.TextField(blank=True, null=True, help_text="Conteúdo editável no CKEditor. Pode ser vazio para Capítulos.")
+    conteudo = RichTextField(blank=True, null=True, help_text="Conteúdo editável no CKEditor. Pode ser vazio para Capítulos.")
 
     # Blocos que podem pertencer/referenciar outros blocos
     bloco_pai = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='sub_blocos')
     ordem_padrao = models.PositiveIntegerField(default=0, help_text="Ordem de exibição dos blocos. Blocos com ordem menor aparecem primeiro.")
+
+    # obrigatorio = models.BooleanField(default=False, help_text="Indica se o bloco é obrigatório (não pode ser removido da minuta).")
 
     class Meta:
         ordering = ['ordem_padrao']
@@ -148,3 +153,29 @@ class MinutaGerada(models.Model):
 
     # Sedes institucionais
     sede_mpor = models.CharField(max_length=200, blank=True)
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Edital {self.arrendamento} - {self.porto}"
+
+class BlocoDaMinuta(models.Model):
+    # blocos selecionados e que serão editados
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    minuta = models.ForeignKey(MinutaGerada, on_delete=models.CASCADE, related_name='blocos')
+
+    bloco_origem = models.ForeignKey(BlocoPadrao, on_delete=models.SET_NULL, blank=True, null=True, help_text="Referência ao bloco da biblioteca padrão que originou este.")
+
+    # cópia do conteúdo do bloco padrão, para edição
+    tipo = models.CharField(max_length=2, choices=TipoBloco.choices)
+    titulo = models.CharField(max_length=255, blank=True, null=True)
+    conteudo_editado = RichTextField(blank=True, null=True)
+
+    bloco_pai = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='sub_blocos')
+    ordem = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['ordem']
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} - {self.titulo or 'Sem título'}"
