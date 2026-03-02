@@ -58,6 +58,7 @@
     </style>
 </head>
 <body>
+{% csrf_token %}
 
 <div class="container-fluid">
     <div class="row">
@@ -80,7 +81,7 @@
                                 {% for secao in capitulo.sub_blocos.all %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{ secao.titulo }}
-                                    <button class="btn btn-sm btn-outline-success" title="Adicionar à Minuta">+</button>
+                                    <button class="btn btn-sm btn-outline-success" title="Adicionar à Minuta" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
                                 </li>
                                 {% empty %}
                                 <li class="list-group-item text-muted">Sem secções.</li>
@@ -117,5 +118,37 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function adicionarBloco(minutaId, blocoPadraoId) {
+        // Pega o token de segurança do Django
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        // Monta a URL que criamos no urls.py
+        const url = `/minuta/${minutaId}/adicionar-bloco/${blocoPadraoId}/`;
+        
+        // Faz a requisição POST silenciosa
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                // Se deu certo, recarrega a página para o bloco aparecer do lado direito com a numeração certa!
+                window.location.reload();
+            } else {
+                alert('Erro ao adicionar bloco.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro de comunicação com o servidor.');
+        });
+    }
+</script>
 </body>
 </html>
