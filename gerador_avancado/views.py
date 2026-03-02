@@ -1,7 +1,10 @@
+import json
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Max
 from .models import MinutaGerada, BlocoPadrao, BlocoDaMinuta, TipoBloco
+from django.views.decorators.csrf import csrf_exempt
 
 def editar_minuta_dashboard(request, minuta_id):
     # busca a minuta especificada ou retorna 404 se não existir
@@ -67,3 +70,16 @@ def remover_bloco_ajax(request, bloco_minuta_id):
         return JsonResponse({'status': 'sucesso'})
     
     return JsonResponse({'status': 'erro', 'mensagem': 'Método inválido'}, status=400)
+
+@csrf_exempt # Para facilitar o salvamento via JS
+def salvar_conteudo_bloco_ajax(request, bloco_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        novo_conteudo = data.get('conteudo')
+        
+        bloco = get_object_or_404(BlocoDaMinuta, id=bloco_id)
+        bloco.conteudo_editado = novo_conteudo
+        bloco.save()
+        
+        return JsonResponse({'status': 'sucesso'})
+    return JsonResponse({'status': 'erro'}, status=400)

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <meta charset="UTF-8">
     <title>Editar Minuta - {{ minuta.leilao }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -111,7 +112,11 @@
                         </div>
 
                         {% if bloco.conteudo_editado %}
-                            <div class="mt-2">{{ bloco.conteudo_editado|safe }}</div>
+                            <div class="mt-2 editor-clausula" 
+                                contenteditable="true" 
+                                data-id="{{ bloco.id }}">
+                                {{ bloco.conteudo_editado|safe }}
+                            </div>
                         {% endif %}
                     </div>
                 {% empty %}
@@ -175,6 +180,35 @@
                 window.location.reload(); // Recarrega para ajustar a numeração!
             } else {
                 alert('Erro ao remover bloco.');
+            }
+        });
+    }
+
+    document.querySelectorAll('.editor-clausula').forEach( (elemento) => {
+        const editor = CKEDITOR.inline( elemento );
+
+        // Evento: Quando o usuário termina de editar (perde o foco)
+        editor.on('blur', function() {
+            const conteudoNovo = editor.getData();
+            const blocoId = elemento.getAttribute('data-id');
+
+            salvarNoBanco(blocoId, conteudoNovo);
+        });
+    });
+
+    function salvarNoBanco(id, conteudo) {
+        fetch(`/minuta/salvar-bloco/${id}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ conteudo: conteudo })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                console.log('Bloco ' + id + ' salvo com sucesso!');
             }
         });
     }
