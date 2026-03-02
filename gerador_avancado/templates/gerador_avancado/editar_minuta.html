@@ -103,9 +103,15 @@
             <div class="minuta-documento" id="area-minuta">
                 {% for bloco in blocos_da_minuta %}
                     <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" data-id="{{ bloco.id }}">
-                        <span class="titulo-texto">{{ bloco.titulo|default_if_none:"" }}</span>
+                        
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <span class="titulo-texto">{{ bloco.titulo|default_if_none:"" }}</span>
+                            
+                            <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco">🗑️</button>
+                        </div>
+
                         {% if bloco.conteudo_editado %}
-                            <div>{{ bloco.conteudo_editado|safe }}</div>
+                            <div class="mt-2">{{ bloco.conteudo_editado|safe }}</div>
                         {% endif %}
                     </div>
                 {% empty %}
@@ -147,6 +153,29 @@
         .catch(error => {
             console.error('Erro:', error);
             alert('Erro de comunicação com o servidor.');
+        });
+    }
+
+    function removerBloco(blocoMinutaId) {
+        if (!confirm('Tem certeza que deseja remover este bloco?')) return;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = `/minuta/remover-bloco/${blocoMinutaId}/`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                window.location.reload(); // Recarrega para ajustar a numeração!
+            } else {
+                alert('Erro ao remover bloco.');
+            }
         });
     }
 </script>

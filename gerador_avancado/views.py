@@ -59,3 +59,11 @@ def adicionar_bloco_ajax(request, minuta_id, bloco_padrao_id):
         return JsonResponse({'status': 'sucesso'})
     
     return JsonResponse({'status': 'erro', 'mensagem': 'Método inválido'}, status=400)
+
+def remover_bloco_ajax(request, bloco_minuta_id):
+    if request.method == 'POST':
+        bloco = get_object_or_404(BlocoDaMinuta, id=bloco_minuta_id)
+        bloco.delete()
+        return JsonResponse({'status': 'sucesso'})
+    
+    return JsonResponse({'status': 'erro', 'mensagem': 'Método inválido'}, status=400)
