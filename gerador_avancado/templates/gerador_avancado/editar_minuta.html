@@ -114,14 +114,20 @@
                             </div>
 
                         {% endif %}
-                    {% endfor %}
-                    
-                {% endfor %}
-                </div>
+                    {% endfor %} <div class="text-center mt-2 mb-5 no-print">
+                        <button class="btn btn-sm text-secondary w-100" 
+                                style="border: 2px dashed #ccc; background: transparent;" 
+                                onclick="criarClausula({{ minuta.id }}, {{ capitulo.id }})">
+                            + Adicionar Nova Cláusula
+                        </button>
+                    </div>
+
+                {% endfor %} </div>
         </div>
 
     </div>
 </div>
+
 <div class="modal fade" id="modalNovaSecao" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -207,12 +213,11 @@
     const areaMinuta = document.getElementById('area-minuta');
     new Sortable(areaMinuta, {
         handle: '.handle', 
-        filter: '.nao-move', // <-- IGNORA OS CAPÍTULOS, BLOQUEANDO O ARRASTE NELES
+        filter: '.nao-move',
         animation: 150,
         ghostClass: 'bg-light',
         onEnd: function() {
             const itens = [];
-            // Seleciona APENAS os elementos que tem data-id (Os capítulos fixos não têm)
             areaMinuta.querySelectorAll('[data-id]').forEach((el, index) => {
                 itens.push({
                     id: el.getAttribute('data-id'),
@@ -283,10 +288,31 @@
         .then(response => response.json())
         .then(data => {
             if (data.status === 'sucesso') {
-                // Recarrega a página para exibir a nova seção na Biblioteca
                 window.location.reload(); 
             } else {
                 alert('Erro: ' + data.mensagem);
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    }
+
+    function criarClausula(minutaId, capituloId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch(`/minuta/${minutaId}/criar-clausula/`, {
+            method: 'POST',
+            headers: { 
+                'X-CSRFToken': csrfToken, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                window.location.reload();
+            } else {
+                alert('Erro ao criar cláusula: ' + data.mensagem);
             }
         })
         .catch(error => console.error('Erro:', error));

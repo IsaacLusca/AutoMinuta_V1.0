@@ -192,3 +192,41 @@ def criar_secao_ajax(request):
         except Exception as e:
             return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
     return JsonResponse({'status': 'erro'}, status=400)
+
+@csrf_exempt
+def criar_clausula_ajax(request, minuta_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            capitulo_id = data.get('capitulo_id')
+            
+            minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+            capitulo = get_object_or_404(BlocoPadrao, id=capitulo_id)
+            
+            # cria a referência na Biblioteca (BlocoPadrao)
+            nova_clausula_padrao = BlocoPadrao.objects.create(
+                tipo='CL', # Ou TipoBloco.CLAUSULA dependendo de como importou
+                titulo="",
+                conteudo="<p>Nova cláusula (clique para editar)</p>",
+                bloco_pai=capitulo,
+                ordem_padrao=999 # Vai para o final
+            )
+            
+            # calcula a ordem para o final do documento atual
+            ultimo_bloco = minuta.blocos.order_by('-ordem').first()
+            nova_ordem = (ultimo_bloco.ordem + 10) if ultimo_bloco else 10
+            
+            # adiciona a cláusula vazia na Minuta atual
+            BlocoDaMinuta.objects.create(
+                minuta=minuta,
+                bloco_origem=nova_clausula_padrao,
+                tipo='CL',
+                titulo="",
+                conteudo_editado="<p>Nova cláusula (clique para editar)</p>",
+                ordem=nova_ordem
+            )
+            
+            return JsonResponse({'status': 'sucesso'})
+        except Exception as e:
+            return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
+    return JsonResponse({'status': 'erro'}, status=400)
