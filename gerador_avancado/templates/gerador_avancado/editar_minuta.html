@@ -190,6 +190,56 @@
             });
         }
     });
+
+    // remover warning do CKEditor
+    (function() {
+        // Função para remover o aviso
+        function removerAvisoVersion() {
+            // Tenta encontrar e remover a notificação de aviso
+            const avisos = document.querySelectorAll('.cke_notification_warning');
+            avisos.forEach(function(aviso) {
+                if (aviso.textContent.includes('version is not secure') || 
+                    aviso.textContent.includes('versão não é segura')) {
+                    aviso.remove();
+                }
+            });
+            
+            // Também remove qualquer div com a classe específica de aviso
+            const notificacoes = document.querySelectorAll('.cke_notification');
+            notificacoes.forEach(function(notif) {
+                if (notif.textContent.includes('CKEditor') && 
+                    (notif.textContent.includes('version') || notif.textContent.includes('versão'))) {
+                    notif.remove();
+                }
+            });
+        }
+        
+        // Executar imediatamente
+        removerAvisoVersion();
+        
+        // Executar após cada inicialização de instância do CKEditor
+        if (typeof CKEDITOR !== 'undefined') {
+            CKEDITOR.on('instanceReady', function() {
+                setTimeout(removerAvisoVersion, 100);
+            });
+        }
+        
+        // Executar periodicamente por alguns segundos (para garantir)
+        let tentativas = 0;
+        const intervalo = setInterval(function() {
+            removerAvisoVersion();
+            tentativas++;
+            if (tentativas > 20) { // Para após ~2 segundos (20 * 100ms)
+                clearInterval(intervalo);
+            }
+        }, 100);
+        
+        // Também executar quando o DOM estiver completamente carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(removerAvisoVersion, 500);
+        });
+    })();
+
 </script>
 </body>
 </html>
