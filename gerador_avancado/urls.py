@@ -9,4 +9,5 @@ urlpatterns = [
     path('minuta/<int:minuta_id>/reordenar/', views.reordenar_blocos_ajax, name='reordenar_blocos_ajax'),
     path('minuta/<int:minuta_id>/preview/', views.preview_minuta, name='preview_minuta'),
     path('minuta/<int:minuta_id>/pdf/', views.gerar_pdf_minuta, name='gerar_pdf_minuta'),
+    path('minuta/criar-secao/', views.criar_secao_ajax, name='criar_secao_ajax'),
 ]

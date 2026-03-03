@@ -43,7 +43,12 @@
     <div class="row">
         
         <div class="col-md-4 painel-esquerdo">
-            <h4>Biblioteca de Cláusulas</h4>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Biblioteca</h4>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalNovaSecao">
+                    + Nova Seção
+                </button>
+            </div>
             <div class="accordion" id="accordionBiblioteca">
                 {% for capitulo in capitulos_padrao %}
                 <div class="accordion-item">
@@ -116,6 +121,35 @@
         </div>
 
     </div>
+</div>
+<div class="modal fade" id="modalNovaSecao" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Criar Nova Seção na Biblioteca</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label class="form-label">Título da Seção</label>
+            <input type="text" class="form-control" id="tituloNovaSecao" placeholder="Ex: DAS SANÇÕES ADMINISTRATIVAS">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Pertence a qual Capítulo?</label>
+            <select class="form-select" id="capituloPaiId">
+                <option value="">Selecione o Capítulo...</option>
+                {% for capitulo in capitulos_padrao %}
+                    <option value="{{ capitulo.id }}">{{ capitulo.titulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="salvarNovaSecao()">Salvar na Biblioteca</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -227,6 +261,36 @@
         }, 100);
         document.addEventListener('DOMContentLoaded', function() { setTimeout(removerAvisoVersion, 500); });
     })();
+
+    function salvarNovaSecao() {
+        const titulo = document.getElementById('tituloNovaSecao').value;
+        const capituloId = document.getElementById('capituloPaiId').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if (!titulo || !capituloId) {
+            alert('Por favor, preencha o título e selecione o capítulo.');
+            return;
+        }
+
+        fetch('/minuta/criar-secao/', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRFToken': csrfToken 
+            },
+            body: JSON.stringify({ titulo: titulo, capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                // Recarrega a página para exibir a nova seção na Biblioteca
+                window.location.reload(); 
+            } else {
+                alert('Erro: ' + data.mensagem);
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    }
 </script>
 </body>
 </html>

@@ -160,3 +160,35 @@ def gerar_pdf_minuta(request, minuta_id):
     response['Content-Disposition'] = f'attachment; filename="{nome_arquivo}"'
     
     return response
+
+# No final do seu arquivo views.py
+@csrf_exempt
+def criar_secao_ajax(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            titulo = data.get('titulo')
+            capitulo_id = data.get('capitulo_id')
+            
+            if not titulo or not capitulo_id:
+                return JsonResponse({'status': 'erro', 'mensagem': 'Título e Capítulo são obrigatórios.'})
+
+            # Busca o capítulo pai
+            capitulo_pai = get_object_or_404(BlocoPadrao, id=capitulo_id)
+            
+            # Descobre qual é a ordem correta para colocar a nova seção no final do capítulo
+            ultimo_filho = capitulo_pai.sub_blocos.order_by('-ordem_padrao').first()
+            nova_ordem = (ultimo_filho.ordem_padrao + 10) if ultimo_filho else (capitulo_pai.ordem_padrao + 10)
+            
+            # Cria a nova seção no banco 
+            BlocoPadrao.objects.create(
+                tipo=TipoBloco.SECAO, # garante que será uma Seção (SE)
+                titulo=titulo,
+                bloco_pai=capitulo_pai,
+                ordem_padrao=nova_ordem
+            )
+            
+            return JsonResponse({'status': 'sucesso'})
+        except Exception as e:
+            return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
+    return JsonResponse({'status': 'erro'}, status=400)
