@@ -110,7 +110,11 @@ def preview_minuta(request, minuta_id):
     minuta = get_object_or_404(MinutaGerada, id=minuta_id)
     blocos = minuta.blocos.all().order_by('ordem')
 
+    # busca estrutura dos capitulos
+    capitulos_padrao = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
+
     return render(request, 'gerador_avancado/preview_minuta.html', {
         'minuta': minuta,
         'blocos': blocos,
+        'capitulos_padrao': capitulos_padrao,
     })
