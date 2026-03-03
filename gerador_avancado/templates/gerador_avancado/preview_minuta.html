@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Pré-visualização - {{ minuta.leilao }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f2f5; font-family: "Times New Roman", Times, serif; }
+        
+        /* Layout de Folha A4 */
+        .folha-a4 {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 25mm 25mm; /* Margens padrão de documento */
+            margin: 30px auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* Numeração Automática (Mantendo a lógica da edição) */
+        .documento-final { counter-reset: capitulo; color: #000; line-height: 1.6; }
+
+        .bloco-CA { counter-increment: capitulo; counter-reset: secao clausula; text-align: center; font-weight: bold; text-transform: uppercase; margin: 30px 0 20px 0; font-size: 1.2em; }
+        .bloco-CA::before { content: "CAPÍTULO " counter(capitulo) " - "; }
+
+        .bloco-SE { counter-increment: secao; font-weight: bold; margin: 20px 0 10px 0; font-size: 1.1em; }
+        .bloco-SE::before { content: "Seção " counter(secao, upper-roman) " - "; }
+
+        .bloco-CL { counter-increment: clausula; margin-bottom: 12px; text-align: justify; display: flex; gap: 8px; }
+        .bloco-CL::before { content: counter(capitulo) "." counter(clausula) ". "; font-weight: bold; flex-shrink: 0; }
+
+        /* Estilos de Impressão */
+        @media print {
+            body { background: none; }
+            .folha-a4 { margin: 0; box-shadow: none; width: 100%; padding: 0; }
+            .no-print { display: none; }
+        }
+
+        .btn-flutuante { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+<div class="no-print btn-flutuante">
+    <button class="btn btn-secondary me-2" onclick="window.close()">Fechar</button>
+    <button class="btn btn-primary" onclick="window.print()">Imprimir / Salvar PDF</button>
+</div>
+
+<div class="folha-a4">
+    <div class="documento-final">
+        <div class="text-center mb-5">
+            <h5 class="mb-1">MINUTA DE EDITAL</h5>
+            <p>LEILÃO Nº {{ minuta.leilao }} - PORTO DE {{ minuta.porto }}</p>
+            <hr>
+        </div>
+
+        {% for bloco in blocos %}
+            <div class="bloco-{{ bloco.tipo }}">
+                <span>{{ bloco.titulo|default_if_none:"" }}</span>
+            </div>
+            {% if bloco.conteudo_editado %}
+                <div class="conteudo-texto mb-3">
+                    {{ bloco.conteudo_editado|safe }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

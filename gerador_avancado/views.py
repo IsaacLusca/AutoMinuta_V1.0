@@ -103,3 +103,14 @@ def reordenar_blocos_ajax(request, minuta_id):
         except Exception as e:
             return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
     return JsonResponse({'status': 'erro'}, status=400)
+
+# pré-visualização da minuta (página de visualização sem edição)
+def preview_minuta(request, minuta_id):
+    # Busca a minuta e seus blocos ordenados
+    minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+    blocos = minuta.blocos.all().order_by('ordem')
+
+    return render(request, 'gerador_avancado/preview_minuta.html', {
+        'minuta': minuta,
+        'blocos': blocos,
+    })
