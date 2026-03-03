@@ -6,6 +6,10 @@ from django.db.models import Max
 from .models import MinutaGerada, BlocoPadrao, BlocoDaMinuta, TipoBloco
 from django.views.decorators.csrf import csrf_exempt
 
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from playwright.sync_api import sync_playwright
+
 def editar_minuta_dashboard(request, minuta_id):
     # busca a minuta especificada ou retorna 404 se não existir
     minuta = get_object_or_404(MinutaGerada, id=minuta_id)
@@ -118,3 +122,41 @@ def preview_minuta(request, minuta_id):
         'blocos': blocos,
         'capitulos_padrao': capitulos_padrao,
     })
+
+def gerar_pdf_minuta(request, minuta_id):
+    minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+    blocos = minuta.blocos.all().order_by('ordem')
+    capitulos_padrao = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
+
+    # Renderiza o HTML
+    html_string = render_to_string('gerador_avancado/preview_minuta.html', {
+        'minuta': minuta,
+        'blocos': blocos,
+        'capitulos_padrao': capitulos_padrao,
+    }, request=request)
+
+    # Usa o Playwright para gerar o PDF perfeitamente
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        
+        # Carrega o HTML e espera a rede acalmar (para carregar o Bootstrap da CDN)
+        page.set_content(html_string, wait_until="networkidle")
+        
+        # Gera o PDF com margens e numeração nativa do navegador
+        pdf_bytes = page.pdf(
+            format="A4",
+            print_background=True,
+            margin={"top": "25mm", "bottom": "25mm", "left": "25mm", "right": "25mm"},
+            display_header_footer=True,
+            header_template="<span></span>", # Cabeçalho vazio por enquanto
+            footer_template="<div style='font-size: 10px; width: 100%; text-align: right; padding-right: 25mm; font-family: \"Times New Roman\", serif;'>Página <span class='pageNumber'></span> de <span class='totalPages'></span></div>"
+        )
+        browser.close()
+
+    # Retorna o PDF para download
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    nome_arquivo = f"Minuta_Edital_{minuta.leilao}_Porto_{minuta.porto}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{nome_arquivo}"'
+    
+    return response
