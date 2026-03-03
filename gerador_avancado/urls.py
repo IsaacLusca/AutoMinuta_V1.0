@@ -6,4 +6,5 @@ urlpatterns = [
     path('minuta/<int:minuta_id>/adicionar-bloco/<int:bloco_padrao_id>/', views.adicionar_bloco_ajax, name='adicionar_bloco_ajax'),
     path('minuta/remover-bloco/<uuid:bloco_minuta_id>/', views.remover_bloco_ajax, name='remover_bloco_ajax'),
     path('minuta/salvar-bloco/<uuid:bloco_id>/', views.salvar_conteudo_bloco_ajax, name='salvar_conteudo_bloco_ajax'),
+    path('minuta/<int:minuta_id>/reordenar/', views.reordenar_blocos_ajax, name='reordenar_blocos_ajax'),
 ]

@@ -83,3 +83,23 @@ def salvar_conteudo_bloco_ajax(request, bloco_id):
         
         return JsonResponse({'status': 'sucesso'})
     return JsonResponse({'status': 'erro'}, status=400)
+
+# reordenação dos blocos via drag-and-drop
+@csrf_exempt
+def reordenar_blocos_ajax(request, minuta_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            itens = data.get('itens', [])
+            
+            # Garantimos que os blocos pertencem à minuta informada
+            for item in itens:
+                BlocoDaMinuta.objects.filter(
+                    id=item['id'], 
+                    minuta_id=minuta_id
+                ).update(ordem=item['ordem'])
+            
+            return JsonResponse({'status': 'sucesso'})
+        except Exception as e:
+            return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
+    return JsonResponse({'status': 'erro'}, status=400)
