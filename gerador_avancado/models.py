@@ -28,6 +28,9 @@ class BlocoPadrao(models.Model):
         return f"{self.get_tipo_display()} - {self.titulo or 'Sem título'}"
     
 class MinutaGerada(models.Model):
+    # Identificar minuta
+    nome_interno = models.CharField(max_length=200, default="Novo Rascunho de Edital")
+
     # Identificação geral
     leilao = models.CharField(max_length=200, blank=True)
     arrendamento = models.CharField(max_length=200, blank=True)
@@ -157,7 +160,7 @@ class MinutaGerada(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Edital {self.arrendamento} - {self.porto}"
+        return f"{self.nome_interno}"
 
 class BlocoDaMinuta(models.Model):
     # blocos selecionados e que serão editados

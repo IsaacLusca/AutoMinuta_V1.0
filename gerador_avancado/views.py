@@ -228,3 +228,47 @@ def criar_clausula_ajax(request, minuta_id):
         except Exception as e:
             return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
     return JsonResponse({'status': 'erro'}, status=400)
+
+
+# --- novas estruturas ---
+
+# função para mostrar a lista de editais
+def dashboard_editais(request):
+    editais = MinutaGerada.objects.all().order_by('-criado_em')
+    return render(request, 'gerador_avancado/dashboard_editais.html', {'editais': editais})
+
+# função para criar um novo edital (minuta)
+from django.shortcuts import render, redirect
+
+def dashboard_editais(request):
+    """
+    Exibe a lista de todos os editais criados (rascunhos).
+    """
+    editais = MinutaGerada.objects.all().order_by('-criado_em')
+    return render(request, 'gerador_avancado/dashboard.html', {'editais': editais})
+
+# função para criar um novo edital a partir do zero, clonando a estrutura da Biblioteca Padrão
+def criar_novo_edital(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome_interno', 'Novo Edital')
+        
+        # cria o registro vazio
+        nova_minuta = MinutaGerada.objects.create(nome_interno=nome)
+        
+        # clona a Biblioteca Padrao para este novo edital
+        blocos_padrao = BlocoPadrao.objects.all()
+        for bloco in blocos_padrao:
+            BlocoDaMinuta.objects.create(
+                minuta=nova_minuta,
+                bloco_origem=bloco,
+                tipo=bloco.tipo,
+                titulo=bloco.titulo,
+                conteudo_editado=bloco.conteudo,
+                ordem=bloco.ordem_padrao
+            )
+            
+        # Redireciona para a tela de edição que já construímos
+        return redirect('editar_minuta', minuta_id=nova_minuta.id)
+        
+    # Se alguém tentar aceder via GET, redireciona de volta para o dashboard
+    return redirect('dashboard_editais')

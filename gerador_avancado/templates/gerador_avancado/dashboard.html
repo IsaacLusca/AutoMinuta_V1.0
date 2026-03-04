@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel de Editais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card-edital { transition: transform 0.2s, box-shadow 0.2s; }
+        .card-edital:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2>Meus Editais (Rascunhos)</h2>
+        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalNovoEdital">
+            + Criar Novo Edital
+        </button>
+    </div>
+
+    <div class="row">
+        {% for edital in editais %}
+            <div class="col-md-4 mb-4">
+                <div class="card card-edital h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ edital.nome_interno }}</h5>
+                        <p class="card-text text-muted mb-1"><small>Criado em: {{ edital.criado_em|date:"d/m/Y H:i" }}</small></p>
+                        <p class="card-text">
+                            <strong>Leilão:</strong> {{ edital.leilao|default:"Não definido" }}<br>
+                            <strong>Porto:</strong> {{ edital.porto|default:"Não definido" }}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+                        <a href="{% url 'editar_minuta' edital.id %}" class="btn btn-outline-primary w-100 me-2">Editar</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted fs-5">Você ainda não tem nenhum edital criado.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<div class="modal fade" id="modalNovoEdital" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Iniciar Novo Edital</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'criar_novo_edital' %}" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Nome do Rascunho (Controle Interno)</label>
+                <input type="text" class="form-control" name="nome_interno" placeholder="Ex: Rascunho Porto de Santos V1" required>
+                <div class="form-text">Você preencherá os detalhes técnicos (Porto, Prazos) na próxima tela.</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Começar a Escrever</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
