@@ -111,7 +111,11 @@
                             
                             <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" data-id="{{ bloco.id }}">
                                 <div class="d-flex justify-content-between align-items-center w-100">
-                                    <span class="titulo-texto">{{ bloco.titulo|default_if_none:"" }}</span>
+                                    {% if bloco.tipo == 'SE' %}
+                                        <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
+                                    {% else %}
+                                        <span class="titulo-texto text-muted" style="font-size: 0.9em;">{{ bloco.titulo|default_if_none:"" }}</span>
+                                    {% endif %}
                                     
                                     <div class="d-flex align-items-center">
                                         <span class="handle me-2" title="Arrastar para reordenar">⠿</span>

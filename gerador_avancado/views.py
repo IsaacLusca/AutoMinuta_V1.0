@@ -33,35 +33,33 @@ def adicionar_bloco_ajax(request, minuta_id, bloco_padrao_id):
         minuta = get_object_or_404(MinutaGerada, id=minuta_id)
         bloco_origem = get_object_or_404(BlocoPadrao, id=bloco_padrao_id)
         
-        # descobre qual é a última 'ordem' no documento do lado direito para colocar este no final
+        # Pega a última ordem do documento
         ultima_ordem = minuta.blocos.aggregate(Max('ordem'))['ordem__max'] or 0
-        nova_ordem = ultima_ordem + 10
+        ordem_atual = ultima_ordem + 10
         
-        # cria a cópia do bloco principal (ex: A Seção)
         novo_bloco = BlocoDaMinuta.objects.create(
             minuta=minuta,
             bloco_origem=bloco_origem,
             tipo=bloco_origem.tipo,
             titulo=bloco_origem.titulo,
             conteudo_editado=bloco_origem.conteudo,
-            ordem=nova_ordem
+            ordem=ordem_atual
         )
         
-        # procura se esse bloco tem filhos (ex: As cláusulas dentro da seção)
         filhos = BlocoPadrao.objects.filter(bloco_pai=bloco_origem).order_by('ordem_padrao')
         
-        ordem_filho = 10
         for filho in filhos:
+            ordem_atual += 10 
+            
             BlocoDaMinuta.objects.create(
                 minuta=minuta,
                 bloco_origem=filho,
                 tipo=filho.tipo,
                 titulo=filho.titulo,
                 conteudo_editado=filho.conteudo,
-                bloco_pai=novo_bloco, # O pai não é mais a biblioteca, é a cópia que acabamos de criar
-                ordem=ordem_filho
+                bloco_pai=novo_bloco,
+                ordem=ordem_atual
             )
-            ordem_filho += 10
             
         return JsonResponse({'status': 'sucesso'})
     
