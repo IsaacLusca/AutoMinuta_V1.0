@@ -364,6 +364,23 @@
         })
         .catch(error => console.error('Erro:', error));
     }
+
+    // Salva automaticamente quando a página for recarregada ou fechada
+    window.addEventListener('beforeunload', function() {
+        const painel = document.querySelector('.painel-direito');
+        if (painel) {
+            localStorage.setItem('scroll-pos-minuta', painel.scrollTop);
+        }
+    });
+
+    // Restaura automaticamente quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        const painel = document.querySelector('.painel-direito');
+        const pos = localStorage.getItem('scroll-pos-minuta');
+        if (painel && pos !== null) {
+            painel.scrollTop = parseInt(pos);
+        }
+    });
 </script>
 </body>
 </html>
