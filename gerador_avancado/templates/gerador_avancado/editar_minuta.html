@@ -47,6 +47,31 @@
         .handle:hover { color: #333; }
 
         .capitulo-fixo { background-color: #f8f9fa; padding: 10px; border-radius: 5px; border-bottom: 2px solid #ddd; }
+
+        #accordionBiblioteca {
+            counter-reset: capitulo_bib; 
+        }
+        
+        #accordionBiblioteca .accordion-button {
+            counter-increment: capitulo_bib;
+        }
+        #accordionBiblioteca .accordion-button::before {
+            content: "CAPÍTULO " counter(capitulo_bib) " - ";
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        #accordionBiblioteca .accordion-item {
+            counter-reset: secao_bib; 
+        }
+        
+        .titulo-secao-bib {
+            counter-increment: secao_bib;
+        }
+        .titulo-secao-bib::before {
+            content: "Seção " counter(secao_bib, upper-roman) " - ";
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +100,8 @@
                             <ul class="list-group list-group-flush">
                                 {% for secao in capitulo.sub_blocos.all %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ secao.titulo }}
+                                    <span class="titulo-secao-bib">{{ secao.titulo }}</span>
+                                    
                                     <button class="btn btn-sm btn-outline-success" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
                                 </li>
                                 {% endfor %}
