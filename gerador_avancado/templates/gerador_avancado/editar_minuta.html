@@ -210,6 +210,11 @@
         }
     }
 
+    if (typeof CKEDITOR !== 'undefined') {
+        CKEDITOR.config.versionCheck = false;
+        CKEDITOR.config.removePlugins = 'notification';
+    }
+
     function inicializarEditores() {
         document.querySelectorAll('.editor-clausula').forEach((elemento) => {
             garantirIdEditor(elemento);
