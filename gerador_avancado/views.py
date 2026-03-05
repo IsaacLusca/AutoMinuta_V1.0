@@ -9,6 +9,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from playwright.sync_api import sync_playwright
+from django.forms.models import model_to_dict
+from django.template import Template, Context
+from django.shortcuts import redirect
+import re
 
 def editar_minuta_dashboard(request, minuta_id):
     # busca a minuta especificada ou retorna 404 se não existir
@@ -108,12 +112,20 @@ def reordenar_blocos_ajax(request, minuta_id):
 
 # pré-visualização da minuta (página de visualização sem edição)
 def preview_minuta(request, minuta_id):
-    # Busca a minuta e seus blocos ordenados
     minuta = get_object_or_404(MinutaGerada, id=minuta_id)
     blocos = minuta.blocos.all().order_by('ordem')
-
-    # busca estrutura dos capitulos
     capitulos_padrao = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
+
+    # Transforma todos os campos da Minuta (porto, prazo, etc) num Dicionário do Django
+    dados_variaveis = model_to_dict(minuta)
+    contexto_dinamico = Context(dados_variaveis)
+
+    # Varre cada bloco do documento para fazer a troca
+    for bloco in blocos:
+        if bloco.conteudo_editado:
+            template_texto = Template(bloco.conteudo_editado)
+            # Ele procura todas as tags {{ }} no texto e troca pelos valores do dicionário
+            bloco.texto_final_renderizado = template_texto.render(contexto_dinamico)
 
     return render(request, 'gerador_avancado/preview_minuta.html', {
         'minuta': minuta,
@@ -271,4 +283,19 @@ def criar_novo_edital(request):
         return redirect('editar_minuta', minuta_id=nova_minuta.id)
         
     # Se alguém tentar aceder via GET, redireciona de volta para o dashboard
+    return redirect('dashboard_editais')
+
+# função que salva dados do edital
+def salvar_dados_edital(request, minuta_id):
+    if request.method == 'POST':
+        minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+        
+        # O Django percorre todos os campos enviados no formulário e atualiza o banco
+        for campo, valor in request.POST.items():
+            if hasattr(minuta, campo) and campo != 'csrfmiddlewaretoken':
+                setattr(minuta, campo, valor)
+                
+        minuta.save()
+        return redirect('editar_minuta', minuta_id=minuta.id)
+        
     return redirect('dashboard_editais')

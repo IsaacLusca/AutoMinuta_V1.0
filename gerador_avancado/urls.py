@@ -16,4 +16,7 @@ urlpatterns = [
     path('minuta/<int:minuta_id>/pdf/', views.gerar_pdf_minuta, name='gerar_pdf_minuta'),
     path('minuta/criar-secao/', views.criar_secao_ajax, name='criar_secao_ajax'),
     path('minuta/<int:minuta_id>/criar-clausula/', views.criar_clausula_ajax, name='criar_clausula_ajax'),
+
+    # rota para salvar os dados do edital (formulário)
+    path('minuta/<int:minuta_id>/salvar-dados/', views.salvar_dados_edital, name='salvar_dados_edital'),
 ]
