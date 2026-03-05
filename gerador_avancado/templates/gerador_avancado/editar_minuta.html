@@ -308,7 +308,7 @@
         .catch(error => console.error(`❌ Erro de conexão/Fetch no bloco ${id}:`, error));
     }
 
-    // --- 3. CONTROLE DOS EDITORES ---
+    // controle dos editores
     function garantirIdEditor(elemento) {
         if (!elemento.id) {
             const blocoId = elemento.getAttribute('data-id');
@@ -347,20 +347,91 @@
         });
     }
 
+    // Variável para guardar o estado de todas as seções durante o arrasto
+    let pacotesDeSecoes = [];
     const areaMinuta = document.getElementById('area-minuta');
+    
     new Sortable(areaMinuta, {
         handle: '.handle',
         filter: '.nao-move',
         animation: 150,
         ghostClass: 'bg-light',
-        onStart: function() {
+        
+        onChoose: function(evt) {
+            const item = evt.item;
+
+            // logica de malas, se for seção
+            if (item.classList.contains('bloco-SE')) {
+                
+                // Esconde os botões de adicionar cláusula para não atrapalhar o drag
+                document.querySelectorAll('.text-center.no-print').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                let secaoAtual = null;
+                let clausulasDaSecao = [];
+                
+                // Varre o documento inteiro e agrupa as cláusulas com os seus donos
+                Array.from(areaMinuta.children).forEach(el => {
+                    if (el.classList.contains('bloco-CA') || el.classList.contains('bloco-SE')) {
+                        if (secaoAtual && clausulasDaSecao.length > 0) {
+                            pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
+                        }
+                        secaoAtual = el;
+                        clausulasDaSecao = [];
+                    } else if (el.classList.contains('bloco-CL')) {
+                        if (secaoAtual) clausulasDaSecao.push(el);
+                    }
+                });
+                
+                // Guarda o último grupo
+                if (secaoAtual && clausulasDaSecao.length > 0) {
+                    pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
+                }
+
+                // Coloca fisicamente as cláusulas "dentro" das suas Seções
+                pacotesDeSecoes.forEach(pacote => {
+                    const malaInvisivel = document.createElement('div');
+                    malaInvisivel.className = 'mala-invisivel';
+                    malaInvisivel.style.display = 'none'; // Esconde o conteúdo
+                    
+                    pacote.filhos.forEach(filho => malaInvisivel.appendChild(filho));
+                    pacote.pai.appendChild(malaInvisivel);
+                });
+            }
+        },
+        
+        onStart: function(evt) {
             isDraggingBloco = true;
             destruirEditoresParaReordenar();
         },
-        onEnd: function() {
+        
+        onEnd: function(evt) {
+            // Desfazemos as malas: Cada Seção devolve as suas cláusulas para o HTML principal
+            if (pacotesDeSecoes.length > 0) {
+                pacotesDeSecoes.forEach(pacote => {
+                    let inserirApos = pacote.pai;
+                    
+                    pacote.filhos.forEach(filho => {
+                        pacote.pai.parentNode.insertBefore(filho, inserirApos.nextSibling);
+                        inserirApos = filho;
+                    });
+                    
+                    const mala = pacote.pai.querySelector('.mala-invisivel');
+                    if (mala) mala.remove();
+                });
+                pacotesDeSecoes = []; // Limpa a memória
+            }
+
+            // Traz de volta os botões de adicionar cláusula
+            document.querySelectorAll('.text-center.no-print').forEach(el => {
+                el.style.display = '';
+            });
+
             inicializarEditores();
             isDraggingBloco = false;
 
+            // Lê a ordem visual perfeita e salva no Django
             const itens = [];
             areaMinuta.querySelectorAll('[data-id]').forEach((el, index) => {
                 itens.push({
@@ -383,7 +454,7 @@
         }
     });
 
-    // --- 5. EVENTOS DA PÁGINA ---
+    // atualiza pagina
     document.addEventListener('DOMContentLoaded', function() {
         inicializarEditores();
         
@@ -402,7 +473,7 @@
         }
     });
 
-    // --- 6. REMOÇÃO DE AVISOS DO CKEDITOR ---
+    // remover avisos do ckeditor
     (function() {
         function removerAvisoVersion() {
             document.querySelectorAll('.cke_notification_warning, .cke_notification').forEach(aviso => {
@@ -414,7 +485,7 @@
         setInterval(removerAvisoVersion, 100);
     })();
 
-    // --- 7. NOVOS BLOCOS ---
+    // novos blocos
     function salvarNovaSecao() {
         const titulo = document.getElementById('tituloNovaSecao').value;
         const capituloId = document.getElementById('capituloPaiId').value;
