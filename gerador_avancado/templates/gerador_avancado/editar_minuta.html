@@ -300,12 +300,12 @@
         })
         .then(data => {
             if (data.status === 'sucesso') {
-                console.log(`✅ Bloco ${id} salvo com sucesso!`);
+                console.log(`Bloco ${id} salvo com sucesso!`);
             } else {
-                console.error(`❌ Erro no backend para o bloco ${id}:`, data.mensagem);
+                console.error(`Erro no backend para o bloco ${id}:`, data.mensagem);
             }
         })
-        .catch(error => console.error(`❌ Erro de conexão/Fetch no bloco ${id}:`, error));
+        .catch(error => console.error(`Erro de conexão/Fetch no bloco ${id}:`, error));
     }
 
     // controle dos editores
@@ -346,6 +346,47 @@
             CKEDITOR.instances[id].destroy(true); 
         });
     }
+    // função para mover dinamicamente os blocos entre a tela
+    let autoScrollDirecao = 0;
+    let autoScrollAtivo = false;
+
+    function loopAutoScroll() {
+        if (!autoScrollAtivo) return;
+
+        const painel = document.querySelector('.painel-direito');
+        if (painel && autoScrollDirecao !== 0) {
+            painel.scrollTop += autoScrollDirecao;
+        }
+
+        requestAnimationFrame(loopAutoScroll);
+    }
+
+    document.addEventListener('dragover', function(e) {
+
+        if (!isDraggingBloco) return;
+
+        const painel = document.querySelector('.painel-direito');
+        if (!painel) return;
+
+        const rect = painel.getBoundingClientRect();
+        const zona = 70;      // distância da borda
+        const velocidade = 10; // velocidade base
+
+        if (e.clientY > rect.bottom - zona) {
+            autoScrollDirecao = velocidade;
+        } 
+        else if (e.clientY < rect.top + zona) {
+            autoScrollDirecao = -velocidade;
+        } 
+        else {
+            autoScrollDirecao = 0;
+        }
+
+        if (!autoScrollAtivo) {
+            autoScrollAtivo = true;
+            requestAnimationFrame(loopAutoScroll);
+        }
+    });
 
     // Variável para guardar o estado de todas as seções durante o arrasto
     let pacotesDeSecoes = [];
@@ -356,10 +397,10 @@
         filter: '.nao-move',
         animation: 150,
         ghostClass: 'bg-light',
-        
+
         onChoose: function(evt) {
             const item = evt.item;
-
+            
             // logica de malas, se for seção
             if (item.classList.contains('bloco-SE')) {
                 
@@ -367,7 +408,7 @@
                 document.querySelectorAll('.text-center.no-print').forEach(el => {
                     el.style.display = 'none';
                 });
-
+                
                 let secaoAtual = null;
                 let clausulasDaSecao = [];
                 
@@ -388,7 +429,7 @@
                 if (secaoAtual && clausulasDaSecao.length > 0) {
                     pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
                 }
-
+                
                 // Coloca fisicamente as cláusulas "dentro" das suas Seções
                 pacotesDeSecoes.forEach(pacote => {
                     const malaInvisivel = document.createElement('div');
@@ -407,6 +448,8 @@
         },
         
         onEnd: function(evt) {
+            autoScrollAtivo = false;
+            autoScrollDirecao = 0;
             // Desfazemos as malas: Cada Seção devolve as suas cláusulas para o HTML principal
             if (pacotesDeSecoes.length > 0) {
                 pacotesDeSecoes.forEach(pacote => {
