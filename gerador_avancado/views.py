@@ -138,6 +138,14 @@ def gerar_pdf_minuta(request, minuta_id):
     blocos = minuta.blocos.all().order_by('ordem')
     capitulos_padrao = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
 
+    dados_variaveis = model_to_dict(minuta)
+    contexto_dinamico = Context(dados_variaveis)
+
+    for bloco in blocos:
+        if bloco.conteudo_editado:
+            template_texto = Template(bloco.conteudo_editado)
+            bloco.texto_final_renderizado = template_texto.render(contexto_dinamico)
+
     # Renderiza o HTML
     html_string = render_to_string('gerador_avancado/preview_minuta.html', {
         'minuta': minuta,
