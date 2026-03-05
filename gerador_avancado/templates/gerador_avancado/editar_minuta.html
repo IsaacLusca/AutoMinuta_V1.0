@@ -393,16 +393,16 @@
     // Variável para guardar o estado de todas as seções durante o arrasto
     let pacotesDeSecoes = [];
     const areaMinuta = document.getElementById('area-minuta');
-    
+
     new Sortable(areaMinuta, {
         handle: '.handle',
         filter: '.nao-move',
         animation: 150,
         ghostClass: 'bg-light',
 
-        onChoose: function(evt) {
+        onStart: function(evt) {
             const item = evt.item;
-            
+
             // logica de malas, se for seção
             if (item.classList.contains('bloco-SE')) {
                 
@@ -410,10 +410,10 @@
                 document.querySelectorAll('.text-center.no-print').forEach(el => {
                     el.style.display = 'none';
                 });
-                
+
                 let secaoAtual = null;
                 let clausulasDaSecao = [];
-                
+
                 // Varre o documento inteiro e agrupa as cláusulas com os seus donos
                 Array.from(areaMinuta.children).forEach(el => {
                     if (el.classList.contains('bloco-CA') || el.classList.contains('bloco-SE')) {
@@ -426,29 +426,28 @@
                         if (secaoAtual) clausulasDaSecao.push(el);
                     }
                 });
-                
+
                 // Guarda o último grupo
                 if (secaoAtual && clausulasDaSecao.length > 0) {
                     pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
                 }
-                
+
                 // Coloca fisicamente as cláusulas "dentro" das suas Seções
                 pacotesDeSecoes.forEach(pacote => {
                     const malaInvisivel = document.createElement('div');
                     malaInvisivel.className = 'mala-invisivel';
                     malaInvisivel.style.display = 'none'; // Esconde o conteúdo
-                    
+
                     pacote.filhos.forEach(filho => malaInvisivel.appendChild(filho));
                     pacote.pai.appendChild(malaInvisivel);
                 });
             }
-        },
-        
-        onStart: function(evt) {
+
+            // Mantém a lógica existente
             isDraggingBloco = true;
             destruirEditoresParaReordenar();
         },
-        
+
         onEnd: function(evt) {
             autoScrollAtivo = false;
             autoScrollDirecao = 0;
@@ -456,12 +455,12 @@
             if (pacotesDeSecoes.length > 0) {
                 pacotesDeSecoes.forEach(pacote => {
                     let inserirApos = pacote.pai;
-                    
+
                     pacote.filhos.forEach(filho => {
                         pacote.pai.parentNode.insertBefore(filho, inserirApos.nextSibling);
                         inserirApos = filho;
                     });
-                    
+
                     const mala = pacote.pai.querySelector('.mala-invisivel');
                     if (mala) mala.remove();
                 });
