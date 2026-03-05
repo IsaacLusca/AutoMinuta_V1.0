@@ -91,7 +91,7 @@
                 {% for capitulo in capitulos_padrao %}
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ capitulo.id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
                             {{ capitulo.titulo }}
                         </button>
                     </h2>
@@ -100,7 +100,7 @@
                             <ul class="list-group list-group-flush">
                                 {% for secao in capitulo.sub_blocos.all %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="titulo-secao-bib">{{ secao.titulo }}</span>
+                                    <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
                                     
                                     <button class="btn btn-sm btn-outline-success" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
                                 </li>
@@ -133,7 +133,7 @@
                 
                 {% for capitulo in capitulos_padrao %}
                     
-                    <div class="bloco-CA capitulo-fixo nao-move mb-4">
+                    <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
                         <div class="d-flex justify-content-center align-items-center w-100">
                             <span class="titulo-texto">{{ capitulo.titulo }}</span>
                         </div>
@@ -142,7 +142,7 @@
                     {% for bloco in blocos_da_minuta %}
                         {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
                             
-                            <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" data-id="{{ bloco.id }}">
+                            <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" data-id="{{ bloco.id }}" data-origem-id="{{ bloco.bloco_origem.id }}">
                                 <div class="d-flex justify-content-between align-items-center w-100">
                                     {% if bloco.tipo == 'SE' %}
                                         <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
@@ -164,7 +164,9 @@
                             </div>
 
                         {% endif %}
-                    {% endfor %} <div class="text-center mt-2 mb-5 no-print">
+                    {% endfor %} 
+
+                    <div class="text-center mt-2 mb-5 no-print">
                         <button class="btn btn-sm text-secondary w-100" 
                                 style="border: 2px dashed #ccc; background: transparent;" 
                                 onclick="criarClausula({{ minuta.id }}, {{ capitulo.id }})">
@@ -561,6 +563,40 @@
             if (data.status === 'sucesso') window.location.reload();
             else alert('Erro ao criar cláusula: ' + data.mensagem);
         });
+    }
+
+    // navegar entre as páginas
+    function rolarParaCapitulo(capituloPadraoId) {
+        // Procura o capítulo no lado direito pelo ID exato
+        const elemento = document.getElementById('capitulo-doc-' + capituloPadraoId);
+        
+        if (elemento) {
+            // Rola suavemente 
+            elemento.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Efeito visual de destaque
+            elemento.style.transition = "background-color 0.5s";
+            elemento.style.backgroundColor = "#fff3cd"; 
+            setTimeout(() => {
+                elemento.style.backgroundColor = ""; 
+            }, 1500);
+        }
+    }
+
+    function rolarParaSecao(secaoPadraoId) {
+        const elemento = document.querySelector(`.painel-direito [data-origem-id="${secaoPadraoId}"]`);
+        
+        if (elemento) {
+            elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            elemento.style.transition = "background-color 0.5s";
+            elemento.style.backgroundColor = "#fff3cd";
+            setTimeout(() => {
+                elemento.style.backgroundColor = "";
+            }, 1500);
+        } else {
+            console.warn("Esta seção não está presente no documento atual.");
+        }
     }
 </script>
 </body>
