@@ -288,10 +288,21 @@
             method: 'POST',
             headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
         })
-        .then(response => response.json())
+        .then(response => {
+            // se o Python devolver status 400 
+            if (!response.ok && response.status === 400) {
+                return response.json().then(err => { throw new Error(err.mensagem); });
+            }
+            return response.json();
+        })
         .then(data => {
-            if (data.status === 'sucesso') window.location.reload();
-            else alert('Erro ao adicionar bloco.');
+            if (data.status === 'sucesso') {
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            // Exibe o aviso no ecrã para o utilizador
+            alert("Aviso: " + error.message);
         });
     }
 

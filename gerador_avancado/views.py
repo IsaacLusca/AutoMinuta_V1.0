@@ -50,6 +50,13 @@ def adicionar_bloco_ajax(request, minuta_id, bloco_padrao_id):
     if request.method == 'POST':
         minuta = get_object_or_404(MinutaGerada, id=minuta_id)
         bloco_origem = get_object_or_404(BlocoPadrao, id=bloco_padrao_id)
+
+        # impedir duplicidade
+        if BlocoDaMinuta.objects.filter(minuta=minuta, bloco_origem=bloco_origem).exists():
+            return JsonResponse({
+                'status': 'erro', 
+                'mensagem': 'Esta seção já foi adicionada a este edital!'
+            }, status=400)
         
         # Pega a última ordem do documento
         ultima_ordem = minuta.blocos.aggregate(Max('ordem'))['ordem__max'] or 0
