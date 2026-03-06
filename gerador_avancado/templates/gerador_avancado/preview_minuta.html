@@ -91,7 +91,7 @@
                 {% endif %}
 
                 {% if bloco.tipo == 'CL' and bloco.conteudo_editado %}
-                    <div class="bloco-CL">
+                    <div class="bloco-CL" id="bloco-{{ bloco.id }}">
                         <div class="conteudo-texto">
                             {{ bloco.texto_final_renderizado|safe }}
                         </div>

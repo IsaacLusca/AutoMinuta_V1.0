@@ -139,7 +139,7 @@
                     {% for bloco in blocos_da_minuta %}
                         {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
                             
-                            <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" data-id="{{ bloco.id }}" data-origem-id="{{ bloco.bloco_origem.id }}">
+                            <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" id="bloco-{{ bloco.id }}" data-id="{{ bloco.id }}" data-origem-id="{{ bloco.bloco_origem.id }}">
                                 <div class="d-flex justify-content-between align-items-center w-100">
                                     {% if bloco.tipo == 'SE' %}
                                         <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
@@ -148,6 +148,9 @@
                                     {% endif %}
                                     
                                     <div class="d-flex align-items-center">
+                                        <button class="btn btn-sm btn-outline-info me-2" onclick="abrirModalReferencia('{{ bloco.id }}')" title="Inserir referência cruzada neste texto">
+                                            🔗 Referenciar
+                                        </button>
                                         <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
                                         <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco">🗑️</button>
                                     </div>
@@ -243,6 +246,27 @@
             <button type="submit" class="btn btn-primary">Salvar Variáveis</button>
           </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para referencias -->
+<div class="modal fade" id="modalReferencia" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">🔗 Inserir Referência Cruzada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <p class="text-muted small">Selecione a cláusula para a qual deseja apontar. O número será atualizado automaticamente se o documento for reordenado.</p>
+          <select id="selectAlvoReferencia" class="form-select" size="10">
+              </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-info text-white" onclick="inserirReferenciaNoEditor()">Inserir no Texto</button>
+      </div>
     </div>
   </div>
 </div>
@@ -457,7 +481,7 @@
                         pacote.pai.parentNode.insertBefore(filho, inserirApos.nextSibling);
                         inserirApos = filho;
                     });
-
+                    
                     const mala = pacote.pai.querySelector('.mala-invisivel');
                     if (mala) mala.remove();
                 });
@@ -594,6 +618,102 @@
             console.warn("Esta seção não está presente no documento atual.");
         }
     }
+
+    // referencias
+    let idBlocoDestinoReferencia = null;
+
+    // contagem da ordem
+    function mapearNumeracao() {
+        let numCap = 0;
+        let numClau = 0;
+        let mapa = {};
+
+        // Pega todos os blocos na ordem que aparecem na tela
+        const elementos = document.querySelectorAll('#area-minuta .bloco-CA, #area-minuta .bloco-SE, #area-minuta .bloco-CL');
+
+        elementos.forEach(el => {
+            if (el.classList.contains('bloco-CA')) {
+                numCap++; // Achou um capítulo, sobe o número
+                numClau = 0; // Zera as cláusulas
+            } else if (el.classList.contains('bloco-CL')) {
+                numClau++;
+                const id = el.getAttribute('data-id');
+                if (id) {
+                    mapa[id] = {
+                        texto_exibicao: `${numCap}.${numClau}`,
+                        capitulo: numCap
+                    };
+                }
+            }
+        });
+        return mapa;
+    }
+
+    // O Modal Organizado por Capítulos
+    function abrirModalReferencia(blocoOrigemId) {
+        idBlocoDestinoReferencia = blocoOrigemId;
+        
+        const mapa = mapearNumeracao();
+        const select = document.getElementById('selectAlvoReferencia');
+        select.innerHTML = '';
+
+        let capituloAtual = 0;
+        let optGroup = null;
+
+        for (const [id, dados] of Object.entries(mapa)) {
+            // Não deixa apontar para si mesmo
+            if (id === blocoOrigemId.toString()) continue;
+
+            // Se mudou de capítulo, cria uma nova "Pasta Visual" na lista
+            if (dados.capitulo !== capituloAtual) {
+                capituloAtual = dados.capitulo;
+                optGroup = document.createElement('optgroup');
+                optGroup.label = `--- CAPÍTULO ${capituloAtual} ---`;
+                select.appendChild(optGroup);
+            }
+
+            // Cria a opção clicável
+            let option = document.createElement('option');
+            option.value = id;
+            option.textContent = `Cláusula ${dados.texto_exibicao}`;
+            
+            // Adiciona a cláusula dentro da pasta do capítulo correspondente
+            if (optGroup) optGroup.appendChild(option);
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('modalReferencia'));
+        modal.show();
+    }
+
+    // Inserção no CKEditor
+    function inserirReferenciaNoEditor() {
+        const select = document.getElementById('selectAlvoReferencia');
+        const alvoId = select.value;
+        const texto = select.options[select.selectedIndex]?.text; 
+
+        if (!alvoId || !idBlocoDestinoReferencia) return;
+
+        // O Link âncora interno para o PDF
+        const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
+        
+        let editorCorreto = null;
+        for (let instanceName in CKEDITOR.instances) {
+            let editor = CKEDITOR.instances[instanceName];
+            if (editor.element.$.closest(`[data-id="${idBlocoDestinoReferencia}"]`)) {
+                editorCorreto = editor;
+                break;
+            }
+        }
+
+        if (editorCorreto) {
+            editorCorreto.insertHtml(linkHTML);
+            salvarNoBanco(idBlocoDestinoReferencia, editorCorreto.getData());
+        }
+
+        bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
+        idBlocoDestinoReferencia = null;
+    }
+    
 </script>
 </body>
 </html>
