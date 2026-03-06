@@ -749,6 +749,7 @@
     function atualizarReferencias() {
         const mapa = mapearNumeracao(); 
         let quantidadeAtualizada = 0;
+        let alertasParaExibir = []; // Guarda os avisos para mostrar no final
 
         // Varre todos os blocos de texto
         document.querySelectorAll('.editor-clausula').forEach(editorDiv => {
@@ -761,16 +762,33 @@
             let instanciaCK = CKEDITOR.instances[editorDiv.id];
             tempDiv.innerHTML = instanciaCK ? instanciaCK.getData() : editorDiv.innerHTML;
 
+            // Descobre o número da cláusula que estamos a ler agora (para o aviso)
+            let blocoAvo = editorDiv.closest('.bloco-CL');
+            let meuNumero = blocoAvo ? (mapa[blocoAvo.getAttribute('data-id')]?.texto_exibicao || "?") : "?";
+
             // Procura os nossos links lá dentro
             tempDiv.querySelectorAll('a.ref-cruzada').forEach(ref => {
                 let alvoId = ref.getAttribute('data-alvo-id');
                 
                 if (alvoId && mapa[alvoId]) {
                     let textoCorreto = `${mapa[alvoId].texto_exibicao}`;
-                    
+                    // melhorar estilo dps
                     if (ref.innerText !== textoCorreto) {
                         ref.innerText = textoCorreto;
+                        ref.style.color = "#0d6efd"; // Volta a ficar azul
+                        ref.style.backgroundColor = "transparent";
                         mudouNesteBloco = true;
+                    }
+                } else {
+                    // apagar ref do bloco destino
+                    if (ref.innerText !== "[Referência Apagada]") {
+                        ref.innerText = "[Referência Apagada]";
+                        ref.style.color = "red"; // Pinta o texto de vermelho
+                        ref.style.backgroundColor = "#ffe6e6"; // Fundo de erro
+                        mudouNesteBloco = true;
+                        
+                        // Prepara o aviso para o utilizador
+                        alertasParaExibir.push(`A <strong>Cláusula ${meuNumero}</strong> contém uma referência apontando para um bloco que não existe mais.`);
                     }
                 }
             });
@@ -792,9 +810,38 @@
             }
         });
 
+        // Dispara todos os alertas acumulados no ecrã!
+        if (alertasParaExibir.length > 0) {
+            alertasParaExibir.forEach(msg => mostrarAlertaReferenciaQuebrada(msg));
+        }
+
         if (quantidadeAtualizada > 0) {
             console.log(`Sucesso: ${quantidadeAtualizada} bloco(s) de referência atualizado(s)!`);
         }
+    }
+
+    // Função para criar o Aviso Flutuante (Toast)
+    function mostrarAlertaReferenciaQuebrada(mensagem) {
+        let container = document.getElementById('container-alertas-ref');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'container-alertas-ref';
+            container.style.cssText = "position: fixed; top: 20px; right: 20px; z-index: 9999;";
+            document.body.appendChild(container);
+        }
+        
+        let alerta = document.createElement('div');
+        alerta.className = 'alert alert-danger alert-dismissible fade show shadow-lg';
+        alerta.innerHTML = `<strong>⚠️ Alerta de Referência:</strong> ${mensagem}
+                           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+        
+        container.appendChild(alerta);
+        
+        // Remove automaticamente ao fim de 6 segundos
+        // setTimeout(() => {
+        //     alerta.classList.remove('show');
+        //     setTimeout(() => alerta.remove(), 150);
+        // }, 6000);
     }
     
 </script>
