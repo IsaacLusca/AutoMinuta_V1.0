@@ -201,8 +201,16 @@ def gerar_pdf_minuta(request, minuta_id):
     # Se der tudo certo, faz o download do arquivo
     response = HttpResponse(pdf_bytes, content_type='application/pdf')
     nome_arquivo = f"Minuta_Edital_{minuta.leilao}_Porto_{minuta.porto}.pdf"
-    response['Content-Disposition'] = f'attachment; filename="{nome_arquivo}"'
-    
+
+    acao = request.GET.get('acao', 'baixar')
+
+    if acao == 'ver':
+        # "inline" abre o PDF nativo dentro da aba do navegador do usuário
+        response['Content-Disposition'] = f'inline; filename="{nome_arquivo}"'
+    else:
+        # "attachment" força o download do arquivo para o computador
+        response['Content-Disposition'] = f'attachment; filename="{nome_arquivo}"'
+
     return response
 
 # No final do seu arquivo views.py
@@ -274,6 +282,9 @@ def criar_clausula_ajax(request, minuta_id):
         except Exception as e:
             return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
     return JsonResponse({'status': 'erro'}, status=400)
+
+# def referencia_blocos(request, bloco_id):
+
 
 
 # --- novas estruturas ---

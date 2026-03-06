@@ -121,11 +121,8 @@
                         Dados do Edital
                     </button>
                     
-                    <a href="{% url 'preview_minuta' minuta.id %}" target="_blank" class="btn btn-outline-secondary me-2">Pré-visualizar</a>
-                    <button class="btn btn-primary"
-                        onclick="window.location.href='{% url 'gerar_pdf_minuta' minuta.id %}'">
-                        Gerar PDF Final
-                    </button>
+                    <a href="{% url 'gerar_pdf_minuta' minuta.id %}?acao=ver" target="_blank" class="btn btn-outline-secondary me-2">Pré-visualizar</a>
+                    <a href="{% url 'gerar_pdf_minuta' minuta.id %}?acao=baixar" class="btn btn-primary">Baixar PDF Final</a>
                 </div>
             </div>
             
