@@ -17,17 +17,31 @@ import re
 def editar_minuta_dashboard(request, minuta_id):
     # busca a minuta especificada ou retorna 404 se não existir
     minuta = get_object_or_404(MinutaGerada, id=minuta_id)
-
-    # busca os capitulos padrão (blocos de nível CAPITULO) para exibir na biblioteca
     capitulos_padrao = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
 
     # busca os blocos da minuta, ordenados pela ordem definida
     blocos_da_minuta = minuta.blocos.order_by('ordem')
 
+    campos_variaveis = []
+    
+    campos_ignorados = ['id', 'nome_interno', 'criado_em', 'atualizado_em'] 
+    
+    # Varre todos os campos que existem no seu modelo MinutaGerada
+    for campo in minuta._meta.fields:
+        if campo.name not in campos_ignorados:
+            valor = getattr(minuta, campo.name)
+            campos_variaveis.append({
+                'name': campo.name,
+                # O Django já transforma 'prazo_arrendamento' em 'Prazo arrendamento' automaticamente
+                'label': campo.verbose_name.title(), 
+                'valor': valor if valor is not None else ''
+            })
+
     context = {
         'minuta': minuta,
         'capitulos_padrao': capitulos_padrao,
         'blocos_da_minuta': blocos_da_minuta,
+        'campos_variaveis': campos_variaveis, # Passamos a nossa lista inteligente
     }
 
     return render(request, 'gerador_avancado/editar_minuta.html', context)

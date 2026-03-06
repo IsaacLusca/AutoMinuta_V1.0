@@ -221,29 +221,25 @@
       </div>
       <form action="{% url 'salvar_dados_edital' minuta.id %}" method="POST">
           {% csrf_token %}
-          <div class="modal-body row">
+            <div class="modal-body row">
+                <div class="col-12 mb-3">
+                    <div class="alert alert-info">
+                        {% verbatim %}
+                        Para usar a palavra reservada corretamente no documento, coloque neste formato <strong>{{ palavra }}</strong>.<br>
+                        O título deve estar em <strong>minúsculo</strong> e espaços devem ser substituídos por <strong>_</strong>.<br>
+                        Exemplo: Perfil Da Carga → <code>{{ perfil_da_carga }}</code>
+                        {% endverbatim %}
+                    </div>
+                </div>
+              {% for campo in campos_variaveis %}
               <div class="col-md-6 mb-3">
-                  <label class="form-label">Número do Leilão</label>
-                  <input type="text" class="form-control" name="leilao" value="{{ minuta.leilao }}">
+                  <label class="form-label fw-bold text-secondary">{{ campo.label }}</label>
+                  <input type="text" class="form-control" name="{{ campo.name }}" value="{{ campo.valor }}">
               </div>
-              <div class="col-md-6 mb-3">
-                  <label class="form-label">Nome do Porto</label>
-                  <input type="text" class="form-control" name="porto" value="{{ minuta.porto }}">
-              </div>
-              <div class="col-md-6 mb-3">
-                  <label class="form-label">Município</label>
-                  <input type="text" class="form-control" name="municipio" value="{{ minuta.municipio }}">
-              </div>
-              <div class="col-md-6 mb-3">
-                  <label class="form-label">Estado (UF)</label>
-                  <input type="text" class="form-control" name="estado" value="{{ minuta.estado }}">
-              </div>
-              <div class="col-md-6 mb-3">
-                  <label class="form-label">Prazo do Arrendamento (Anos)</label>
-                  <input type="text" class="form-control" name="prazo_arrendamento" value="{{ minuta.prazo_arrendamento }}">
-              </div>
+              {% endfor %}
+              
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer bg-light">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             <button type="submit" class="btn btn-primary">Salvar Variáveis</button>
           </div>
