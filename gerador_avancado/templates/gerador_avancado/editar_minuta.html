@@ -120,7 +120,7 @@
                     <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#modalDadosEdital">
                         Dados do Edital
                     </button>
-                    
+                    <!-- <button class="btn btn-danger me-2" onclick="atualizarReferencias()">Testar Recálculo</button> -->
                     <a href="{% url 'gerar_pdf_minuta' minuta.id %}?acao=ver" target="_blank" class="btn btn-outline-secondary me-2">Pré-visualizar</a>
                     <a href="{% url 'gerar_pdf_minuta' minuta.id %}?acao=baixar" class="btn btn-primary">Baixar PDF Final</a>
                 </div>
@@ -148,9 +148,11 @@
                                     {% endif %}
                                     
                                     <div class="d-flex align-items-center">
+                                        {% if bloco.tipo == 'CL' %}
                                         <button class="btn btn-sm btn-outline-info me-2" onclick="abrirModalReferencia('{{ bloco.id }}')" title="Inserir referência cruzada neste texto">
                                             🔗 Referenciar
                                         </button>
+                                        {% endif %}
                                         <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
                                         <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco">🗑️</button>
                                     </div>
@@ -280,6 +282,8 @@
         CKEDITOR.disableAutoInline = true; 
         
         CKEDITOR.config.versionCheck = false;
+
+        CKEDITOR.config.allowedContent = true;
     }
 
     function adicionarBloco(minutaId, blocoPadraoId) {
@@ -297,6 +301,11 @@
 
     function removerBloco(blocoMinutaId) {
         if (!confirm('Tem certeza que deseja remover este bloco?')) return;
+        
+        // encontra o bloco antes de enviar pro server
+        const bloco = document.getElementById(`bloco-${blocoMinutaId}`);
+        const isSecao = bloco && bloco.classList.contains('bloco-SE');
+
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         fetch(`/minuta/remover-bloco/${blocoMinutaId}/`, {
             method: 'POST',
@@ -304,7 +313,27 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 'sucesso') window.location.reload();
+            if (data.status === 'sucesso') {
+                if (bloco) {
+                    // se for uma Seção, encontra suas clausulas e apaga
+                    if (isSecao) {
+                        let nextEl = bloco.nextElementSibling;
+                        while (nextEl && nextEl.classList.contains('bloco-CL')) {
+                            const clToRemove = nextEl;
+                            nextEl = nextEl.nextElementSibling;
+                            clToRemove.remove(); // Apaga visualmente
+                        }
+                    }
+                    
+                    // apaga o bloco
+                    bloco.remove();
+                }
+                
+                // para os blocos que acabaram de sumir, o alerta vermelho vai disparar!
+                setTimeout(() => {
+                    atualizarReferencias(); 
+                }, 400);
+            }
             else alert('Erro ao remover bloco.');
         });
     }
@@ -496,6 +525,10 @@
             inicializarEditores();
             isDraggingBloco = false;
 
+            setTimeout(() => {
+                atualizarReferencias(); 
+            }, 800);
+
             // Lê a ordem visual perfeita e salva no Django
             const itens = [];
             areaMinuta.querySelectorAll('[data-id]').forEach((el, index) => {
@@ -675,7 +708,7 @@
             // Cria a opção clicável
             let option = document.createElement('option');
             option.value = id;
-            option.textContent = `Cláusula ${dados.texto_exibicao}`;
+            option.textContent = `${dados.texto_exibicao}`;
             
             // Adiciona a cláusula dentro da pasta do capítulo correspondente
             if (optGroup) optGroup.appendChild(option);
@@ -712,6 +745,56 @@
 
         bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
         idBlocoDestinoReferencia = null;
+    }
+    function atualizarReferencias() {
+        const mapa = mapearNumeracao(); 
+        let quantidadeAtualizada = 0;
+
+        // Varre todos os blocos de texto
+        document.querySelectorAll('.editor-clausula').forEach(editorDiv => {
+            let mudouNesteBloco = false;
+            
+            // Cria um rascunho invisível para ler o HTML atual do bloco
+            let tempDiv = document.createElement('div');
+            
+            // Pega o HTML (se o CKEditor estiver ativo, pega dele, senão pega da div)
+            let instanciaCK = CKEDITOR.instances[editorDiv.id];
+            tempDiv.innerHTML = instanciaCK ? instanciaCK.getData() : editorDiv.innerHTML;
+
+            // Procura os nossos links lá dentro
+            tempDiv.querySelectorAll('a.ref-cruzada').forEach(ref => {
+                let alvoId = ref.getAttribute('data-alvo-id');
+                
+                if (alvoId && mapa[alvoId]) {
+                    let textoCorreto = `${mapa[alvoId].texto_exibicao}`;
+                    
+                    if (ref.innerText !== textoCorreto) {
+                        ref.innerText = textoCorreto;
+                        mudouNesteBloco = true;
+                    }
+                }
+            });
+
+            if (mudouNesteBloco) {
+                quantidadeAtualizada++;
+                let novoHTML = tempDiv.innerHTML;
+                
+                // Atualiza a tela
+                if (instanciaCK) {
+                    instanciaCK.setData(novoHTML);
+                } else {
+                    editorDiv.innerHTML = novoHTML;
+                }
+                
+                // Salva no banco de dados
+                const blocoId = editorDiv.getAttribute('data-id');
+                salvarNoBanco(blocoId, novoHTML);
+            }
+        });
+
+        if (quantidadeAtualizada > 0) {
+            console.log(`Sucesso: ${quantidadeAtualizada} bloco(s) de referência atualizado(s)!`);
+        }
     }
     
 </script>
