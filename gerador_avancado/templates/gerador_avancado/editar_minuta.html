@@ -184,8 +184,12 @@
                 {% for capitulo in capitulos_padrao %}
                     
                     <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
-                        <div class="d-flex justify-content-center align-items-center w-100">
+                        <div class="d-flex justify-content-between align-items-center w-100 px-2">
+                            <div style="width: 32px;"></div> 
+                            
                             <span class="titulo-texto">{{ capitulo.titulo }}</span>
+                            
+                            <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo">🗑️</button>
                         </div>
                     </div>
 
@@ -985,6 +989,67 @@
             window.location.reload(); // Recarrega a página apenas 1 vez no final!
         } else {
             alert(`Nenhuma nova seção foi adicionada. Todas as ${jaExistiam} seções já estavam presentes no documento.`);
+        }
+    }
+
+    async function removerCapituloCompleto(capituloId) {
+        // Encontra a barra de título do capítulo no documento
+        const capituloDiv = document.getElementById(`capitulo-doc-${capituloId}`);
+        if (!capituloDiv) return;
+
+        let blocosParaRemover = [];
+        let nextEl = capituloDiv.nextElementSibling;
+        
+        // Vai descendo o documento elemento por elemento até bater no próximo capítulo
+        while (nextEl && !nextEl.classList.contains('bloco-CA')) {
+            // Se o elemento tiver um data-id (ou seja, é uma seção ou cláusula real)
+            if (nextEl.hasAttribute('data-id')) { 
+                blocosParaRemover.push({
+                    id: nextEl.getAttribute('data-id'),
+                    elemento: nextEl // Guarda o HTML para apagarmos da tela depois
+                });
+            }
+            nextEl = nextEl.nextElementSibling;
+        }
+
+        // Validações
+        if (blocosParaRemover.length === 0) {
+            alert('Este capítulo já está vazio.');
+            return;
+        }
+
+        if (!confirm(`Tem certeza que deseja APAGAR TODO O CONTEÚDO (${blocosParaRemover.length} itens) deste capítulo?\nEsta ação não pode ser desfeita.`)) {
+            return;
+        }
+
+        // Executa a deleção em massa reaproveitando o seu endpoint atual
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        document.body.style.cursor = 'wait'; // Cursor a carregar
+        let removidos = 0;
+
+        for (let item of blocosParaRemover) {
+            try {
+                const response = await fetch(`/minuta/remover-bloco/${item.id}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    item.elemento.remove(); // Apaga o bloco visualmente da tela
+                    removidos++;
+                }
+            } catch (error) {
+                console.error("Erro ao remover bloco:", error);
+            }
+        }
+
+        document.body.style.cursor = 'default'; // Cursor normal
+
+        if (removidos > 0) {
+            setTimeout(() => {
+                atualizarReferencias();
+                window.location.reload(); 
+            }, 400);
         }
     }
     
