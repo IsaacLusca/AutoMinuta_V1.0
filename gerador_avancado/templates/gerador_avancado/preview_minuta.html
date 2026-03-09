@@ -64,6 +64,40 @@
             page-break-before: auto;
             break-before: auto;
         }
+        
+        .conteudo-texto ol, .editor-clausula ol {
+            list-style: none !important;
+            counter-reset: subnivel;
+            padding-left: 0 !important;
+            margin-left: 15px !important; 
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .conteudo-texto ol ol, .editor-clausula ol ol {
+            margin-left: -10px !important; 
+        }
+
+        .conteudo-texto ol li, .editor-clausula ol li {
+            list-style: none !important;
+            counter-increment: subnivel;
+            display: table !important; 
+            width: 100%;
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .conteudo-texto ol li::before, .editor-clausula ol li::before {
+            content: counter(capitulo) "." counter(clausula) "." counters(subnivel, ".") " ";
+            display: table-cell !important; 
+            white-space: nowrap; 
+            width: 1%; 
+            
+            padding-right: 5px !important; 
+            
+            font-weight: bold;
+            vertical-align: top; 
+        }
     </style>
 </head>
 <body>

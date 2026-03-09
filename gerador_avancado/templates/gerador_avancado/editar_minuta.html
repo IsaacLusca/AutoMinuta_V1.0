@@ -72,6 +72,40 @@
             content: "Seção " counter(secao_bib, upper-roman) " - ";
             font-weight: bold;
         }
+        
+        .conteudo-texto ol, .editor-clausula ol {
+            list-style: none !important;
+            counter-reset: subnivel;
+            padding-left: 0 !important;
+            margin-left: 15px !important; 
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .conteudo-texto ol ol, .editor-clausula ol ol {
+            margin-left: -10px !important; 
+        }
+
+        .conteudo-texto ol li, .editor-clausula ol li {
+            list-style: none !important;
+            counter-increment: subnivel;
+            display: table !important; 
+            width: 100%;
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .conteudo-texto ol li::before, .editor-clausula ol li::before {
+            content: counter(capitulo) "." counter(clausula) "." counters(subnivel, ".") " ";
+            display: table-cell !important; 
+            white-space: nowrap; 
+            width: 1%; 
+            
+            padding-right: 5px !important; 
+            
+            font-weight: bold;
+            vertical-align: top; 
+        }
     </style>
 </head>
 <body>
@@ -280,6 +314,22 @@
         CKEDITOR.config.versionCheck = false;
 
         CKEDITOR.config.allowedContent = true;
+
+        // tab faz com que mude a lista em subniveis
+        CKEDITOR.on('instanceCreated', function(e) {
+            e.editor.on('key', function(evt) {
+                // Se o utilizador apertar apenas TAB (Código 9)
+                if (evt.data.keyCode === 9) {
+                    evt.cancel(); // Bloqueia o salto para o próximo bloco
+                    e.editor.execCommand('indent'); // Aumenta o nível (Ex: 1.1 -> 1.1.1)
+                } 
+                // Se o utilizador apertar SHIFT + TAB
+                else if (evt.data.keyCode === CKEDITOR.SHIFT + 9) {
+                    evt.cancel(); // Bloqueia o comportamento padrão
+                    e.editor.execCommand('outdent'); // Diminui o nível (Ex: 1.1.1 -> 1.1)
+                }
+            });
+        });
     }
 
     function adicionarBloco(minutaId, blocoPadraoId) {
