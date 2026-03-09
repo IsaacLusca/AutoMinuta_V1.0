@@ -920,17 +920,13 @@
         // }, 6000);
     }
 
-    function adicionarCapituloCompleto(collapseId, event) {
-        // Impede que o clique abra/feche o acordeão
+    async function adicionarCapituloCompleto(collapseId, event) {
         event.stopPropagation();
         event.preventDefault();
 
         // Encontra a div que contém as seções do capítulo
         const containerCapitulo = document.getElementById(collapseId);
-        if (!containerCapitulo) {
-            console.error("Capítulo não encontrado!");
-            return;
-        }
+        if (!containerCapitulo) return;
 
         // Pega todos os botões '+' individuais deste capítulo
         const botoesAdicionar = containerCapitulo.querySelectorAll('.btn-adicionar-secao');
@@ -940,16 +936,55 @@
             return;
         }
 
-        // Pede confirmação
-        if (confirm(`Deseja adicionar todas as ${botoesAdicionar.length} seções deste capítulo à sua minuta?`)) {
+        if (!confirm(`Deseja verificar e adicionar as ${botoesAdicionar.length} seções deste capítulo à sua minuta?`)) {
+            return;
+        }
+
+        let adicionadas = 0;
+        let jaExistiam = 0;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Muda o cursor para "carregando" para o utilizador saber que o sistema está a trabalhar
+        document.body.style.cursor = 'wait';
+
+        // Loop assíncrono: espera uma requisição terminar antes de fazer a próxima 
+        for (let btn of botoesAdicionar) {
+            // Extrai os IDs (minuta e seção) diretamente do atributo onclick="adicionarBloco(1, 45)" do botão
+            const match = btn.getAttribute('onclick').match(/\d+/g);
             
-            // Faz um loop clicando em cada botão com um pequeno atraso
-            // O atraso de 200ms evita que o navegador envie dezenas de requisições de uma vez e trave o servidor
-            botoesAdicionar.forEach((btn, index) => {
-                setTimeout(() => {
-                    btn.click();
-                }, index * 10); 
-            });
+            if (match && match.length >= 2) {
+                const minutaId = match[0];
+                const secaoId = match[1];
+
+                try {
+                    // Faz a requisição silenciosamente (sem chamar a função antiga que dava os alerts)
+                    const response = await fetch(`/minuta/${minutaId}/adicionar-bloco/${secaoId}/`, {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.status === 'sucesso') adicionadas++;
+                    } else if (response.status === 400) {
+                        // O servidor devolveu 400 (ex: "Seção já adicionada")
+                        jaExistiam++;
+                    }
+                } catch (error) {
+                    console.error("Erro ao adicionar seção:", error);
+                }
+            }
+        }
+
+        // Volta o cursor ao normal
+        document.body.style.cursor = 'default';
+
+        // O Resumo Final 
+        if (adicionadas > 0) {
+            alert(`Processo concluído! ${adicionadas} nova(s) seção(ões) adicionada(s) à minuta.`);
+            window.location.reload(); // Recarrega a página apenas 1 vez no final!
+        } else {
+            alert(`Nenhuma nova seção foi adicionada. Todas as ${jaExistiam} seções já estavam presentes no documento.`);
         }
     }
     
