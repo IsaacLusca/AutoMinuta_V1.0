@@ -140,9 +140,12 @@
             <div class="accordion" id="accordionBiblioteca">
                 {% for capitulo in capitulos_padrao %}
                 <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
+                    <h2 class="accordion-header d-flex align-items-center">
+                        <button class="accordion-button collapsed flex-grow-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
                             {{ capitulo.titulo }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-success ms-1 me-3 text-nowrap shadow-sm" onclick="adicionarCapituloCompleto('collapse-{{ capitulo.id }}', event)" title="Adicionar todas as seções deste capítulo">
+                            + Tudo
                         </button>
                     </h2>
                     <div id="collapse-{{ capitulo.id }}" class="accordion-collapse collapse">
@@ -152,7 +155,7 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
                                     
-                                    <button class="btn btn-sm btn-outline-success" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
+                                    <button class="btn btn-sm btn-outline-success btn-adicionar-secao" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -915,6 +918,39 @@
         //     alerta.classList.remove('show');
         //     setTimeout(() => alerta.remove(), 150);
         // }, 6000);
+    }
+
+    function adicionarCapituloCompleto(collapseId, event) {
+        // Impede que o clique abra/feche o acordeão
+        event.stopPropagation();
+        event.preventDefault();
+
+        // Encontra a div que contém as seções do capítulo
+        const containerCapitulo = document.getElementById(collapseId);
+        if (!containerCapitulo) {
+            console.error("Capítulo não encontrado!");
+            return;
+        }
+
+        // Pega todos os botões '+' individuais deste capítulo
+        const botoesAdicionar = containerCapitulo.querySelectorAll('.btn-adicionar-secao');
+
+        if (botoesAdicionar.length === 0) {
+            alert('Nenhuma seção disponível para adicionar neste capítulo.');
+            return;
+        }
+
+        // Pede confirmação
+        if (confirm(`Deseja adicionar todas as ${botoesAdicionar.length} seções deste capítulo à sua minuta?`)) {
+            
+            // Faz um loop clicando em cada botão com um pequeno atraso
+            // O atraso de 200ms evita que o navegador envie dezenas de requisições de uma vez e trave o servidor
+            botoesAdicionar.forEach((btn, index) => {
+                setTimeout(() => {
+                    btn.click();
+                }, index * 10); 
+            });
+        }
     }
     
 </script>
