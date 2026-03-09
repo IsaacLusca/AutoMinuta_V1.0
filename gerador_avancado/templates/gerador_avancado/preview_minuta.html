@@ -159,6 +159,40 @@
             break-after: page;
         }
 
+        .sumario-edital {
+            page-break-after: always; 
+            break-after: page;
+            counter-reset: cap_sumario; /* Contador isolado do resto do documento */
+        }
+
+        .titulo-sumario {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14pt;
+            margin-bottom: 40px;
+        }
+
+        .item-sumario-ca {
+            counter-increment: cap_sumario;
+            counter-reset: sec_sumario; 
+            font-weight: bold;
+            margin-top: 15px;
+            text-transform: uppercase;
+        }
+        .item-sumario-ca::before {
+            content: "CAPÍTULO " counter(cap_sumario) " - ";
+        }
+
+        .item-sumario-se {
+            counter-increment: sec_sumario;
+            margin-left: 25px; /* Degrau da seção no sumário */
+            margin-top: 5px;
+            font-weight: normal;
+        }
+        .item-sumario-se::before {
+            content: "Seção " counter(sec_sumario, upper-roman) " - ";
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -172,9 +206,33 @@
         </p>
     </div>
 
+    <div class="sumario-edital">
+        <div class="titulo-sumario">SUMÁRIO</div>
+        
+        {% for capitulo in capitulos_padrao %}
+            <a href="#capitulo-{{ capitulo.id }}" style="text-decoration: none; color: inherit;">
+                <div class="item-sumario-ca">{{ capitulo.titulo }}</div>
+            </a>
+
+            {% for bloco in blocos %}
+                {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
+                    
+                    {% if bloco.tipo == 'SE' %}
+                        <div class="item-sumario-se">
+                            <a href="#secao-{{ bloco.id }}" style="text-decoration: none; color: inherit;">
+                                {{ bloco.titulo|default_if_none:"" }}
+                            </a>
+                        </div>
+                    {% endif %}
+                    
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+
     {% for capitulo in capitulos_padrao %}
         
-        <div class="bloco-CA">
+        <div class="bloco-CA" id="capitulo-{{ capitulo.id }}">
             <span>{{ capitulo.titulo }}</span>
         </div>
 
@@ -182,7 +240,7 @@
             {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
                 
                 {% if bloco.tipo == 'SE' %}
-                    <div class="bloco-SE">
+                    <div class="bloco-SE" id="secao-{{ bloco.id }}">
                         <span>{{ bloco.titulo|default_if_none:"" }}</span>
                     </div>
                 {% endif %}
