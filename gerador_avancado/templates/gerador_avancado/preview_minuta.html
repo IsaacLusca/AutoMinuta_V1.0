@@ -136,13 +136,38 @@
         .editor-clausula ol li > ol {
             grid-column: 1 / -1; 
         }
+
+        /* ========================================================= */
+        /* CAPA E SUMÁRIO                                            */
+        /* ========================================================= */
+        
+        .capa-edital {
+            height: 100vh; 
+            
+            /* Trocamos margin por padding e adicionamos um respiro no fundo */
+            padding-top: 150px; 
+            padding-bottom: 80px; 
+            
+            box-sizing: border-box; 
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            page-break-after: always; 
+            break-after: page;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="titulo-edital" style="text-align: center; font-weight: bold; font-family: Arial, sans-serif; margin-bottom: 40px;">
-        <p style="margin-bottom: 5px; font-size: 14pt;">EDITAL</p>
-        <p style="text-transform: uppercase;">
+    <div class="capa-edital" style="font-family: Arial, sans-serif; font-weight: bold;">
+        <p style="margin-bottom: 5px; font-size: 11pt; padding-bottom: 100px;">UNIÃO</p>
+        <p style="margin-bottom: 20px; font-size: 11pt;">AGÊNCIA NACIONAL DE TRANSPORTES AQUAVIÁRIOS – ANTAQ</p>
+        <p style="margin-bottom: 20px; font-size: 11pt;">EDITAL</p>
+        <p style="text-transform: uppercase; font-size: 11pt; line-height: 1.5;">
             LEILÃO Nº {{ minuta.leilao|default:"[•][•][•]" }} ANTAQ, PARA O DE ÁREA E INFRAESTRUTURA PÚBLICA PARA A MOVIMENTAÇÃO E ARMAZENAGEM DE {{ minuta.perfil_da_carga|default:"[•][•][•]" }}, ESPECIALMENTE {{ minuta.cargas_no_mme|default:"[•][•][•]" }}, LOCALIZADA DENTRO DO PORTO ORGANIZADO DE {{ minuta.porto|default:"[•][•][•]" }}, DENOMINADA {{ minuta.codigo_area|default:"[•][•][•]" }}
         </p>
     </div>
