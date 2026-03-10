@@ -88,40 +88,23 @@
 
         /* usando grid */
         .conteudo-texto ol li, .editor-clausula ol li {
-            list-style: none !important;
             counter-increment: subnivel;
-            
-            /* display: grid !important; */
-            grid-template-columns: max-content 1fr; 
-            
-            /* ---> mudar depois o tamanho <--- */
-            column-gap: 8px !important; 
-            
-            align-items: start; 
             margin-bottom: 8px;
             text-align: justify;
+            min-height: 1.5em; 
         }
 
         .conteudo-texto ol li::before, .editor-clausula ol li::before {
             content: counter(capitulo) "." counter(clausula) "." counters(subnivel, ".") ".";
-            grid-column: 1; /* Força o número a ficar na primeira coluna */
             font-weight: bold;
             white-space: nowrap;
             padding-right: 10px;
+            color: #000;
         }
 
-        /* .conteudo-texto ol li > p, 
-        .editor-clausula ol li > p,
-        .conteudo-texto ol li > div,
-        .editor-clausula ol li > div {
-            grid-column: 2; 
+        .editor-clausula ol li > p {
+            display: inline;
             margin: 0 !important;
-            text-indent: 0 !important; 
-        } */
-
-        .conteudo-texto ol li > ol, 
-        .editor-clausula ol li > ol {
-            grid-column: 1 / -1; 
         }
     </style>
 </head>
@@ -310,19 +293,43 @@
 <div class="modal fade" id="modalReferencia" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      
       <div class="modal-header bg-info text-white">
         <h5 class="modal-title">🔗 Inserir Referência Cruzada</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      
       <div class="modal-body">
-          <p class="text-muted small">Selecione a cláusula para a qual deseja apontar. O número será atualizado automaticamente se o documento for reordenado.</p>
-          <select id="selectAlvoReferencia" class="form-select" size="10">
-              </select>
+          
+          <ul class="nav nav-tabs mb-3" id="abasReferencia" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="tab-clausulas-btn" data-bs-toggle="tab" data-bs-target="#tab-clausulas" type="button" role="tab">Cláusulas Numeradas</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-definicoes-btn" data-bs-toggle="tab" data-bs-target="#tab-definicoes" type="button" role="tab">Conceitos (Termos)</button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="conteudoAbasReferencia">
+            
+            <div class="tab-pane fade show active" id="tab-clausulas" role="tabpanel">
+                <p class="text-muted small mb-2">Selecione a cláusula para a qual deseja apontar.</p>
+                <select id="selectAlvoReferencia" class="form-select" size="8"></select>
+            </div>
+
+            <div class="tab-pane fade" id="tab-definicoes" role="tabpanel">
+                <p class="text-muted small mb-2">O sistema lista automaticamente termos que começam em <strong>negrito</strong> no documento.</p>
+                <select id="selectAlvoDefinicao" class="form-select" size="8"></select>
+            </div>
+
+          </div>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-info text-white" onclick="inserirReferenciaNoEditor()">Inserir no Texto</button>
+        <button type="button" class="btn btn-info text-white" onclick="inserirLinkInteligente()">Inserir no Texto</button>
       </div>
+
     </div>
   </div>
 </div>
@@ -764,13 +771,13 @@
     }
 
     // O Modal Organizado por Capítulos
-    function abrirModalReferencia(blocoOrigemId) {
+     function abrirModalReferencia(blocoOrigemId) {
         idBlocoDestinoReferencia = blocoOrigemId;
         
         const mapa = mapearNumeracao();
         const select = document.getElementById('selectAlvoReferencia');
         select.innerHTML = '';
-
+        
         let capituloAtual = 0;
         let optGroup = null;
 
@@ -789,10 +796,31 @@
             // Cria a opção clicável
             let option = document.createElement('option');
             option.value = id;
+            // não é pra quebrar 
             option.textContent = `${dados.texto_exibicao}`;
             
             // Adiciona a cláusula dentro da pasta do capítulo correspondente
             if (optGroup) optGroup.appendChild(option);
+        }
+
+        // Carrega as Definições 
+        const mapaDef = mapearDefinicoes();
+        const selectDef = document.getElementById('selectAlvoDefinicao');
+        selectDef.innerHTML = '';
+
+        if (Object.keys(mapaDef).length === 0) {
+            let option = document.createElement('option');
+            option.disabled = true;
+            option.textContent = "Nenhuma definição (termo em negrito) encontrada.";
+            selectDef.appendChild(option);
+        } else {
+            for (const [id, termo] of Object.entries(mapaDef)) {
+                if (id === blocoOrigemId.toString()) continue;
+                let option = document.createElement('option');
+                option.value = id;
+                option.textContent = termo;
+                selectDef.appendChild(option);
+            }
         }
 
         const modal = new bootstrap.Modal(document.getElementById('modalReferencia'));
@@ -800,33 +828,33 @@
     }
 
     // Inserção no CKEditor
-    function inserirReferenciaNoEditor() {
-        const select = document.getElementById('selectAlvoReferencia');
-        const alvoId = select.value;
-        const texto = select.options[select.selectedIndex]?.text; 
+    // function inserirReferenciaNoEditor() {
+    //     const select = document.getElementById('selectAlvoReferencia');
+    //     const alvoId = select.value;
+    //     const texto = select.options[select.selectedIndex]?.text; 
 
-        if (!alvoId || !idBlocoDestinoReferencia) return;
+    //     if (!alvoId || !idBlocoDestinoReferencia) return;
 
-        // O Link âncora interno para o PDF
-        const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
+    //     // O Link âncora interno para o PDF
+    //     const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
         
-        let editorCorreto = null;
-        for (let instanceName in CKEDITOR.instances) {
-            let editor = CKEDITOR.instances[instanceName];
-            if (editor.element.$.closest(`[data-id="${idBlocoDestinoReferencia}"]`)) {
-                editorCorreto = editor;
-                break;
-            }
-        }
+    //     let editorCorreto = null;
+    //     for (let instanceName in CKEDITOR.instances) {
+    //         let editor = CKEDITOR.instances[instanceName];
+    //         if (editor.element.$.closest(`[data-id="${idBlocoDestinoReferencia}"]`)) {
+    //             editorCorreto = editor;
+    //             break;
+    //         }
+    //     }
 
-        if (editorCorreto) {
-            editorCorreto.insertHtml(linkHTML);
-            salvarNoBanco(idBlocoDestinoReferencia, editorCorreto.getData());
-        }
+    //     if (editorCorreto) {
+    //         editorCorreto.insertHtml(linkHTML);
+    //         salvarNoBanco(idBlocoDestinoReferencia, editorCorreto.getData());
+    //     }
 
-        bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
-        idBlocoDestinoReferencia = null;
-    }
+    //     bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
+    //     idBlocoDestinoReferencia = null;
+    // }
     function atualizarReferencias() {
         const mapa = mapearNumeracao(); 
         let quantidadeAtualizada = 0;
@@ -1052,6 +1080,75 @@
                 window.location.reload(); 
             }, 400);
         }
+    }
+
+    function mapearDefinicoes() {
+        let mapaDefinicoes = {};
+
+        document.querySelectorAll('#area-minuta .bloco-CL').forEach(el => {
+            const editor = el.querySelector('.editor-clausula');
+            if (!editor) return;
+
+            // Cria um rascunho invisível para analisar o HTML da cláusula
+            const tempDiv = document.createElement('div');
+            // Se o CKEditor estiver ativo, pega dele para ter a versão mais recente
+            const instanciaCK = CKEDITOR.instances[editor.id];
+            tempDiv.innerHTML = instanciaCK ? instanciaCK.getData() : editor.innerHTML;
+
+            // Procura o primeiro parágrafo
+            const primeiroP = tempDiv.querySelector('p, div');
+            if (primeiroP && primeiroP.firstChild) {
+                const primeiroElemento = primeiroP.firstChild;
+                
+                // Se a primeira coisa for uma tag <strong> ou <b> é um conceito
+                if (primeiroElemento.nodeType === 1 && (primeiroElemento.tagName === 'STRONG' || primeiroElemento.tagName === 'B')) {
+                    // Limpa os dois pontos ou traços (Ex: "Arrendamento:" vira "Arrendamento")
+                    let termoLimpo = primeiroElemento.innerText.replace(/[:\-]/g, '').trim();
+                    
+                    // Só adiciona se for uma palavra/frase curta (evita pegar um parágrafo inteiro em negrito acidentalmente)
+                    if (termoLimpo.length > 2 && termoLimpo.length < 60) {
+                        const idBloco = el.getAttribute('data-id');
+                        mapaDefinicoes[idBloco] = termoLimpo;
+                    }
+                }
+            }
+        });
+
+        return mapaDefinicoes;
+    }
+
+    function inserirLinkInteligente() {
+        // Descobre qual aba está aberta no momento
+        const abaClausulasAtiva = document.getElementById('tab-clausulas-btn').classList.contains('active');
+        
+        const select = abaClausulasAtiva 
+            ? document.getElementById('selectAlvoReferencia') 
+            : document.getElementById('selectAlvoDefinicao');
+
+        const alvoId = select.value;
+        const texto = select.options[select.selectedIndex]?.text; 
+
+        if (!alvoId || !idBlocoDestinoReferencia) return;
+
+        // O HTML da âncora
+        const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
+        
+        let editorCorreto = null;
+        for (let instanceName in CKEDITOR.instances) {
+            let editor = CKEDITOR.instances[instanceName];
+            if (editor.element.$.closest(`[data-id="${idBlocoDestinoReferencia}"]`)) {
+                editorCorreto = editor;
+                break;
+            }
+        }
+
+        if (editorCorreto) {
+            editorCorreto.insertHtml(linkHTML);
+            salvarNoBanco(idBlocoDestinoReferencia, editorCorreto.getData());
+        }
+
+        bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
+        idBlocoDestinoReferencia = null;
     }
     
 </script>

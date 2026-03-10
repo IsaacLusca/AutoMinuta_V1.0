@@ -102,40 +102,23 @@
 
         /* usando grid */
         .conteudo-texto ol li, .editor-clausula ol li {
-            list-style: none !important;
             counter-increment: subnivel;
-            
-            /* display: grid !important; */
-            grid-template-columns: max-content 1fr; 
-            
-            /* ---> mudar depois o tamanho <--- */
-            column-gap: 8px !important; 
-            
-            align-items: start; 
             margin-bottom: 8px;
             text-align: justify;
+            min-height: 1.5em; 
         }
 
         .conteudo-texto ol li::before, .editor-clausula ol li::before {
             content: counter(capitulo) "." counter(clausula) "." counters(subnivel, ".") ".";
-            grid-column: 1; /* Força o número a ficar na primeira coluna */
             font-weight: bold;
             white-space: nowrap;
-            padding-right: 8px;
+            padding-right: 10px;
+            color: #000;
         }
 
-        /* .conteudo-texto ol li > p, 
-        .editor-clausula ol li > p,
-        .conteudo-texto ol li > div,
-        .editor-clausula ol li > div {
-            grid-column: 2; 
+        .editor-clausula ol li > p {
+            display: inline;
             margin: 0 !important;
-            text-indent: 0 !important; 
-        } */
-
-        .conteudo-texto ol li > ol, 
-        .editor-clausula ol li > ol {
-            grid-column: 1 / -1; 
         }
 
         /* ========================================================= */
