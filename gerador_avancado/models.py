@@ -8,6 +8,8 @@ class TipoBloco(models.TextChoices):
     SECAO = 'SE', 'Seção'
     SUBSECAO = 'SU', 'Subseção'
     CLAUSULA = 'CL', 'Cláusula'
+    TEXTO = 'TX', 'Texto'
+    APENDICE = 'AP', 'Apêndice'
 
 class BlocoPadrao(models.Model):
     # Parte da esquerda, opções de seção, subseção, cláusula

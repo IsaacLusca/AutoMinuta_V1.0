@@ -177,6 +177,17 @@
             content: "Seção " counter(sec_sumario, upper-roman) " - ";
             font-weight: bold;
         }
+
+        /* Apêndices */
+        .bloco-AP { 
+            counter-increment: apendice; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+        }
+        .bloco-AP .titulo-texto::before { 
+            content: "Apêndice " counter(apendice) " - "; 
+        }
     </style>
 </head>
 <body>
@@ -201,7 +212,7 @@
             {% for bloco in blocos %}
                 {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
                     
-                    {% if bloco.tipo == 'SE' %}
+                    {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
                         <div class="item-sumario-se">
                             <a href="#secao-{{ bloco.id }}" style="text-decoration: none; color: inherit;">
                                 {{ bloco.titulo|default_if_none:"" }}
@@ -223,15 +234,15 @@
         {% for bloco in blocos %}
             {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
                 
-                {% if bloco.tipo == 'SE' %}
-                    <div class="bloco-SE" id="secao-{{ bloco.id }}">
-                        <span>{{ bloco.titulo|default_if_none:"" }}</span>
+                {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
+                    <div class="bloco-{{ bloco.tipo }} mb-3" id="secao-{{ bloco.id }}">
+                        <span class="titulo-texto">{{ bloco.titulo }}</span>
                     </div>
                 {% endif %}
 
-                {% if bloco.tipo == 'CL' and bloco.conteudo_editado %}
-                    <div class="bloco-CL" id="bloco-{{ bloco.id }}">
-                        <div class="conteudo-texto">
+                {% if bloco.tipo == 'CL' or bloco.tipo == 'TX' %}
+                    <div class="bloco-{{ bloco.tipo }} mb-2" id="clausula-{{ bloco.id }}">
+                        <div class="conteudo-texto text-justify">
                             {{ bloco.texto_final_renderizado|safe }}
                         </div>
                     </div>

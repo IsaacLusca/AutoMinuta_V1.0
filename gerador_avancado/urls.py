@@ -19,4 +19,7 @@ urlpatterns = [
 
     # rota para salvar os dados do edital (formulário)
     path('minuta/<int:minuta_id>/salvar-dados/', views.salvar_dados_edital, name='salvar_dados_edital'),
+
+    # rota para os textos
+    path('minuta/<int:minuta_id>/criar-texto/', views.criar_texto_ajax, name='criar_texto_ajax'),
 ]

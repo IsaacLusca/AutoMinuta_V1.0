@@ -106,6 +106,17 @@
             display: inline;
             margin: 0 !important;
         }
+
+        /* Apêndices */
+        .bloco-AP { 
+            counter-increment: apendice; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+        }
+        .bloco-AP .titulo-texto::before { 
+            content: "Apêndice " counter(apendice) " - "; 
+        }
     </style>
 </head>
 <body>
@@ -166,14 +177,21 @@
             <div class="minuta-documento" id="area-minuta">
                 
                 {% for capitulo in capitulos_padrao %}
-                    
-                    <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
-                        <div class="d-flex justify-content-between align-items-center w-100 px-2">
-                            <div style="width: 32px;"></div> 
-                            
-                            <span class="titulo-texto">{{ capitulo.titulo }}</span>
-                            
-                            <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo">🗑️</button>
+                
+                <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
+                    <div class="d-flex justify-content-between align-items-center w-100 px-2">
+                        <div style="width: 32px;"></div> 
+                        
+                        <span class="titulo-texto">{{ capitulo.titulo }}</span>
+                        
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo">🗑️</button>
+                    </div>
+                        <div class="text-center mt-2 mb-5 no-print">
+                            <button class="btn btn-sm text-secondary w-100" 
+                                    style="border: 2px dashed #ccc; background: transparent;" 
+                                    onclick="criarTexto({{ minuta.id }}, {{ capitulo.id }})">
+                                + Adicionar Novo Texto
+                            </button>
                         </div>
                     </div>
 
@@ -182,7 +200,7 @@
                             
                             <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" id="bloco-{{ bloco.id }}" data-id="{{ bloco.id }}" data-origem-id="{{ bloco.bloco_origem.id }}">
                                 <div class="d-flex justify-content-between align-items-center w-100">
-                                    {% if bloco.tipo == 'SE' %}
+                                    {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
                                         <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
                                     {% else %}
                                         <span class="titulo-texto text-muted" style="font-size: 0.9em;">{{ bloco.titulo|default_if_none:"" }}</span>
@@ -703,6 +721,21 @@
         .then(data => {
             if (data.status === 'sucesso') window.location.reload();
             else alert('Erro ao criar cláusula: ' + data.mensagem);
+        });
+    }
+    
+    function criarTexto(minutaId, capituloId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+        fetch(`/minuta/${minutaId}/criar-texto/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar bloco de texto: ' + data.mensagem);
         });
     }
 

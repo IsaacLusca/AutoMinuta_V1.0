@@ -266,6 +266,41 @@ def criar_secao_ajax(request):
             return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
     return JsonResponse({'status': 'erro'}, status=400)
 
+# Criar textos 
+@csrf_exempt
+def criar_texto_ajax(request, minuta_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            capitulo_id = data.get('capitulo_id')
+            
+            minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+            capitulo = get_object_or_404(BlocoPadrao, id=capitulo_id)
+            
+            # Cria a referência na Biblioteca Padrão
+            novo_texto_padrao = BlocoPadrao.objects.create(
+                tipo='TX', # Força o tipo TEXTO
+                titulo="",
+                conteudo="<p>Novo texto introdutório (clique para editar)</p>",
+                bloco_pai=capitulo,
+                ordem_padrao=1 # Ordem 1 para ficar no topo do capítulo
+            )
+            
+            # Adiciona o texto na Minuta atual
+            BlocoDaMinuta.objects.create(
+                minuta=minuta,
+                bloco_origem=novo_texto_padrao,
+                tipo='TX',
+                titulo="",
+                conteudo_editado="<p>Novo texto introdutório (clique para editar)</p>",
+                ordem=1 # Ordem 1 para ficar no topo da tela
+            )
+            
+            return JsonResponse({'status': 'sucesso'})
+        except Exception as e:
+            return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
+    return JsonResponse({'status': 'erro'}, status=400)
+
 @csrf_exempt
 def criar_clausula_ajax(request, minuta_id):
     if request.method == 'POST':
@@ -326,17 +361,28 @@ def criar_novo_edital(request):
         
         # cria o registro vazio
         nova_minuta = MinutaGerada.objects.create(nome_interno=nome)
+
+        # Contar os textos para garantir bom funcionamento
+        contador_ordem_texto = 1
         
         # clona a Biblioteca Padrao para este novo edital
         blocos_padrao = BlocoPadrao.objects.all()
         for bloco in blocos_padrao:
+            # se for tx, a ordem será baixa
+            if bloco.tipo == 'TX':
+                ordem_final = contador_ordem_texto
+                contador_ordem_texto += 1
+            else:
+                ordem_final = bloco.ordem_padrao
+
             BlocoDaMinuta.objects.create(
                 minuta=nova_minuta,
                 bloco_origem=bloco,
                 tipo=bloco.tipo,
                 titulo=bloco.titulo,
                 conteudo_editado=bloco.conteudo,
-                ordem=bloco.ordem_padrao
+                ordem=ordem_final,
+                bloco_pai=None
             )
             
         # Redireciona para a tela de edição que já construímos
