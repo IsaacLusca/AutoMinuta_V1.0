@@ -273,34 +273,35 @@ def criar_texto_ajax(request, minuta_id):
         try:
             data = json.loads(request.body)
             capitulo_id = data.get('capitulo_id')
-            bloco_referencia_id = data.get('bloco_referencia_id')
+            bloco_referencia_id = data.get('bloco_referencia_id') 
             
             minuta = get_object_or_404(MinutaGerada, id=minuta_id)
             capitulo = get_object_or_404(BlocoPadrao, id=capitulo_id)
             
-            # Cria a referência na Biblioteca Padrão
-            novo_texto_padrao = BlocoPadrao.objects.create(
-                tipo='TX', # Força o tipo TEXTO
-                titulo="",
-                conteudo="<p>Novo texto introdutório (clique para editar)</p>",
-                bloco_pai=capitulo,
-                ordem_padrao=1 # Ordem 1 para ficar no topo do capítulo
-            )
-
+            # ficar logo abaixo do bloco de referência
             if bloco_referencia_id:
                 bloco_ref = get_object_or_404(BlocoDaMinuta, id=bloco_referencia_id)
-                nova_ordem = bloco_ref.ordem + 1 # adiciona no proximo
+                nova_ordem = bloco_ref.ordem + 1 
             else:
-                nova_ordem = 1
+                nova_ordem = 1 # Fallback de segurança
             
-            # Adiciona o texto na Minuta atual
+            # Cria a referência na Biblioteca Padrão com a ordem calculada
+            novo_texto_padrao = BlocoPadrao.objects.create(
+                tipo='TX',
+                titulo="",
+                conteudo="<p>Novo texto (clique para editar)</p>",
+                bloco_pai=capitulo,
+                ordem_padrao=nova_ordem
+            )
+            
+            # Adiciona o texto na Minuta atual, colado no Apêndice
             BlocoDaMinuta.objects.create(
                 minuta=minuta,
                 bloco_origem=novo_texto_padrao,
                 tipo='TX',
                 titulo="",
-                conteudo_editado="<p>Novo texto introdutório (clique para editar)</p>",
-                ordem=nova_ordem # Ordem 1 para ficar no topo da tela
+                conteudo_editado="<p>Novo texto (clique para editar)</p>",
+                ordem=nova_ordem
             )
             
             return JsonResponse({'status': 'sucesso'})
@@ -308,35 +309,34 @@ def criar_texto_ajax(request, minuta_id):
             return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
     return JsonResponse({'status': 'erro'}, status=400)
 
+# Criar Cláusulas 
 @csrf_exempt
 def criar_clausula_ajax(request, minuta_id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             capitulo_id = data.get('capitulo_id')
-            bloco_referencia_id = data.get('bloco_referencia_id')
-
+            bloco_referencia_id = data.get('bloco_referencia_id') # Recebe o ID do bloco atual
+            
             minuta = get_object_or_404(MinutaGerada, id=minuta_id)
             capitulo = get_object_or_404(BlocoPadrao, id=capitulo_id)
             
-            # cria a referência na Biblioteca (BlocoPadrao)
-            nova_clausula_padrao = BlocoPadrao.objects.create(
-                tipo='CL', # Ou TipoBloco.CLAUSULA dependendo de como importou
-                titulo="",
-                conteudo="<p>Nova cláusula (clique para editar)</p>",
-                bloco_pai=capitulo,
-                ordem_padrao=999 # Vai para o final
-            )
-            
-            # calcula a ordem para o final do documento atual
+            # Ficar logo abaixo de onde clicou
             if bloco_referencia_id:
                 bloco_ref = get_object_or_404(BlocoDaMinuta, id=bloco_referencia_id)
-                nova_ordem = bloco_ref.ordem + 1 # Fica logo a seguir
+                nova_ordem = bloco_ref.ordem + 1
             else:
                 ultimo_bloco = minuta.blocos.order_by('-ordem').first()
                 nova_ordem = (ultimo_bloco.ordem + 10) if ultimo_bloco else 10
+                
+            nova_clausula_padrao = BlocoPadrao.objects.create(
+                tipo='CL',
+                titulo="",
+                conteudo="<p>Nova cláusula (clique para editar)</p>",
+                bloco_pai=capitulo,
+                ordem_padrao=nova_ordem
+            )
             
-            # adiciona a cláusula vazia na Minuta atual
             BlocoDaMinuta.objects.create(
                 minuta=minuta,
                 bloco_origem=nova_clausula_padrao,

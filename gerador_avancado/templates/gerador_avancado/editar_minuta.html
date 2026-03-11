@@ -161,18 +161,23 @@
                     </h2>
                     <div id="collapse-{{ capitulo.id }}" class="accordion-collapse collapse">
                         <div class="accordion-body p-0">
-                            <ul class="list-group list-group-flush">
+                           <ul class="list-group list-group-flush">
                                 {% for secao in capitulo.sub_blocos.all %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
                                     
-                                    {% if secao.tipo == 'AP' %}
-                                        <span class="titulo-apendice-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para este apêndice no documento">{{ secao.titulo }}</span>
-                                    {% else %}
-                                        <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
+                                    {% if secao.tipo == 'SE' or secao.tipo == 'AP' %}
+                                    
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% if secao.tipo == 'AP' %}
+                                            <span class="titulo-apendice-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para este apêndice no documento">{{ secao.titulo }}</span>
+                                        {% else %}
+                                            <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
+                                        {% endif %}
+                                        
+                                        <button class="btn btn-sm btn-outline-success btn-adicionar-secao" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
+                                    </li>
+                                    
                                     {% endif %}
                                     
-                                    <button class="btn btn-sm btn-outline-success btn-adicionar-secao" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
-                                </li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -207,13 +212,13 @@
                         
                         <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo">🗑️</button>
                     </div>
-                        <div class="text-center mt-2 mb-5 no-print">
+                        <!-- <div class="text-center mt-2 mb-5 no-print">
                             <button class="btn btn-sm text-secondary w-100" 
                                     style="border: 2px dashed #ccc; background: transparent;" 
                                     onclick="criarTexto({{ minuta.id }}, {{ capitulo.id }})">
                                 + Adicionar Novo Texto
                             </button>
-                        </div>
+                        </div> -->
                     </div>
 
                     {% for bloco in blocos_da_minuta %}
@@ -228,24 +233,28 @@
                                     {% endif %}
                                     
                                     <div class="d-flex align-items-center">
+                                        
                                         {% if bloco.tipo == 'CL' %}
                                         <button class="btn btn-sm btn-outline-info me-2" onclick="abrirModalReferencia('{{ bloco.id }}')" title="Inserir referência cruzada neste texto">
                                             🔗 Referenciar
                                         </button>
                                         {% endif %}
                                         
-                                        <div class="dropdown me-2">
-                                            <button class="btn btn-sm text-secondary dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Inserir logo abaixo">
-                                                ➕
+                                        {% if bloco.tipo == 'AP' or bloco.tipo == 'TX' %}
+                                            <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;" title="Inserir Novo Texto logo abaixo">
+                                                📝 + Texto
                                             </button>
-                                            <ul class="dropdown-menu shadow-sm">
-                                                <li><a class="dropdown-item" href="#" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;">📝 Novo Texto</a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;">📄 Nova Cláusula</a></li>
-                                            </ul>
-                                        </div>
+                                        {% endif %}
+
+                                        {% if bloco.tipo == 'SE' or bloco.tipo == 'CL' %}
+                                            <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;" title="Inserir Nova Cláusula logo abaixo">
+                                                📄 + Cláusula
+                                            </button>
+                                        {% endif %}
 
                                         <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
                                         <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco">🗑️</button>
+                                        
                                     </div>
                                 </div>
 
@@ -1128,7 +1137,7 @@
                     headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
                 });
                 
-                if (response.ok) {
+                if (response.ok || response.status === 404) {
                     item.elemento.remove(); // Apaga o bloco visualmente da tela
                     removidos++;
                 }
