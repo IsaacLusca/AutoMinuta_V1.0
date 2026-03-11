@@ -276,7 +276,8 @@
                         </button>
                     </div>
 
-                {% endfor %} </div>
+                {% endfor %} 
+            </div>
         </div>
 
     </div>
@@ -593,6 +594,7 @@
 
     new Sortable(areaMinuta, {
         handle: '.handle',
+        draggable: '[data-id]',
         filter: '.nao-move',
         animation: 150,
         ghostClass: 'bg-light',
