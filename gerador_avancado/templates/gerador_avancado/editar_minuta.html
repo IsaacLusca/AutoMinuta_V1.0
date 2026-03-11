@@ -15,6 +15,7 @@
             padding: 40px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             min-height: 800px;
+            counter-reset: capitulo apendice;
         }
 
         .bloco-CA { counter-increment: capitulo; counter-reset: secao clausula; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 20px; }
@@ -49,7 +50,7 @@
         .capitulo-fixo { background-color: #f8f9fa; padding: 10px; border-radius: 5px; border-bottom: 2px solid #ddd; }
 
         #accordionBiblioteca {
-            counter-reset: capitulo_bib; 
+            counter-reset: capitulo_bib apendice_bib; 
         }
         
         #accordionBiblioteca .accordion-button {
@@ -71,6 +72,21 @@
         .titulo-secao-bib::before {
             content: "Seção " counter(secao_bib, upper-roman) " - ";
             font-weight: bold;
+        }
+
+        /* numeração dos apendices */
+        .titulo-apendice-bib {
+            counter-increment: apendice_bib;
+        }
+        .titulo-apendice-bib::before {
+            content: "Apêndice " counter(apendice_bib) " - ";
+            font-weight: bold;
+        }
+
+        /* formatar bloco de texto */
+        .bloco-TX {
+            margin-bottom: 15px;
+            text-align: justify;
         }
         
         .conteudo-texto ol, .editor-clausula ol {
@@ -148,7 +164,12 @@
                             <ul class="list-group list-group-flush">
                                 {% for secao in capitulo.sub_blocos.all %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
+                                    
+                                    {% if secao.tipo == 'AP' %}
+                                        <span class="titulo-apendice-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para este apêndice no documento">{{ secao.titulo }}</span>
+                                    {% else %}
+                                        <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
+                                    {% endif %}
                                     
                                     <button class="btn btn-sm btn-outline-success btn-adicionar-secao" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
                                 </li>
