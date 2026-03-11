@@ -273,6 +273,7 @@ def criar_texto_ajax(request, minuta_id):
         try:
             data = json.loads(request.body)
             capitulo_id = data.get('capitulo_id')
+            bloco_referencia_id = data.get('bloco_referencia_id')
             
             minuta = get_object_or_404(MinutaGerada, id=minuta_id)
             capitulo = get_object_or_404(BlocoPadrao, id=capitulo_id)
@@ -285,6 +286,12 @@ def criar_texto_ajax(request, minuta_id):
                 bloco_pai=capitulo,
                 ordem_padrao=1 # Ordem 1 para ficar no topo do capítulo
             )
+
+            if bloco_referencia_id:
+                bloco_ref = get_object_or_404(BlocoDaMinuta, id=bloco_referencia_id)
+                nova_ordem = bloco_ref.ordem + 1 # adiciona no proximo
+            else:
+                nova_ordem = 1
             
             # Adiciona o texto na Minuta atual
             BlocoDaMinuta.objects.create(
@@ -293,7 +300,7 @@ def criar_texto_ajax(request, minuta_id):
                 tipo='TX',
                 titulo="",
                 conteudo_editado="<p>Novo texto introdutório (clique para editar)</p>",
-                ordem=1 # Ordem 1 para ficar no topo da tela
+                ordem=nova_ordem # Ordem 1 para ficar no topo da tela
             )
             
             return JsonResponse({'status': 'sucesso'})
@@ -307,7 +314,8 @@ def criar_clausula_ajax(request, minuta_id):
         try:
             data = json.loads(request.body)
             capitulo_id = data.get('capitulo_id')
-            
+            bloco_referencia_id = data.get('bloco_referencia_id')
+
             minuta = get_object_or_404(MinutaGerada, id=minuta_id)
             capitulo = get_object_or_404(BlocoPadrao, id=capitulo_id)
             
@@ -321,8 +329,12 @@ def criar_clausula_ajax(request, minuta_id):
             )
             
             # calcula a ordem para o final do documento atual
-            ultimo_bloco = minuta.blocos.order_by('-ordem').first()
-            nova_ordem = (ultimo_bloco.ordem + 10) if ultimo_bloco else 10
+            if bloco_referencia_id:
+                bloco_ref = get_object_or_404(BlocoDaMinuta, id=bloco_referencia_id)
+                nova_ordem = bloco_ref.ordem + 1 # Fica logo a seguir
+            else:
+                ultimo_bloco = minuta.blocos.order_by('-ordem').first()
+                nova_ordem = (ultimo_bloco.ordem + 10) if ultimo_bloco else 10
             
             # adiciona a cláusula vazia na Minuta atual
             BlocoDaMinuta.objects.create(

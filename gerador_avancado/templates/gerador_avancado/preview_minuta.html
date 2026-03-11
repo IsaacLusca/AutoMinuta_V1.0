@@ -37,43 +37,40 @@
         }
         .bloco-SE::before { content: "Seção " counter(secao, upper-roman) " - "; }
         
+        /* Cl como container */
         .bloco-CL {
             counter-increment: clausula; 
-            display: table !important; 
+            display: flex !important; 
             width: 100%;
-            margin-bottom: 15px;
+            margin-top: 0 !important;       /* Garante que não empurra o de cima */
+            margin-bottom: 15px !important; /* Espaço exato para o de baixo */
+            padding: 0 !important;
             text-align: justify;
         }
 
-        .bloco-CL .titulo-texto {
-            display: table-cell !important;
-            white-space: nowrap; 
-            width: 1%; 
-            /* em teoria devia mudar o tamanho entre o texto e o numero */
-            padding-right: 8px !important; 
-            vertical-align: top;
-        }
-
-        .bloco-CL .titulo-texto::before {
-            content: counter(capitulo) "." counter(clausula) ". ";
-            font-weight: bold;
-            color: #000;
-        }
-
-        .bloco-CL .conteudo-texto {
-            display: table-cell !important;
-            vertical-align: top;
-        }
-
-        .bloco-CL .conteudo-texto > p:first-child,
-        .bloco-CL .conteudo-texto > div:first-child {
-            margin-top: 0 !important;
-        }
+        /* exibir a numeração */
         .bloco-CL::before { 
             content: counter(capitulo) "." counter(clausula) ". "; 
             font-weight: bold; 
-            margin-right: 8px;
+            color: #000;
+            margin-right: 8px; /* ajustar tamanho entre numero e texto */
             flex-shrink: 0; 
+        }
+
+        /* talvez remover */
+        .bloco-CL .titulo-texto {
+            display: none !important;
+        }
+
+        /* O texto ocupa todo o espaço restante */
+        .bloco-CL .conteudo-texto {
+            flex-grow: 1;
+        }
+
+        /* Remove margens do topo do texto para alinhar perfeitamente com o número */
+        .bloco-CL .conteudo-texto > p:first-child,
+        .bloco-CL .conteudo-texto > div:first-child {
+            margin-top: 0 !important;
         }
 
         .conteudo-texto p { 
@@ -188,6 +185,21 @@
         .bloco-AP .titulo-texto::before { 
             content: "Apêndice " counter(apendice) " - "; 
         }
+        
+        .bloco-TX {
+            margin-bottom: 15px; 
+            text-align: justify;
+        }
+
+        .bloco-TX p {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .bloco-TX p + p {
+            margin-top: 8px !important;
+        }
+        
     </style>
 </head>
 <body>

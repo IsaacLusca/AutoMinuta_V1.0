@@ -233,6 +233,17 @@
                                             🔗 Referenciar
                                         </button>
                                         {% endif %}
+                                        
+                                        <div class="dropdown me-2">
+                                            <button class="btn btn-sm text-secondary dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Inserir logo abaixo">
+                                                ➕
+                                            </button>
+                                            <ul class="dropdown-menu shadow-sm">
+                                                <li><a class="dropdown-item" href="#" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;">📝 Novo Texto</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;">📄 Nova Cláusula</a></li>
+                                            </ul>
+                                        </div>
+
                                         <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
                                         <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco">🗑️</button>
                                     </div>
@@ -1203,6 +1214,26 @@
 
         bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
         idBlocoDestinoReferencia = null;
+    }
+
+    // Função unificada para inserir um bloco no meio do documento
+    function criarBlocoApos(minutaId, capituloId, blocoRefId, tipo) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = tipo === 'TX' ? `/minuta/${minutaId}/criar-texto/` : `/minuta/${minutaId}/criar-clausula/`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                capitulo_id: capituloId,
+                bloco_referencia_id: blocoRefId // envia id do bloco atual
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar bloco: ' + data.mensagem);
+        });
     }
     
 </script>
