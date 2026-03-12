@@ -22,4 +22,14 @@ urlpatterns = [
 
     # rota para os textos
     path('minuta/<int:minuta_id>/criar-texto/', views.criar_texto_ajax, name='criar_texto_ajax'),
+
+    # editor
+    path('padrao/editar/', views.editar_padrao_dashboard, name='editar_padrao'),
+    path('padrao/salvar/<int:bloco_id>/', views.salvar_conteudo_padrao_ajax, name='salvar_conteudo_padrao_ajax'),
+    path('padrao/remover/<int:bloco_id>/', views.remover_bloco_padrao_ajax, name='remover_bloco_padrao_ajax'),
+    path('padrao/reordenar/', views.reordenar_blocos_padrao_ajax, name='reordenar_blocos_padrao_ajax'),
+
+    path('padrao/criar-secao/', views.criar_secao_padrao_ajax, name='criar_secao_padrao_ajax'),
+    path('padrao/criar-clausula/', views.criar_clausula_padrao_ajax, name='criar_clausula_padrao_ajax'),
+    path('padrao/criar-texto/', views.criar_texto_padrao_ajax, name='criar_texto_padrao_ajax'),
 ]

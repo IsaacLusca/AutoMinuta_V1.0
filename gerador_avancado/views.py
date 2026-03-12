@@ -417,3 +417,88 @@ def salvar_dados_edital(request, minuta_id):
         return redirect('editar_minuta', minuta_id=minuta.id)
         
     return redirect('dashboard_editais')
+
+# editar a minuta padrão
+def editar_padrao_dashboard(request):
+    # Capítulos: Blocos que não têm pai
+    capitulos = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
+    
+    # Restantes blocos (Seções, Cláusulas, Apêndices, Textos)
+    blocos = BlocoPadrao.objects.filter(bloco_pai__isnull=False).order_by('ordem_padrao')
+
+    return render(request, 'gerador_avancado/editar_padrao.html', {
+        'capitulos': capitulos,
+        'blocos': blocos,
+    })
+
+@csrf_exempt
+def salvar_conteudo_padrao_ajax(request, bloco_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        bloco = get_object_or_404(BlocoPadrao, id=bloco_id)
+        # Atenção: Na matriz o campo chama-se 'conteudo' (e não 'conteudo_editado')
+        bloco.conteudo = data.get('conteudo') 
+        bloco.save()
+        return JsonResponse({'status': 'sucesso'})
+
+@csrf_exempt
+def remover_bloco_padrao_ajax(request, bloco_id):
+    if request.method == 'POST':
+        bloco = get_object_or_404(BlocoPadrao, id=bloco_id)
+        bloco.delete() # Apaga da raiz!
+        return JsonResponse({'status': 'sucesso'})
+
+@csrf_exempt
+def reordenar_blocos_padrao_ajax(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        itens = data.get('itens', [])
+        for item in itens:
+            # Atualiza o campo 'ordem_padrao' da raiz
+            BlocoPadrao.objects.filter(id=item['id']).update(ordem_padrao=item['ordem'])
+        return JsonResponse({'status': 'sucesso'})
+    
+@csrf_exempt
+def criar_secao_padrao_ajax(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        capitulo = get_object_or_404(BlocoPadrao, id=data.get('capitulo_id'))
+        
+        ultimo_filho = capitulo.sub_blocos.order_by('-ordem_padrao').first()
+        nova_ordem = (ultimo_filho.ordem_padrao + 10) if ultimo_filho else 10
+        
+        BlocoPadrao.objects.create(tipo='SE', titulo=data.get('titulo'), bloco_pai=capitulo, ordem_padrao=nova_ordem)
+        return JsonResponse({'status': 'sucesso'})
+
+@csrf_exempt
+def criar_clausula_padrao_ajax(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        capitulo = get_object_or_404(BlocoPadrao, id=data.get('capitulo_id'))
+        bloco_ref_id = data.get('bloco_referencia_id')
+        
+        if bloco_ref_id:
+            bloco_ref = get_object_or_404(BlocoPadrao, id=bloco_ref_id)
+            nova_ordem = bloco_ref.ordem_padrao + 1
+        else:
+            ultimo_filho = capitulo.sub_blocos.order_by('-ordem_padrao').first()
+            nova_ordem = (ultimo_filho.ordem_padrao + 10) if ultimo_filho else 10
+            
+        BlocoPadrao.objects.create(tipo='CL', titulo="", conteudo="<p>Nova cláusula matriz (clique para editar)</p>", bloco_pai=capitulo, ordem_padrao=nova_ordem)
+        return JsonResponse({'status': 'sucesso'})
+
+@csrf_exempt
+def criar_texto_padrao_ajax(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        capitulo = get_object_or_404(BlocoPadrao, id=data.get('capitulo_id'))
+        bloco_ref_id = data.get('bloco_referencia_id')
+        
+        if bloco_ref_id:
+            bloco_ref = get_object_or_404(BlocoPadrao, id=bloco_ref_id)
+            nova_ordem = bloco_ref.ordem_padrao + 1
+        else:
+            nova_ordem = 1
+            
+        BlocoPadrao.objects.create(tipo='TX', titulo="", conteudo="<p>Novo texto matriz (clique para editar)</p>", bloco_pai=capitulo, ordem_padrao=nova_ordem)
+        return JsonResponse({'status': 'sucesso'})

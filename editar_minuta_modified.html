@@ -1,0 +1,1306 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Minuta - {{ minuta.leilao }}</title>
+    
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .minuta-documento {
+            counter-reset: capitulo;
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 800px;
+            counter-reset: capitulo apendice;
+        }
+
+        .bloco-CA { counter-increment: capitulo; counter-reset: secao clausula; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 20px; }
+        .bloco-CA .titulo-texto::before { content: "CAPÍTULO " counter(capitulo) " - "; }
+
+        .bloco-SE { counter-increment: secao; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+        .bloco-SE .titulo-texto::before { content: "Seção " counter(secao, upper-roman) " - "; }
+
+        .bloco-CL { counter-increment: clausula; margin-bottom: 15px; text-align: justify; }
+        
+        /* A numeração fica acoplada diretamente ao título */
+        .bloco-CL .titulo-texto::before { content: counter(capitulo) "." counter(clausula) ". "; font-weight: bold; margin-right: 5px; color: #000; }
+
+        .editor-clausula {
+            display: block;
+            width: 100%;
+            min-height: 2em;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .editor-clausula:hover { background-color: rgba(0,0,0,0.03); }
+        .editor-clausula:focus { background-color: #fff; outline: 2px dashed #0d6efd; }
+
+        .painel-esquerdo { background-color: #f8f9fa; height: 100vh; overflow-y: auto; padding: 20px; border-right: 1px solid #ddd; }
+        .painel-direito { background-color: #e9ecef; height: 100vh; overflow-y: auto; padding: 20px; }
+        
+        .handle { cursor: grab; color: #999; font-size: 20px; transition: color 0.2s; }
+        .handle:hover { color: #333; }
+
+        .capitulo-fixo { background-color: #f8f9fa; padding: 10px; border-radius: 5px; border-bottom: 2px solid #ddd; }
+
+        #accordionBiblioteca {
+            counter-reset: capitulo_bib apendice_bib; 
+        }
+        
+        #accordionBiblioteca .accordion-button {
+            counter-increment: capitulo_bib;
+        }
+        #accordionBiblioteca .accordion-button::before {
+            content: "CAPÍTULO " counter(capitulo_bib) " - ";
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        #accordionBiblioteca .accordion-item {
+            counter-reset: secao_bib; 
+        }
+        
+        .titulo-secao-bib {
+            counter-increment: secao_bib;
+        }
+        .titulo-secao-bib::before {
+            content: "Seção " counter(secao_bib, upper-roman) " - ";
+            font-weight: bold;
+        }
+
+        /* numeração dos apendices */
+        .titulo-apendice-bib {
+            counter-increment: apendice_bib;
+        }
+        .titulo-apendice-bib::before {
+            content: "Apêndice " counter(apendice_bib) " - ";
+            font-weight: bold;
+        }
+
+        /* formatar bloco de texto */
+        .bloco-TX {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .conteudo-texto ol, .editor-clausula ol {
+            list-style: none !important;
+            counter-reset: subnivel;
+            padding-left: 0 !important;
+            margin-left: 0 !important; 
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .conteudo-texto ol ol, .editor-clausula ol ol {
+            margin-left: 20px !important; 
+        }
+
+        /* usando grid */
+        .conteudo-texto ol li, .editor-clausula ol li {
+            counter-increment: subnivel;
+            margin-bottom: 8px;
+            text-align: justify;
+            min-height: 1.5em; 
+        }
+
+        .conteudo-texto ol li::before, .editor-clausula ol li::before {
+            content: counter(capitulo) "." counter(clausula) "." counters(subnivel, ".") ".";
+            font-weight: bold;
+            white-space: nowrap;
+            padding-right: 10px;
+            color: #000;
+        }
+
+        .editor-clausula ol li > p {
+            display: inline;
+            margin: 0 !important;
+        }
+
+        /* Apêndices */
+        .bloco-AP { 
+            counter-increment: apendice; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            margin-bottom: 10px; 
+        }
+        .bloco-AP .titulo-texto::before { 
+            content: "Apêndice " counter(apendice) " - "; 
+        }
+    </style>
+</head>
+<body>
+{% csrf_token %}
+
+<div class="container-fluid">
+    <div class="row">
+        
+        <div class="col-md-4 painel-esquerdo">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Biblioteca</h4>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalNovaSecao">
+                    + Nova Seção
+                </button>
+            </div>
+            <div class="accordion" id="accordionBiblioteca">
+                {% for capitulo in capitulos_padrao %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header d-flex align-items-center">
+                        <button class="accordion-button collapsed flex-grow-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
+                            {{ capitulo.titulo }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-success ms-1 me-3 text-nowrap shadow-sm" onclick="adicionarCapituloCompleto('collapse-{{ capitulo.id }}', event)" title="Adicionar todas as seções deste capítulo">
+                            + Tudo
+                        </button>
+                    </h2>
+                    <div id="collapse-{{ capitulo.id }}" class="accordion-collapse collapse">
+                        <div class="accordion-body p-0">
+                           <ul class="list-group list-group-flush">
+                                {% for secao in capitulo.sub_blocos.all %}
+                                    
+                                    {% if secao.tipo == 'SE' or secao.tipo == 'AP' %}
+                                    
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% if secao.tipo == 'AP' %}
+                                            <span class="titulo-apendice-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para este apêndice no documento">{{ secao.titulo }}</span>
+                                        {% else %}
+                                            <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
+                                        {% endif %}
+                                        
+                                        <button class="btn btn-sm btn-outline-success btn-adicionar-secao" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
+                                    </li>
+                                    
+                                    {% endif %}
+                                    
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        
+<div class="col-md-10 offset-md-1 painel-direito">
+    <div class="d-flex justify-content-between mb-3 align-items-center border-bottom pb-2">
+        <h4 class="text-primary">🏛️ Editor Mestre - Biblioteca Matriz (Padrão ANTAQ)</h4>
+        <div>
+            <span class="text-muted small">Qualquer alteração aqui afetará todos os novos editais criados.</span>
+        </div>
+    </div>
+
+            </div>
+            
+            <div class="minuta-documento" id="area-minuta">
+                
+                {% for capitulo in capitulos_padrao %}
+                
+                <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
+                    <div class="d-flex justify-content-between align-items-center w-100 px-2">
+                        <div style="width: 32px;"></div> 
+                        
+                        <span class="titulo-texto">{{ capitulo.titulo }}</span>
+                        
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo">🗑️</button>
+                    </div>
+                        <!-- <div class="text-center mt-2 mb-5 no-print">
+                            <button class="btn btn-sm text-secondary w-100" 
+                                    style="border: 2px dashed #ccc; background: transparent;" 
+                                    onclick="criarTexto({{ minuta.id }}, {{ capitulo.id }})">
+                                + Adicionar Novo Texto
+                            </button>
+                        </div> -->
+                    </div>
+
+                    {% for bloco in blocos_da_minuta %}
+                        {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
+                            
+                            <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" id="bloco-{{ bloco.id }}" data-id="{{ bloco.id }}" data-origem-id="{{ bloco.bloco_origem.id }}">
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
+                                        <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
+                                    {% else %}
+                                        <span class="titulo-texto text-muted" style="font-size: 0.9em;">{{ bloco.titulo|default_if_none:"" }}</span>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex align-items-center">
+                                        
+                                        {% if bloco.tipo == 'CL' %}
+                                        <button class="btn btn-sm btn-outline-info me-2" onclick="abrirModalReferencia('{{ bloco.id }}')" title="Inserir referência cruzada neste texto">
+                                            🔗 Referenciar
+                                        </button>
+                                        {% endif %}
+                                        
+                                        {% if bloco.tipo == 'AP' or bloco.tipo == 'TX' %}
+                                            <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;" title="Inserir Novo Texto logo abaixo">
+                                                📝 + Texto
+                                            </button>
+                                        {% endif %}
+
+                                        {% if bloco.tipo == 'SE' or bloco.tipo == 'CL' %}
+                                            <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ minuta.id }}, {{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;" title="Inserir Nova Cláusula logo abaixo">
+                                                📄 + Cláusula
+                                            </button>
+                                        {% endif %}
+
+                                        <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
+                                        <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco">🗑️</button>
+                                        
+                                    </div>
+                                </div>
+
+                                {% if bloco.conteudo_editado %}
+                                    <div class="mt-2 editor-clausula" contenteditable="true" data-id="{{ bloco.id }}">
+                                        {{ bloco.conteudo_editado|safe }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        {% endif %}
+                    {% endfor %} 
+
+                    <div class="text-center mt-2 mb-5 no-print">
+                        <button class="btn btn-sm text-secondary w-100" 
+                                style="border: 2px dashed #ccc; background: transparent;" 
+                                onclick="criarClausula({{ minuta.id }}, {{ capitulo.id }})">
+                            + Adicionar Nova Cláusula
+                        </button>
+                    </div>
+
+                {% endfor %} 
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="modalNovaSecao" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Criar Nova Seção na Biblioteca</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label class="form-label">Título da Seção</label>
+            <input type="text" class="form-control" id="tituloNovaSecao" placeholder="Ex: DAS SANÇÕES ADMINISTRATIVAS">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Pertence a qual Capítulo?</label>
+            <select class="form-select" id="capituloPaiId">
+                <option value="">Selecione o Capítulo...</option>
+                {% for capitulo in capitulos_padrao %}
+                    <option value="{{ capitulo.id }}">{{ capitulo.titulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="salvarNovaSecao()">Salvar na Biblioteca</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <form action="{% url 'salvar_dados_edital' minuta.id %}" method="POST">
+    {% csrf_token %}
+
+          {% csrf_token %}
+            <div class="modal-body row">
+                <div class="col-12 mb-3">
+                    <div class="alert alert-info">
+                        {% verbatim %}
+                        Para usar a palavra reservada corretamente no documento, coloque neste formato <strong>{{ palavra }}</strong>.<br>
+                        O título deve estar em <strong>minúsculo</strong> e espaços devem ser substituídos por <strong>_</strong>.<br>
+                        Exemplo: Perfil Da Carga → <code>{{ perfil_da_carga }}</code>
+                        {% endverbatim %}
+                    </div>
+                </div>
+              {% for campo in campos_variaveis %}
+              <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold text-secondary">{{ campo.label }}</label>
+                  <input type="text" class="form-control" name="{{ campo.name }}" value="{{ campo.valor }}">
+              </div>
+              {% endfor %}
+              
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar Variáveis</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para referencias -->
+<div class="modal fade" id="modalReferencia" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">🔗 Inserir Referência Cruzada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+          
+          <ul class="nav nav-tabs mb-3" id="abasReferencia" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="tab-clausulas-btn" data-bs-toggle="tab" data-bs-target="#tab-clausulas" type="button" role="tab">Cláusulas Numeradas</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-definicoes-btn" data-bs-toggle="tab" data-bs-target="#tab-definicoes" type="button" role="tab">Conceitos (Termos)</button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="conteudoAbasReferencia">
+            
+            <div class="tab-pane fade show active" id="tab-clausulas" role="tabpanel">
+                <p class="text-muted small mb-2">Selecione a cláusula para a qual deseja apontar.</p>
+                <select id="selectAlvoReferencia" class="form-select" size="8"></select>
+            </div>
+
+            <div class="tab-pane fade" id="tab-definicoes" role="tabpanel">
+                <p class="text-muted small mb-2">O sistema lista automaticamente termos que começam em <strong>negrito</strong> no documento.</p>
+                <select id="selectAlvoDefinicao" class="form-select" size="8"></select>
+            </div>
+
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-info text-white" onclick="inserirLinkInteligente()">Inserir no Texto</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let isDraggingBloco = false;
+
+    if (typeof CKEDITOR !== 'undefined') {
+        // impedir editores do ckeditor
+        CKEDITOR.disableAutoInline = true; 
+        
+        CKEDITOR.config.versionCheck = false;
+
+        CKEDITOR.config.allowedContent = true;
+
+        // tab faz com que mude a lista em subniveis
+        CKEDITOR.on('instanceCreated', function(e) {
+            e.editor.on('key', function(evt) {
+                // Se o utilizador apertar apenas TAB (Código 9)
+                if (evt.data.keyCode === 9) {
+                    evt.cancel(); // Bloqueia o salto para o próximo bloco
+                    e.editor.execCommand('indent'); // Aumenta o nível (Ex: 1.1 -> 1.1.1)
+                } 
+                // Se o utilizador apertar SHIFT + TAB
+                else if (evt.data.keyCode === CKEDITOR.SHIFT + 9) {
+                    evt.cancel(); // Bloqueia o comportamento padrão
+                    e.editor.execCommand('outdent'); // Diminui o nível (Ex: 1.1.1 -> 1.1)
+                }
+            });
+        });
+    }
+
+    function adicionarBloco(minutaId, blocoPadraoId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch(`/minuta/${minutaId}/adicionar-bloco/${blocoPadraoId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+        })
+        .then(response => {
+            // se o Python devolver status 400 
+            if (!response.ok && response.status === 400) {
+                return response.json().then(err => { throw new Error(err.mensagem); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'sucesso') {
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            // Exibe o aviso no ecrã para o utilizador
+            alert("Aviso: " + error.message);
+        });
+    }
+
+    function removerBloco(blocoMinutaId) {
+        if (!confirm('Tem certeza que deseja remover este bloco?')) return;
+        
+        // encontra o bloco antes de enviar pro server
+        const bloco = document.getElementById(`bloco-${blocoMinutaId}`);
+        const isSecao = bloco && bloco.classList.contains('bloco-SE');
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch(`/minuta/remover-bloco/${blocoMinutaId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                if (bloco) {
+                    // se for uma Seção, encontra suas clausulas e apaga
+                    if (isSecao) {
+                        let nextEl = bloco.nextElementSibling;
+                        while (nextEl && nextEl.classList.contains('bloco-CL')) {
+                            const clToRemove = nextEl;
+                            nextEl = nextEl.nextElementSibling;
+                            clToRemove.remove(); // Apaga visualmente
+                        }
+                    }
+                    
+                    // apaga o bloco
+                    bloco.remove();
+                }
+                
+                // para os blocos que acabaram de sumir, o alerta vermelho vai disparar!
+                setTimeout(() => {
+                    atualizarReferencias(); 
+                }, 400);
+            }
+            else alert('Erro ao remover bloco.');
+        });
+    }
+
+    function salvarNoBanco(id, conteudo) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch(`/minuta/salvar-bloco/${id}/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ conteudo: conteudo })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP Error status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'sucesso') {
+                console.log(`Bloco ${id} salvo com sucesso!`);
+            } else {
+                console.error(`Erro no backend para o bloco ${id}:`, data.mensagem);
+            }
+        })
+        .catch(error => console.error(`Erro de conexão/Fetch no bloco ${id}:`, error));
+    }
+
+    // controle dos editores
+    function garantirIdEditor(elemento) {
+        if (!elemento.id) {
+            const blocoId = elemento.getAttribute('data-id');
+            elemento.id = `editor-clausula-${blocoId}`;
+        }
+    }
+
+    function inicializarEditores() {
+        document.querySelectorAll('.editor-clausula').forEach((elemento) => {
+            garantirIdEditor(elemento);
+            
+            if (CKEDITOR.instances[elemento.id]) {
+                return; // Já existe um editor aqui, ignora.
+            }
+
+            // Agora nós criamos o editor com o nosso ID e as nossas regras
+            const editor = CKEDITOR.inline(elemento);
+            
+            if (editor) {
+                editor.on('blur', function() {
+                    if (isDraggingBloco) return;
+                    
+                    const conteudoNovo = editor.getData();
+                    const blocoId = elemento.getAttribute('data-id');
+                    
+                    console.log(`⏳ Salvando bloco ${blocoId}...`);
+                    salvarNoBanco(blocoId, conteudoNovo);
+                });
+            }
+        });
+    }
+
+    function destruirEditoresParaReordenar() {
+        Object.keys(CKEDITOR.instances).forEach((id) => {
+            CKEDITOR.instances[id].destroy(true); 
+        });
+    }
+    // função para mover dinamicamente os blocos entre a tela
+    let autoScrollDirecao = 0;
+    let autoScrollAtivo = false;
+
+    function loopAutoScroll() {
+        if (!autoScrollAtivo) return;
+
+        const painel = document.querySelector('.painel-direito');
+        if (painel && autoScrollDirecao !== 0) {
+            painel.scrollTop += autoScrollDirecao;
+        }
+
+        requestAnimationFrame(loopAutoScroll);
+    }
+
+    document.addEventListener('dragover', function(e) {
+
+        if (!isDraggingBloco) return;
+
+        const painel = document.querySelector('.painel-direito');
+        if (!painel) return;
+
+        const rect = painel.getBoundingClientRect();
+        const zona = 70;      // distância da borda
+        const velocidade = 10; // velocidade base
+
+        if (e.clientY > rect.bottom - zona) {
+            autoScrollDirecao = velocidade;
+        } 
+        else if (e.clientY < rect.top + zona) {
+            autoScrollDirecao = -velocidade;
+        } 
+        else {
+            autoScrollDirecao = 0;
+        }
+
+        if (!autoScrollAtivo) {
+            autoScrollAtivo = true;
+            requestAnimationFrame(loopAutoScroll);
+        }
+    });
+
+    // Variável para guardar o estado de todas as seções durante o arrasto
+    let pacotesDeSecoes = [];
+    const areaMinuta = document.getElementById('area-minuta');
+
+    new Sortable(areaMinuta, {
+        handle: '.handle',
+        draggable: '[data-id]',
+        filter: '.nao-move',
+        animation: 150,
+        ghostClass: 'bg-light',
+
+        onStart: function(evt) {
+            const item = evt.item;
+
+            // logica de malas, se for seção
+            if (item.classList.contains('bloco-SE')) {
+                
+                // Esconde os botões de adicionar cláusula para não atrapalhar o drag
+                document.querySelectorAll('.text-center.no-print').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                let secaoAtual = null;
+                let clausulasDaSecao = [];
+
+                // Varre o documento inteiro e agrupa as cláusulas com os seus donos
+                Array.from(areaMinuta.children).forEach(el => {
+                    if (el.classList.contains('bloco-CA') || el.classList.contains('bloco-SE')) {
+                        if (secaoAtual && clausulasDaSecao.length > 0) {
+                            pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
+                        }
+                        secaoAtual = el;
+                        clausulasDaSecao = [];
+                    } else if (el.classList.contains('bloco-CL')) {
+                        if (secaoAtual) clausulasDaSecao.push(el);
+                    }
+                });
+
+                // Guarda o último grupo
+                if (secaoAtual && clausulasDaSecao.length > 0) {
+                    pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
+                }
+
+                // Coloca fisicamente as cláusulas "dentro" das suas Seções
+                pacotesDeSecoes.forEach(pacote => {
+                    const malaInvisivel = document.createElement('div');
+                    malaInvisivel.className = 'mala-invisivel';
+                    malaInvisivel.style.display = 'none'; // Esconde o conteúdo
+
+                    pacote.filhos.forEach(filho => malaInvisivel.appendChild(filho));
+                    pacote.pai.appendChild(malaInvisivel);
+                });
+            }
+
+            // Mantém a lógica existente
+            isDraggingBloco = true;
+            destruirEditoresParaReordenar();
+        },
+
+        onEnd: function(evt) {
+            autoScrollAtivo = false;
+            autoScrollDirecao = 0;
+            // Desfazemos as malas: Cada Seção devolve as suas cláusulas para o HTML principal
+            if (pacotesDeSecoes.length > 0) {
+                pacotesDeSecoes.forEach(pacote => {
+                    let inserirApos = pacote.pai;
+
+                    pacote.filhos.forEach(filho => {
+                        pacote.pai.parentNode.insertBefore(filho, inserirApos.nextSibling);
+                        inserirApos = filho;
+                    });
+                    
+                    const mala = pacote.pai.querySelector('.mala-invisivel');
+                    if (mala) mala.remove();
+                });
+                pacotesDeSecoes = []; // Limpa a memória
+            }
+
+            // Traz de volta os botões de adicionar cláusula
+            document.querySelectorAll('.text-center.no-print').forEach(el => {
+                el.style.display = '';
+            });
+
+            inicializarEditores();
+            isDraggingBloco = false;
+
+            setTimeout(() => {
+                atualizarReferencias(); 
+            }, 800);
+
+            // Lê a ordem visual perfeita e salva no Django
+            const itens = [];
+            areaMinuta.querySelectorAll('[data-id]').forEach((el, index) => {
+                itens.push({
+                    id: el.getAttribute('data-id'),
+                    ordem: (index + 1) * 10
+                });
+            });
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch(`/minuta/{{ minuta.id }}/reordenar/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({ itens: itens })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'sucesso') console.log('Nova ordem salva!');
+                else alert('Erro ao salvar nova ordem.');
+            });
+        }
+    });
+
+    // atualiza pagina
+    document.addEventListener('DOMContentLoaded', function() {
+        inicializarEditores();
+        
+        // Restaura o scroll
+        const painel = document.querySelector('.painel-direito');
+        const pos = localStorage.getItem('scroll-pos-minuta');
+        if (painel && pos !== null) {
+            painel.scrollTop = parseInt(pos);
+        }
+    });
+
+    window.addEventListener('beforeunload', function() {
+        const painel = document.querySelector('.painel-direito');
+        if (painel) {
+            localStorage.setItem('scroll-pos-minuta', painel.scrollTop);
+        }
+    });
+
+    // remover avisos do ckeditor
+    (function() {
+        function removerAvisoVersion() {
+            document.querySelectorAll('.cke_notification_warning, .cke_notification').forEach(aviso => {
+                if (aviso.textContent.includes('version') || aviso.textContent.includes('versão')) {
+                    aviso.remove();
+                }
+            });
+        }
+        setInterval(removerAvisoVersion, 100);
+    })();
+
+    // novos blocos
+    function salvarNovaSecao() {
+        const titulo = document.getElementById('tituloNovaSecao').value;
+        const capituloId = document.getElementById('capituloPaiId').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if (!titulo || !capituloId) return alert('Por favor, preencha o título e selecione o capítulo.');
+
+        fetch('/minuta/criar-secao/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ titulo: titulo, capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro: ' + data.mensagem);
+        });
+    }
+
+    function criarClausula(minutaId, capituloId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`/minuta/${minutaId}/criar-clausula/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar cláusula: ' + data.mensagem);
+        });
+    }
+    
+    function criarTexto(minutaId, capituloId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+        fetch(`/minuta/${minutaId}/criar-texto/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar bloco de texto: ' + data.mensagem);
+        });
+    }
+
+    // navegar entre as páginas
+    function rolarParaCapitulo(capituloPadraoId) {
+        // Procura o capítulo no lado direito pelo ID exato
+        const elemento = document.getElementById('capitulo-doc-' + capituloPadraoId);
+        
+        if (elemento) {
+            // Rola suavemente 
+            elemento.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Efeito visual de destaque
+            elemento.style.transition = "background-color 0.5s";
+            elemento.style.backgroundColor = "#fff3cd"; 
+            setTimeout(() => {
+                elemento.style.backgroundColor = ""; 
+            }, 1500);
+        }
+    }
+
+    function rolarParaSecao(secaoPadraoId) {
+        const elemento = document.querySelector(`.painel-direito [data-origem-id="${secaoPadraoId}"]`);
+        
+        if (elemento) {
+            elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            elemento.style.transition = "background-color 0.5s";
+            elemento.style.backgroundColor = "#fff3cd";
+            setTimeout(() => {
+                elemento.style.backgroundColor = "";
+            }, 1500);
+        } else {
+            console.warn("Esta seção não está presente no documento atual.");
+        }
+    }
+
+    // referencias
+    let idBlocoDestinoReferencia = null;
+
+    // contagem da ordem
+    function mapearNumeracao() {
+        let numCap = 0;
+        let numClau = 0;
+        let mapa = {};
+
+        // Pega todos os blocos na ordem que aparecem na tela
+        const elementos = document.querySelectorAll('#area-minuta .bloco-CA, #area-minuta .bloco-SE, #area-minuta .bloco-CL');
+
+        elementos.forEach(el => {
+            if (el.classList.contains('bloco-CA')) {
+                numCap++; // Achou um capítulo, sobe o número
+                numClau = 0; // Zera as cláusulas
+            } else if (el.classList.contains('bloco-CL')) {
+                numClau++;
+                const id = el.getAttribute('data-id');
+                if (id) {
+                    mapa[id] = {
+                        texto_exibicao: `${numCap}.${numClau}`,
+                        capitulo: numCap
+                    };
+                }
+            }
+        });
+        return mapa;
+    }
+
+    // O Modal Organizado por Capítulos
+     function abrirModalReferencia(blocoOrigemId) {
+        idBlocoDestinoReferencia = blocoOrigemId;
+        
+        const mapa = mapearNumeracao();
+        const select = document.getElementById('selectAlvoReferencia');
+        select.innerHTML = '';
+        
+        let capituloAtual = 0;
+        let optGroup = null;
+
+        for (const [id, dados] of Object.entries(mapa)) {
+            // Não deixa apontar para si mesmo
+            if (id === blocoOrigemId.toString()) continue;
+
+            // Se mudou de capítulo, cria uma nova "Pasta Visual" na lista
+            if (dados.capitulo !== capituloAtual) {
+                capituloAtual = dados.capitulo;
+                optGroup = document.createElement('optgroup');
+                optGroup.label = `--- CAPÍTULO ${capituloAtual} ---`;
+                select.appendChild(optGroup);
+            }
+
+            // Cria a opção clicável
+            let option = document.createElement('option');
+            option.value = id;
+            // não é pra quebrar 
+            option.textContent = `${dados.texto_exibicao}`;
+            
+            // Adiciona a cláusula dentro da pasta do capítulo correspondente
+            if (optGroup) optGroup.appendChild(option);
+        }
+
+        // Carrega as Definições 
+        const mapaDef = mapearDefinicoes();
+        const selectDef = document.getElementById('selectAlvoDefinicao');
+        selectDef.innerHTML = '';
+
+        if (Object.keys(mapaDef).length === 0) {
+            let option = document.createElement('option');
+            option.disabled = true;
+            option.textContent = "Nenhuma definição (termo em negrito) encontrada.";
+            selectDef.appendChild(option);
+        } else {
+            for (const [id, termo] of Object.entries(mapaDef)) {
+                if (id === blocoOrigemId.toString()) continue;
+                let option = document.createElement('option');
+                option.value = id;
+                option.textContent = termo;
+                selectDef.appendChild(option);
+            }
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('modalReferencia'));
+        modal.show();
+    }
+
+    // Inserção no CKEditor
+    // function inserirReferenciaNoEditor() {
+    //     const select = document.getElementById('selectAlvoReferencia');
+    //     const alvoId = select.value;
+    //     const texto = select.options[select.selectedIndex]?.text; 
+
+    //     if (!alvoId || !idBlocoDestinoReferencia) return;
+
+    //     // O Link âncora interno para o PDF
+    //     const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
+        
+    //     let editorCorreto = null;
+    //     for (let instanceName in CKEDITOR.instances) {
+    //         let editor = CKEDITOR.instances[instanceName];
+    //         if (editor.element.$.closest(`[data-id="${idBlocoDestinoReferencia}"]`)) {
+    //             editorCorreto = editor;
+    //             break;
+    //         }
+    //     }
+
+    //     if (editorCorreto) {
+    //         editorCorreto.insertHtml(linkHTML);
+    //         salvarNoBanco(idBlocoDestinoReferencia, editorCorreto.getData());
+    //     }
+
+    //     bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
+    //     idBlocoDestinoReferencia = null;
+    // }
+    function atualizarReferencias() {
+        const mapa = mapearNumeracao(); 
+        let quantidadeAtualizada = 0;
+        let alertasParaExibir = []; // Guarda os avisos para mostrar no final
+
+        // Varre todos os blocos de texto
+        document.querySelectorAll('.editor-clausula').forEach(editorDiv => {
+            let mudouNesteBloco = false;
+            
+            // Cria um rascunho invisível para ler o HTML atual do bloco
+            let tempDiv = document.createElement('div');
+            
+            // Pega o HTML (se o CKEditor estiver ativo, pega dele, senão pega da div)
+            let instanciaCK = CKEDITOR.instances[editorDiv.id];
+            tempDiv.innerHTML = instanciaCK ? instanciaCK.getData() : editorDiv.innerHTML;
+
+            // Descobre o número da cláusula que estamos a ler agora (para o aviso)
+            let blocoAvo = editorDiv.closest('.bloco-CL');
+            let meuNumero = blocoAvo ? (mapa[blocoAvo.getAttribute('data-id')]?.texto_exibicao || "?") : "?";
+
+            // Procura os nossos links lá dentro
+            tempDiv.querySelectorAll('a.ref-cruzada').forEach(ref => {
+                let alvoId = ref.getAttribute('data-alvo-id');
+                
+                if (alvoId && mapa[alvoId]) {
+                    let textoCorreto = `${mapa[alvoId].texto_exibicao}`;
+                    // melhorar estilo dps
+                    if (ref.innerText !== textoCorreto) {
+                        ref.innerText = textoCorreto;
+                        ref.style.color = "#0d6efd"; // Volta a ficar azul
+                        ref.style.backgroundColor = "transparent";
+                        mudouNesteBloco = true;
+                    }
+                } else {
+                    // apagar ref do bloco destino
+                    if (ref.innerText !== "[Referência Apagada]") {
+                        ref.innerText = "[Referência Apagada]";
+                        ref.style.color = "red"; // Pinta o texto de vermelho
+                        ref.style.backgroundColor = "#ffe6e6"; // Fundo de erro
+                        mudouNesteBloco = true;
+                        
+                        // Prepara o aviso para o utilizador
+                        alertasParaExibir.push(`A <strong>Cláusula ${meuNumero}</strong> contém uma referência apontando para um bloco que não existe mais.`);
+                    }
+                }
+            });
+
+            if (mudouNesteBloco) {
+                quantidadeAtualizada++;
+                let novoHTML = tempDiv.innerHTML;
+                
+                // Atualiza a tela
+                if (instanciaCK) {
+                    instanciaCK.setData(novoHTML);
+                } else {
+                    editorDiv.innerHTML = novoHTML;
+                }
+                
+                // Salva no banco de dados
+                const blocoId = editorDiv.getAttribute('data-id');
+                salvarNoBanco(blocoId, novoHTML);
+            }
+        });
+
+        // Dispara todos os alertas acumulados no ecrã!
+        if (alertasParaExibir.length > 0) {
+            alertasParaExibir.forEach(msg => mostrarAlertaReferenciaQuebrada(msg));
+        }
+
+        if (quantidadeAtualizada > 0) {
+            console.log(`Sucesso: ${quantidadeAtualizada} bloco(s) de referência atualizado(s)!`);
+        }
+    }
+
+    // Função para criar o Aviso Flutuante (Toast)
+    function mostrarAlertaReferenciaQuebrada(mensagem) {
+        let container = document.getElementById('container-alertas-ref');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'container-alertas-ref';
+            container.style.cssText = "position: fixed; top: 20px; right: 20px; z-index: 9999;";
+            document.body.appendChild(container);
+        }
+        
+        let alerta = document.createElement('div');
+        alerta.className = 'alert alert-danger alert-dismissible fade show shadow-lg';
+        alerta.innerHTML = `<strong>⚠️ Alerta de Referência:</strong> ${mensagem}
+                           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+        
+        container.appendChild(alerta);
+        
+        // Remove automaticamente ao fim de 6 segundos
+        // setTimeout(() => {
+        //     alerta.classList.remove('show');
+        //     setTimeout(() => alerta.remove(), 150);
+        // }, 6000);
+    }
+
+    async function adicionarCapituloCompleto(collapseId, event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        // Encontra a div que contém as seções do capítulo
+        const containerCapitulo = document.getElementById(collapseId);
+        if (!containerCapitulo) return;
+
+        // Pega todos os botões '+' individuais deste capítulo
+        const botoesAdicionar = containerCapitulo.querySelectorAll('.btn-adicionar-secao');
+
+        if (botoesAdicionar.length === 0) {
+            alert('Nenhuma seção disponível para adicionar neste capítulo.');
+            return;
+        }
+
+        if (!confirm(`Deseja verificar e adicionar as ${botoesAdicionar.length} seções deste capítulo à sua minuta?`)) {
+            return;
+        }
+
+        let adicionadas = 0;
+        let jaExistiam = 0;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Muda o cursor para "carregando" para o utilizador saber que o sistema está a trabalhar
+        document.body.style.cursor = 'wait';
+
+        // Loop assíncrono: espera uma requisição terminar antes de fazer a próxima 
+        for (let btn of botoesAdicionar) {
+            // Extrai os IDs (minuta e seção) diretamente do atributo onclick="adicionarBloco(1, 45)" do botão
+            const match = btn.getAttribute('onclick').match(/\d+/g);
+            
+            if (match && match.length >= 2) {
+                const minutaId = match[0];
+                const secaoId = match[1];
+
+                try {
+                    // Faz a requisição silenciosamente (sem chamar a função antiga que dava os alerts)
+                    const response = await fetch(`/minuta/${minutaId}/adicionar-bloco/${secaoId}/`, {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.status === 'sucesso') adicionadas++;
+                    } else if (response.status === 400) {
+                        // O servidor devolveu 400 (ex: "Seção já adicionada")
+                        jaExistiam++;
+                    }
+                } catch (error) {
+                    console.error("Erro ao adicionar seção:", error);
+                }
+            }
+        }
+
+        // Volta o cursor ao normal
+        document.body.style.cursor = 'default';
+
+        // O Resumo Final 
+        if (adicionadas > 0) {
+            alert(`Processo concluído! ${adicionadas} nova(s) seção(ões) adicionada(s) à minuta.`);
+            window.location.reload(); // Recarrega a página apenas 1 vez no final!
+        } else {
+            alert(`Nenhuma nova seção foi adicionada. Todas as ${jaExistiam} seções já estavam presentes no documento.`);
+        }
+    }
+
+    async function removerCapituloCompleto(capituloId) {
+        // Encontra a barra de título do capítulo no documento
+        const capituloDiv = document.getElementById(`capitulo-doc-${capituloId}`);
+        if (!capituloDiv) return;
+
+        let blocosParaRemover = [];
+        let nextEl = capituloDiv.nextElementSibling;
+        
+        // Vai descendo o documento elemento por elemento até bater no próximo capítulo
+        while (nextEl && !nextEl.classList.contains('bloco-CA')) {
+            // Se o elemento tiver um data-id (ou seja, é uma seção ou cláusula real)
+            if (nextEl.hasAttribute('data-id')) { 
+                blocosParaRemover.push({
+                    id: nextEl.getAttribute('data-id'),
+                    elemento: nextEl // Guarda o HTML para apagarmos da tela depois
+                });
+            }
+            nextEl = nextEl.nextElementSibling;
+        }
+
+        // Validações
+        if (blocosParaRemover.length === 0) {
+            alert('Este capítulo já está vazio.');
+            return;
+        }
+
+        if (!confirm(`Tem certeza que deseja APAGAR TODO O CONTEÚDO (${blocosParaRemover.length} itens) deste capítulo?\nEsta ação não pode ser desfeita.`)) {
+            return;
+        }
+
+        // Executa a deleção em massa reaproveitando o seu endpoint atual
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        document.body.style.cursor = 'wait'; // Cursor a carregar
+        let removidos = 0;
+
+        for (let item of blocosParaRemover) {
+            try {
+                const response = await fetch(`/minuta/remover-bloco/${item.id}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+                });
+                
+                if (response.ok || response.status === 404) {
+                    item.elemento.remove(); // Apaga o bloco visualmente da tela
+                    removidos++;
+                }
+            } catch (error) {
+                console.error("Erro ao remover bloco:", error);
+            }
+        }
+
+        document.body.style.cursor = 'default'; // Cursor normal
+
+        if (removidos > 0) {
+            setTimeout(() => {
+                atualizarReferencias();
+                window.location.reload(); 
+            }, 400);
+        }
+    }
+
+    function mapearDefinicoes() {
+        let mapaDefinicoes = {};
+
+        document.querySelectorAll('#area-minuta .bloco-CL').forEach(el => {
+            const editor = el.querySelector('.editor-clausula');
+            if (!editor) return;
+
+            // Cria um rascunho invisível para analisar o HTML da cláusula
+            const tempDiv = document.createElement('div');
+            // Se o CKEditor estiver ativo, pega dele para ter a versão mais recente
+            const instanciaCK = CKEDITOR.instances[editor.id];
+            tempDiv.innerHTML = instanciaCK ? instanciaCK.getData() : editor.innerHTML;
+
+            // Procura o primeiro parágrafo
+            const primeiroP = tempDiv.querySelector('p, div');
+            if (primeiroP && primeiroP.firstChild) {
+                const primeiroElemento = primeiroP.firstChild;
+                
+                // Se a primeira coisa for uma tag <strong> ou <b> é um conceito
+                if (primeiroElemento.nodeType === 1 && (primeiroElemento.tagName === 'STRONG' || primeiroElemento.tagName === 'B')) {
+                    // Limpa os dois pontos ou traços (Ex: "Arrendamento:" vira "Arrendamento")
+                    let termoLimpo = primeiroElemento.innerText.replace(/[:\-]/g, '').trim();
+                    
+                    // Só adiciona se for uma palavra/frase curta (evita pegar um parágrafo inteiro em negrito acidentalmente)
+                    if (termoLimpo.length > 2 && termoLimpo.length < 60) {
+                        const idBloco = el.getAttribute('data-id');
+                        mapaDefinicoes[idBloco] = termoLimpo;
+                    }
+                }
+            }
+        });
+
+        return mapaDefinicoes;
+    }
+
+    function inserirLinkInteligente() {
+        // Descobre qual aba está aberta no momento
+        const abaClausulasAtiva = document.getElementById('tab-clausulas-btn').classList.contains('active');
+        
+        const select = abaClausulasAtiva 
+            ? document.getElementById('selectAlvoReferencia') 
+            : document.getElementById('selectAlvoDefinicao');
+
+        const alvoId = select.value;
+        const texto = select.options[select.selectedIndex]?.text; 
+
+        if (!alvoId || !idBlocoDestinoReferencia) return;
+
+        // O HTML da âncora
+        const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
+        
+        let editorCorreto = null;
+        for (let instanceName in CKEDITOR.instances) {
+            let editor = CKEDITOR.instances[instanceName];
+            if (editor.element.$.closest(`[data-id="${idBlocoDestinoReferencia}"]`)) {
+                editorCorreto = editor;
+                break;
+            }
+        }
+
+        if (editorCorreto) {
+            editorCorreto.insertHtml(linkHTML);
+            salvarNoBanco(idBlocoDestinoReferencia, editorCorreto.getData());
+        }
+
+        bootstrap.Modal.getInstance(document.getElementById('modalReferencia')).hide();
+        idBlocoDestinoReferencia = null;
+    }
+
+    // Função unificada para inserir um bloco no meio do documento
+    function criarBlocoApos(minutaId, capituloId, blocoRefId, tipo) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = tipo === 'TX' ? `/minuta/${minutaId}/criar-texto/` : `/minuta/${minutaId}/criar-clausula/`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                capitulo_id: capituloId,
+                bloco_referencia_id: blocoRefId // envia id do bloco atual
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar bloco: ' + data.mensagem);
+        });
+    }
+    
+
+
+// == Funções Editor Mestre - criação de blocos na Matriz ==
+function salvarNovaSecao() {
+    const titulo = document.getElementById('tituloNovaSecao')?.value;
+    const capituloId = document.getElementById('capituloPaiId')?.value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+    if (!titulo || !capituloId) return alert('Por favor, preencha o título e selecione o capítulo.');
+
+    fetch(`/padrao/criar-secao/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify({ titulo: titulo, capitulo_id: capituloId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'sucesso') window.location.reload();
+        else alert('Erro: ' + (data.mensagem || 'falha desconhecida'));
+    })
+    .catch(err => alert('Erro de rede: ' + err));
+}
+
+// Criar Cláusula (Botão Fixo)
+function criarClausula(capituloId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    fetch(`/padrao/criar-clausula/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ capitulo_id: capituloId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'sucesso') window.location.reload();
+        else alert('Erro ao criar cláusula: ' + (data.mensagem || 'falha'));
+    })
+    .catch(err => alert('Erro de rede: ' + err));
+}
+
+// Função Inteligente para Inserir no Meio (Dropdown/Botões pequenos)
+function criarBlocoApos(capituloId, blocoRefId, tipo) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    const url = tipo === 'TX' ? `/padrao/criar-texto/` : `/padrao/criar-clausula/`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            capitulo_id: capituloId,
+            bloco_referencia_id: blocoRefId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'sucesso') window.location.reload();
+        else alert('Erro ao criar bloco: ' + (data.mensagem || 'falha'));
+    })
+    .catch(err => alert('Erro de rede: ' + err));
+}
+
+</script>
+</body>
+</html>

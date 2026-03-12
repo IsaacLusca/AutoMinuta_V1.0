@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Editor Mestre - Biblioteca Padrão</title>
+    
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body { background-color: #f4f7f6; }
+        
+        .minuta-documento {
+            counter-reset: capitulo apendice;
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 800px;
+        }
+
+        .bloco-CA { counter-increment: capitulo; counter-reset: secao clausula; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 20px; }
+        .bloco-CA .titulo-texto::before { content: "CAPÍTULO " counter(capitulo) " - "; }
+
+        .bloco-SE { counter-increment: secao; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+        .bloco-SE .titulo-texto::before { content: "Seção " counter(secao, upper-roman) " - "; }
+
+        .bloco-CL { counter-increment: clausula; margin-bottom: 15px; text-align: justify; }
+        .bloco-CL .titulo-texto::before { content: counter(capitulo) "." counter(clausula) ". "; font-weight: bold; margin-right: 5px; color: #000; }
+
+        .bloco-TX { margin-bottom: 15px; text-align: justify; }
+        
+        .bloco-AP { counter-increment: apendice; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+        .bloco-AP .titulo-texto::before { content: "Apêndice " counter(apendice) " - "; }
+
+        .editor-clausula {
+            display: block;
+            width: 100%;
+            min-height: 2em;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .editor-clausula:hover { background-color: rgba(0,0,0,0.03); }
+        .editor-clausula:focus { background-color: #fff; outline: 2px dashed #0d6efd; }
+
+        .painel-direito { background-color: #e9ecef; height: 100vh; overflow-y: auto; padding: 20px; }
+        
+        .handle { cursor: grab; color: #999; font-size: 20px; transition: color 0.2s; }
+        .handle:hover { color: #333; }
+
+        .capitulo-fixo { background-color: #f8f9fa; padding: 10px; border-radius: 5px; border-bottom: 2px solid #ddd; }
+
+        .conteudo-texto ol, .editor-clausula ol { list-style: none !important; counter-reset: subnivel; padding-left: 0 !important; margin-left: 0 !important; margin-top: 8px; margin-bottom: 8px; }
+        .conteudo-texto ol ol, .editor-clausula ol ol { margin-left: 20px !important; }
+        .conteudo-texto ol li, .editor-clausula ol li { counter-increment: subnivel; margin-bottom: 8px; text-align: justify; min-height: 1.5em; }
+        .conteudo-texto ol li::before, .editor-clausula ol li::before { content: counter(capitulo) "." counter(clausula) "." counters(subnivel, ".") "."; font-weight: bold; white-space: nowrap; padding-right: 10px; color: #000; }
+        .editor-clausula ol li > p { display: inline; margin: 0 !important; }
+    </style>
+</head>
+<body>
+{% csrf_token %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 offset-md-1 painel-direito mt-3">
+            
+            <div class="d-flex justify-content-between mb-3 align-items-center border-bottom pb-2">
+                <h4 class="text-primary">🏛️ Editor Mestre - Biblioteca Matriz</h4>
+                <span class="text-muted small">Qualquer alteração feita aqui afetará todos os novos editais.</span>
+            </div>
+            
+            <div class="minuta-documento" id="area-minuta">
+                
+                {% for capitulo in capitulos %}
+                
+                <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
+                    <div class="d-flex justify-content-between align-items-center w-100 px-2">
+                        <div style="width: 32px;"></div> 
+                        
+                        <span class="titulo-texto">{{ capitulo.titulo }}</span>
+                        
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo da Matriz">🗑️</button>
+                    </div>
+                </div>
+
+                {% for bloco in blocos %}
+                    {% if bloco.bloco_pai.id == capitulo.id or bloco.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
+                        
+                        <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" id="bloco-{{ bloco.id }}" data-id="{{ bloco.id }}">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
+                                    <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
+                                {% else %}
+                                    <span class="titulo-texto text-muted" style="font-size: 0.9em;">{{ bloco.titulo|default_if_none:"" }}</span>
+                                {% endif %}
+                                
+                                <div class="d-flex align-items-center">
+                                    
+                                    {% if bloco.tipo == 'AP' or bloco.tipo == 'TX' %}
+                                        <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;" title="Inserir Novo Texto logo abaixo">
+                                            📝 + Texto
+                                        </button>
+                                    {% endif %}
+
+                                    {% if bloco.tipo == 'SE' or bloco.tipo == 'CL' %}
+                                        <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;" title="Inserir Nova Cláusula logo abaixo">
+                                            📄 + Cláusula
+                                        </button>
+                                    {% endif %}
+
+                                    <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
+                                    <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco da Matriz">🗑️</button>
+                                </div>
+                            </div>
+
+                            {% if bloco.conteudo %}
+                                <div class="mt-2 editor-clausula" contenteditable="true" data-id="{{ bloco.id }}">
+                                    {{ bloco.conteudo|safe }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+                {% endfor %} 
+
+                <div class="text-center mt-2 mb-5 no-print">
+                    <button class="btn btn-sm text-secondary w-100" 
+                            style="border: 2px dashed #ccc; background: transparent;" 
+                            onclick="criarClausula({{ capitulo.id }})">
+                        + Adicionar Nova Cláusula
+                    </button>
+                </div>
+
+                {% endfor %} 
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="modalNovaSecao" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Criar Nova Seção na Matriz</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label class="form-label">Título da Seção</label>
+            <input type="text" class="form-control" id="tituloNovaSecao" placeholder="Ex: DAS SANÇÕES ADMINISTRATIVAS">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Pertence a qual Capítulo?</label>
+            <select class="form-select" id="capituloPaiId">
+                <option value="">Selecione o Capítulo...</option>
+                {% for capitulo in capitulos %}
+                    <option value="{{ capitulo.id }}">{{ capitulo.titulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="salvarNovaSecao()">Salvar na Matriz</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let isDraggingBloco = false;
+
+    if (typeof CKEDITOR !== 'undefined') {
+        CKEDITOR.disableAutoInline = true; 
+        CKEDITOR.config.versionCheck = false;
+        CKEDITOR.config.allowedContent = true;
+
+        CKEDITOR.on('instanceCreated', function(e) {
+            e.editor.on('key', function(evt) {
+                if (evt.data.keyCode === 9) {
+                    evt.cancel(); 
+                    e.editor.execCommand('indent'); 
+                } 
+                else if (evt.data.keyCode === CKEDITOR.SHIFT + 9) {
+                    evt.cancel(); 
+                    e.editor.execCommand('outdent'); 
+                }
+            });
+        });
+    }
+
+    function removerBloco(blocoId) {
+        if (!confirm('Tem certeza que deseja apagar DEFINITIVAMENTE este bloco da Matriz?')) return;
+        
+        const bloco = document.getElementById(`bloco-${blocoId}`);
+        const isSecao = bloco && bloco.classList.contains('bloco-SE');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch(`/padrao/remover/${blocoId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                if (bloco) {
+                    if (isSecao) {
+                        let nextEl = bloco.nextElementSibling;
+                        while (nextEl && nextEl.classList.contains('bloco-CL')) {
+                            const clToRemove = nextEl;
+                            nextEl = nextEl.nextElementSibling;
+                            clToRemove.remove();
+                        }
+                    }
+                    bloco.remove();
+                }
+            } else alert('Erro ao remover bloco.');
+        });
+    }
+
+    function salvarNoBanco(id, conteudo) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch(`/padrao/salvar/${id}/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ conteudo: conteudo })
+        })
+        .then(response => response.json())
+        .catch(error => console.error(`Erro de conexão/Fetch no bloco ${id}:`, error));
+    }
+
+    function garantirIdEditor(elemento) {
+        if (!elemento.id) {
+            const blocoId = elemento.getAttribute('data-id');
+            elemento.id = `editor-clausula-${blocoId}`;
+        }
+    }
+
+    function inicializarEditores() {
+        document.querySelectorAll('.editor-clausula').forEach((elemento) => {
+            garantirIdEditor(elemento);
+            
+            if (CKEDITOR.instances[elemento.id]) return;
+
+            const editor = CKEDITOR.inline(elemento);
+            
+            if (editor) {
+                editor.on('blur', function() {
+                    if (isDraggingBloco) return;
+                    const conteudoNovo = editor.getData();
+                    const blocoId = elemento.getAttribute('data-id');
+                    salvarNoBanco(blocoId, conteudoNovo);
+                });
+            }
+        });
+    }
+
+    function destruirEditoresParaReordenar() {
+        Object.keys(CKEDITOR.instances).forEach((id) => {
+            CKEDITOR.instances[id].destroy(true); 
+        });
+    }
+
+    let autoScrollDirecao = 0;
+    let autoScrollAtivo = false;
+
+    function loopAutoScroll() {
+        if (!autoScrollAtivo) return;
+
+        const painel = document.querySelector('.painel-direito');
+        if (painel && autoScrollDirecao !== 0) {
+            painel.scrollTop += autoScrollDirecao;
+        }
+
+        requestAnimationFrame(loopAutoScroll);
+    }
+
+    document.addEventListener('dragover', function(e) {
+        if (!isDraggingBloco) return;
+
+        const painel = document.querySelector('.painel-direito');
+        if (!painel) return;
+
+        const rect = painel.getBoundingClientRect();
+        const zona = 70;      
+        const velocidade = 10; 
+
+        if (e.clientY > rect.bottom - zona) {
+            autoScrollDirecao = velocidade;
+        } 
+        else if (e.clientY < rect.top + zona) {
+            autoScrollDirecao = -velocidade;
+        } 
+        else {
+            autoScrollDirecao = 0;
+        }
+
+        if (!autoScrollAtivo) {
+            autoScrollAtivo = true;
+            requestAnimationFrame(loopAutoScroll);
+        }
+    });
+
+    let pacotesDeSecoes = [];
+    const areaMinuta = document.getElementById('area-minuta');
+
+    new Sortable(areaMinuta, {
+        handle: '.handle',
+        draggable: '[data-id]',
+        filter: '.nao-move',
+        animation: 150,
+        ghostClass: 'bg-light',
+
+        onStart: function(evt) {
+            const item = evt.item;
+
+            if (item.classList.contains('bloco-SE')) {
+                document.querySelectorAll('.text-center.no-print').forEach(el => el.style.display = 'none');
+
+                let secaoAtual = null;
+                let clausulasDaSecao = [];
+
+                Array.from(areaMinuta.children).forEach(el => {
+                    if (el.classList.contains('bloco-CA') || el.classList.contains('bloco-SE')) {
+                        if (secaoAtual && clausulasDaSecao.length > 0) {
+                            pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
+                        }
+                        secaoAtual = el;
+                        clausulasDaSecao = [];
+                    } else if (el.classList.contains('bloco-CL') || el.classList.contains('bloco-TX')) {
+                        if (secaoAtual) clausulasDaSecao.push(el);
+                    }
+                });
+
+                if (secaoAtual && clausulasDaSecao.length > 0) {
+                    pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
+                }
+
+                pacotesDeSecoes.forEach(pacote => {
+                    const malaInvisivel = document.createElement('div');
+                    malaInvisivel.className = 'mala-invisivel';
+                    malaInvisivel.style.display = 'none';
+
+                    pacote.filhos.forEach(filho => malaInvisivel.appendChild(filho));
+                    pacote.pai.appendChild(malaInvisivel);
+                });
+            }
+
+            isDraggingBloco = true;
+            destruirEditoresParaReordenar();
+        },
+
+        onEnd: function(evt) {
+            autoScrollAtivo = false;
+            autoScrollDirecao = 0;
+            
+            if (pacotesDeSecoes.length > 0) {
+                pacotesDeSecoes.forEach(pacote => {
+                    let inserirApos = pacote.pai;
+
+                    pacote.filhos.forEach(filho => {
+                        pacote.pai.parentNode.insertBefore(filho, inserirApos.nextSibling);
+                        inserirApos = filho;
+                    });
+                    
+                    const mala = pacote.pai.querySelector('.mala-invisivel');
+                    if (mala) mala.remove();
+                });
+                pacotesDeSecoes = []; 
+            }
+
+            document.querySelectorAll('.text-center.no-print').forEach(el => el.style.display = '');
+
+            inicializarEditores();
+            isDraggingBloco = false;
+
+            const itens = [];
+            areaMinuta.querySelectorAll('[data-id]').forEach((el, index) => {
+                itens.push({
+                    id: el.getAttribute('data-id'),
+                    ordem: (index + 1) * 10
+                });
+            });
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch(`/padrao/reordenar/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({ itens: itens })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== 'sucesso') alert('Erro ao salvar nova ordem na Matriz.');
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        inicializarEditores();
+        
+        const painel = document.querySelector('.painel-direito');
+        const pos = localStorage.getItem('scroll-pos-padrao');
+        if (painel && pos !== null) {
+            painel.scrollTop = parseInt(pos);
+        }
+    });
+
+    window.addEventListener('beforeunload', function() {
+        const painel = document.querySelector('.painel-direito');
+        if (painel) {
+            localStorage.setItem('scroll-pos-padrao', painel.scrollTop);
+        }
+    });
+
+    (function() {
+        function removerAvisoVersion() {
+            document.querySelectorAll('.cke_notification_warning, .cke_notification').forEach(aviso => {
+                if (aviso.textContent.includes('version') || aviso.textContent.includes('versão')) {
+                    aviso.remove();
+                }
+            });
+        }
+        setInterval(removerAvisoVersion, 100);
+    })();
+
+    // Funções de Criação - Agora conectadas aos Endpoints de Padrão
+    function salvarNovaSecao() {
+        const titulo = document.getElementById('tituloNovaSecao').value;
+        const capituloId = document.getElementById('capituloPaiId').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if (!titulo || !capituloId) return alert('Por favor, preencha o título e selecione o capítulo.');
+
+        fetch(`/padrao/criar-secao/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ titulo: titulo, capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro: ' + data.mensagem);
+        });
+    }
+
+    function criarClausula(capituloId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch(`/padrao/criar-clausula/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ capitulo_id: capituloId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar cláusula: ' + data.mensagem);
+        });
+    }
+    
+    function criarBlocoApos(capituloId, blocoRefId, tipo) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = tipo === 'TX' ? `/padrao/criar-texto/` : `/padrao/criar-clausula/`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                capitulo_id: capituloId,
+                bloco_referencia_id: blocoRefId 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') window.location.reload();
+            else alert('Erro ao criar bloco: ' + data.mensagem);
+        });
+    }
+
+    async function removerCapituloCompleto(capituloId) {
+        const capituloDiv = document.getElementById(`capitulo-doc-${capituloId}`);
+        if (!capituloDiv) return;
+
+        let blocosParaRemover = [];
+        let nextEl = capituloDiv.nextElementSibling;
+        
+        while (nextEl && !nextEl.classList.contains('bloco-CA')) {
+            if (nextEl.hasAttribute('data-id')) { 
+                blocosParaRemover.push({
+                    id: nextEl.getAttribute('data-id'),
+                    elemento: nextEl 
+                });
+            }
+            nextEl = nextEl.nextElementSibling;
+        }
+
+        if (blocosParaRemover.length === 0) {
+            alert('Este capítulo já está vazio.');
+            return;
+        }
+
+        if (!confirm(`Tem certeza que deseja APAGAR TODO O CONTEÚDO (${blocosParaRemover.length} itens) deste capítulo da Matriz?\nEsta ação não pode ser desfeita.`)) {
+            return;
+        }
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        document.body.style.cursor = 'wait'; 
+        let removidos = 0;
+
+        for (let item of blocosParaRemover) {
+            try {
+                const response = await fetch(`/padrao/remover/${item.id}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+                });
+                
+                if (response.ok || response.status === 404) {
+                    item.elemento.remove(); 
+                    removidos++;
+                }
+            } catch (error) {
+                console.error("Erro ao remover bloco:", error);
+            }
+        }
+
+        document.body.style.cursor = 'default'; 
+
+        if (removidos > 0) {
+            setTimeout(() => { window.location.reload(); }, 400);
+        }
+    }
+</script>
+</body>
+</html>
