@@ -502,3 +502,24 @@ def criar_texto_padrao_ajax(request):
             
         BlocoPadrao.objects.create(tipo='TX', titulo="", conteudo="<p>Novo texto matriz (clique para editar)</p>", bloco_pai=capitulo, ordem_padrao=nova_ordem)
         return JsonResponse({'status': 'sucesso'})
+    
+@csrf_exempt
+def criar_secao_minuta_ajax(request, minuta_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+        capitulo_origem_id = data.get('capitulo_id')
+        titulo_personalizado = data.get('titulo')
+
+        # Pega o Capítulo Matriz
+        capitulo_pai = get_object_or_404(BlocoPadrao, id=capitulo_origem_id)
+
+        # cria direto na minuta
+        BlocoDaMinuta.objects.create(
+            minuta=minuta,
+            bloco_origem=capitulo_pai, 
+            tipo='SE',
+            titulo=titulo_personalizado
+        )
+
+        return JsonResponse({'status': 'sucesso'})

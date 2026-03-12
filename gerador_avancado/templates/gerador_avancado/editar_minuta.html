@@ -142,48 +142,104 @@
     <div class="row">
         
         <div class="col-md-4 painel-esquerdo">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="mb-0">Biblioteca</h4>
-                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalNovaSecao">
-                    + Nova Seção
-                </button>
-            </div>
-            <div class="accordion" id="accordionBiblioteca">
-                {% for capitulo in capitulos_padrao %}
-                <div class="accordion-item">
-                    <h2 class="accordion-header d-flex align-items-center">
-                        <button class="accordion-button collapsed flex-grow-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
-                            {{ capitulo.titulo }}
-                        </button>
-                        <button type="button" class="btn btn-sm btn-success ms-1 me-3 text-nowrap shadow-sm" onclick="adicionarCapituloCompleto('collapse-{{ capitulo.id }}', event)" title="Adicionar todas as seções deste capítulo">
-                            + Tudo
-                        </button>
-                    </h2>
-                    <div id="collapse-{{ capitulo.id }}" class="accordion-collapse collapse">
-                        <div class="accordion-body p-0">
-                           <ul class="list-group list-group-flush">
-                                {% for secao in capitulo.sub_blocos.all %}
-                                    
-                                    {% if secao.tipo == 'SE' or secao.tipo == 'AP' %}
-                                    
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {% if secao.tipo == 'AP' %}
-                                            <span class="titulo-apendice-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para este apêndice no documento">{{ secao.titulo }}</span>
-                                        {% else %}
-                                            <span class="titulo-secao-bib" style="cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Ir para esta seção no documento">{{ secao.titulo }}</span>
-                                        {% endif %}
+            <ul class="nav nav-tabs mb-3" id="painelEsquerdoTabs" role="tablist">
+                <li class="nav-item" role="presentation" style="width: 50%;">
+                    <button class="nav-link active w-100 py-2 small fw-bold" id="tab-biblioteca" data-bs-toggle="tab" data-bs-target="#conteudo-biblioteca" type="button" role="tab" title="Biblioteca Matriz (Fonte)">
+                        Base
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation" style="width: 50%;">
+                    <button class="nav-link w-100 py-2 small fw-bold text-primary" id="tab-estrutura" data-bs-toggle="tab" data-bs-target="#conteudo-estrutura" type="button" role="tab" title="O seu documento atual">
+                        Minuta
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="painelEsquerdoTabsContent">
+                
+                <div class="tab-pane fade show active" id="conteudo-biblioteca" role="tabpanel">
+                    <p class="text-muted small mb-2">Adicione blocos da base ao seu documento:</p>
+                    <div class="accordion" id="accordionBiblioteca">
+                        {% for capitulo in capitulos_padrao %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingBib-{{ capitulo.id }}">
+                                    <button class="accordion-button collapsed py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBib-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
+                                        <span class="titulo-texto-bib">{{ capitulo.titulo }}</span>
+                                    </button>
+                                </h2>
+                                <div id="collapseBib-{{ capitulo.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionBiblioteca">
+                                    <div class="accordion-body p-0">
                                         
-                                        <button class="btn btn-sm btn-outline-success btn-adicionar-secao" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})">+</button>
-                                    </li>
-                                    
-                                    {% endif %}
-                                    
-                                {% endfor %}
-                            </ul>
-                        </div>
+                                        <div class="p-2 text-center border-bottom bg-light">
+                                            <button class="btn btn-sm btn-outline-success w-100" onclick="adicionarCapituloCompleto('collapseBib-{{ capitulo.id }}', event)">
+                                                ++ Adicionar Capítulo Todo
+                                            </button>
+                                        </div>
+
+                                        <ul class="list-group list-group-flush">
+                                            {% for secao in capitulo.sub_blocos.all %}
+                                                {% if secao.tipo == 'SE' or secao.tipo == 'AP' %}
+                                                <li class="list-group-item d-flex justify-content-between align-items-center p-2">
+                                                    <span class="{% if secao.tipo == 'AP' %}titulo-apendice-bib{% else %}titulo-secao-bib{% endif %} text-muted" style="font-size: 0.85em; cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Localizar na Minuta (se já adicionado)">
+                                                        {{ secao.titulo }}
+                                                    </span>
+                                                    <button class="btn btn-sm btn-outline-success btn-adicionar-secao py-0 px-2" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})" title="Copiar para a minha minuta">+</button>
+                                                </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
+
+                <div class="tab-pane fade" id="conteudo-estrutura" role="tabpanel">
+                    <p class="text-primary small mb-2 fw-bold">Navegue ou altere o seu rascunho:</p>
+                    <div class="accordion" id="accordionEstrutura">
+                        
+                        {% for capitulo in capitulos_padrao %} <div class="accordion-item border-primary mb-1">
+                                <h2 class="accordion-header" id="headingEst-{{ capitulo.id }}">
+                                    <button class="accordion-button collapsed py-2 bg-light text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEst-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
+                                        <span class="titulo-texto-bib fw-bold">{{ capitulo.titulo }}</span>
+                                    </button>
+                                </h2>
+                                <div id="collapseEst-{{ capitulo.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionEstrutura">
+                                    <div class="accordion-body p-0">
+                                        
+                                        <div class="p-2 text-center border-bottom border-primary" style="background-color: #e6f2ff;">
+                                            <button class="btn btn-sm btn-primary w-100" onclick="abrirModalNovaSecaoMinuta({{ minuta.id }}, {{ capitulo.id }})">
+                                                + Nova Seção Personalizada
+                                            </button>
+                                        </div>
+
+                                        <ul class="list-group list-group-flush" id="lista-estrutura-cap-{{ capitulo.id }}">
+                                            {% for bloco in blocos_da_minuta %}
+                                                {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
+                                                    {% if bloco.bloco_origem.id == capitulo.id or bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id %}
+                                                        
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center p-2" id="item-estrutura-{{ bloco.id }}">
+                                                            
+                                                            <span style="cursor: pointer; font-size: 0.85em;" class="text-primary" onclick="rolarParaSecaoMinuta('{{ bloco.id }}')" title="Ir para este texto">
+                                                                {{ bloco.titulo }}
+                                                            </span>
+                                                            
+                                                            <button class="btn btn-sm text-danger p-0 border-0" onclick="removerBloco('{{ bloco.id }}')" title="Apagar da Minuta">🗑️</button>
+                                                        </li>
+
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -222,7 +278,7 @@
                     </div>
 
                     {% for bloco in blocos_da_minuta %}
-                        {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
+                        {% if bloco.bloco_origem.id == capitulo.id or bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
                             
                             <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" id="bloco-{{ bloco.id }}" data-id="{{ bloco.id }}" data-origem-id="{{ bloco.bloco_origem.id }}">
                                 <div class="d-flex justify-content-between align-items-center w-100">
@@ -281,36 +337,6 @@
         </div>
 
     </div>
-</div>
-
-<div class="modal fade" id="modalNovaSecao" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Criar Nova Seção na Biblioteca</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-            <label class="form-label">Título da Seção</label>
-            <input type="text" class="form-control" id="tituloNovaSecao" placeholder="Ex: DAS SANÇÕES ADMINISTRATIVAS">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Pertence a qual Capítulo?</label>
-            <select class="form-select" id="capituloPaiId">
-                <option value="">Selecione o Capítulo...</option>
-                {% for capitulo in capitulos_padrao %}
-                    <option value="{{ capitulo.id }}">{{ capitulo.titulo }}</option>
-                {% endfor %}
-            </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="salvarNovaSecao()">Salvar na Biblioteca</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="modal fade" id="modalDadosEdital" tabindex="-1" aria-hidden="true">
@@ -390,6 +416,33 @@
         <button type="button" class="btn btn-info text-white" onclick="inserirLinkInteligente()">Inserir no Texto</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- Modal para criar seção personalizada -->
+<div class="modal fade" id="modalNovaSecaoMinuta" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content border-primary">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Nova Seção Personalizada</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <input type="hidden" id="minutaIdNovaSecao">
+        <input type="hidden" id="capituloIdNovaSecao">
+        
+        <div class="mb-3">
+            <label class="form-label text-muted small">Esta seção existirá apenas neste documento.</label>
+            <input type="text" class="form-control" id="tituloNovaSecaoMinuta" placeholder="Ex: DAS DISPOSIÇÕES ESPECIAIS DO PORTO">
+        </div>
+
+      </div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="salvarNovaSecaoMinuta()">Adicionar ao Documento</button>
+      </div>
     </div>
   </div>
 </div>
@@ -475,6 +528,10 @@
                     
                     // apaga o bloco
                     bloco.remove();
+                }
+                const itemIndice = document.getElementById(`item-estrutura-${blocoMinutaId}`);
+                if (itemIndice) {
+                    itemIndice.remove();
                 }
                 
                 // para os blocos que acabaram de sumir, o alerta vermelho vai disparar!
@@ -732,26 +789,6 @@
         setInterval(removerAvisoVersion, 100);
     })();
 
-    // novos blocos
-    function salvarNovaSecao() {
-        const titulo = document.getElementById('tituloNovaSecao').value;
-        const capituloId = document.getElementById('capituloPaiId').value;
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        if (!titulo || !capituloId) return alert('Por favor, preencha o título e selecione o capítulo.');
-
-        fetch('/minuta/criar-secao/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
-            body: JSON.stringify({ titulo: titulo, capitulo_id: capituloId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'sucesso') window.location.reload();
-            else alert('Erro: ' + data.mensagem);
-        });
-    }
-
     function criarClausula(minutaId, capituloId) {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
@@ -813,6 +850,22 @@
             }, 1500);
         } else {
             console.warn("Esta seção não está presente no documento atual.");
+        }
+    }
+
+    function rolarParaSecaoMinuta(blocoMinutaId) {
+        const elemento = document.querySelector(`.painel-direito [data-id="${blocoMinutaId}"]`);
+        
+        if (elemento) {
+
+            elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });        
+            elemento.style.transition = "background-color 0.5s";
+            elemento.style.backgroundColor = "#fff3cd";
+            setTimeout(() => {
+                elemento.style.backgroundColor = "";
+            }, 1500);
+        } else {
+            alert("Este bloco não está presente no documento à direita.");
         }
     }
 
@@ -1287,6 +1340,44 @@
             if (data.status === 'sucesso') window.location.reload();
             else alert('Erro ao criar bloco: ' + data.mensagem);
         });
+    }
+
+    // Abre o modal e injeta os IDs ocultos
+    function abrirModalNovaSecaoMinuta(minutaId, capituloId) {
+        document.getElementById('minutaIdNovaSecao').value = minutaId;
+        document.getElementById('capituloIdNovaSecao').value = capituloId;
+        document.getElementById('tituloNovaSecaoMinuta').value = ''; // Limpa o texto antigo
+        
+        const modal = new bootstrap.Modal(document.getElementById('modalNovaSecaoMinuta'));
+        modal.show();
+    }
+
+    // envia os dados para o Python
+    function salvarNovaSecaoMinuta() {
+        const minutaId = document.getElementById('minutaIdNovaSecao').value;
+        const capituloId = document.getElementById('capituloIdNovaSecao').value;
+        const titulo = document.getElementById('tituloNovaSecaoMinuta').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        if (!titulo) {
+            alert('Por favor, digite um título para a seção.');
+            return;
+        }
+
+        fetch(`/minuta/${minutaId}/criar-secao/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ capitulo_id: capituloId, titulo: titulo })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                window.location.reload(); // Recarrega para mostrar a nova seção no painel direito e esquerdo
+            } else {
+                alert('Erro: ' + data.mensagem);
+            }
+        })
+        .catch(error => console.error('Erro ao criar seção:', error));
     }
     
 </script>
