@@ -1127,28 +1127,19 @@
         const capituloDiv = document.getElementById(`capitulo-doc-${capituloId}`);
         if (!capituloDiv) return;
 
-        let blocosParaRemover = [];
         let nextEl = capituloDiv.nextElementSibling;
-        
-        // Vai descendo o documento elemento por elemento até bater no próximo capítulo
+        let blocosExistem = false;
         while (nextEl && !nextEl.classList.contains('bloco-CA')) {
-            // Se o elemento tiver um data-id (ou seja, é uma seção ou cláusula real)
-            if (nextEl.hasAttribute('data-id')) { 
-                blocosParaRemover.push({
-                    id: nextEl.getAttribute('data-id'),
-                    elemento: nextEl // Guarda o HTML para apagarmos da tela depois
-                });
-            }
+            if (nextEl.hasAttribute('data-id')) { blocosExistem = true; break; }
             nextEl = nextEl.nextElementSibling;
         }
-
         // Validações
-        if (blocosParaRemover.length === 0) {
+        if (!blocosExistem) {
             alert('Este capítulo já está vazio.');
             return;
         }
 
-        if (!confirm(`Tem certeza que deseja APAGAR TODO O CONTEÚDO (${blocosParaRemover.length} itens) deste capítulo?\nEsta ação não pode ser desfeita.`)) {
+        if (!confirm('Tem certeza que deseja APAGAR TODO O CONTEÚDO deste capítulo?\nEsta ação não pode ser desfeita.')) {
             return;
         }
 
@@ -1157,28 +1148,51 @@
         document.body.style.cursor = 'wait'; // Cursor a carregar
         let removidos = 0;
 
-        for (let item of blocosParaRemover) {
-            try {
-                const response = await fetch(`/minuta/remover-bloco/${item.id}/`, {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
-                });
-                
-                if (response.ok || response.status === 404) {
-                    item.elemento.remove(); // Apaga o bloco visualmente da tela
-                    removidos++;
+        // Varre elemento por elemento até encontrar o próximo capítulo
+        while (atual && !atual.classList.contains('bloco-CA')) {
+            
+            if (atual.hasAttribute('data-id')) {
+                const id = atual.getAttribute('data-id');
+                const isSecao = atual.classList.contains('bloco-SE');
+
+                try {
+                    // Envia o pedido para os blocos principais - Seções, Textos 
+                    const response = await fetch(`/minuta/remover-bloco/${id}/`, {
+                        method: 'POST',
+                        headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        removidos++;
+                        const elParaRemover = atual;
+                        atual = atual.nextElementSibling; // Avança o ponteiro de leitura
+                        elParaRemover.remove(); // Remove o bloco principal da tela
+
+                        // Se apagou uma Seção, remove as Cláusulas 
+                        if (isSecao) {
+                            while (atual && atual.classList.contains('bloco-CL')) {
+                                const clToRemove = atual;
+                                atual = atual.nextElementSibling; // Pula essa cláusula na próxima leitura
+                                clToRemove.remove(); // Apaga apenas visualmente
+                            }
+                        }
+                        continue; // Pula para a próxima iteração do 'while' principal
+                    }
+                } catch (error) {
+                    console.error("Erro ao remover bloco:", error);
                 }
-            } catch (error) {
-                console.error("Erro ao remover bloco:", error);
             }
+            
+            // Se não tinha data-id ou o fetch falhou, avança para o próximo elemento
+            if (atual) atual = atual.nextElementSibling;
         }
 
-        document.body.style.cursor = 'default'; // Cursor normal
+        document.body.style.cursor = 'default';
 
         if (removidos > 0) {
+            // Não precisa dar reload na página
             setTimeout(() => {
-                atualizarReferencias();
-                window.location.reload(); 
+                atualizarReferencias(); 
             }, 400);
         }
     }

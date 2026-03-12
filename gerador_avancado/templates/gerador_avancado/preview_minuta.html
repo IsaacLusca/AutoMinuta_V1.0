@@ -217,9 +217,12 @@
         <div class="titulo-sumario">SUMÁRIO</div>
         
         {% for capitulo in capitulos_padrao %}
-            <a href="#capitulo-{{ capitulo.id }}" style="text-decoration: none; color: inherit;">
-                <div class="item-sumario-ca">{{ capitulo.titulo }}</div>
-            </a>
+            
+            <div class="item-sumario-ca">
+                <a href="#capitulo-{{ capitulo.id }}" style="text-decoration: none; color: inherit;">
+                    {{ capitulo.titulo }}
+                </a>
+            </div>
 
             {% for bloco in blocos %}
                 {% if bloco.bloco_origem.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.id == capitulo.id or bloco.bloco_origem.bloco_pai.bloco_pai.bloco_pai.id == capitulo.id %}
@@ -233,7 +236,7 @@
                     {% endif %}
                     
                 {% endif %}
-            {% endfor %}
+            {% endfor %}     
         {% endfor %}
     </div>
 
