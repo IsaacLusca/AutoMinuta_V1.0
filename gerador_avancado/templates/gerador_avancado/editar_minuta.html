@@ -1148,6 +1148,7 @@
         document.body.style.cursor = 'wait'; // Cursor a carregar
         let removidos = 0;
 
+        let atual = capituloDiv.nextElementSibling;
         // Varre elemento por elemento até encontrar o próximo capítulo
         while (atual && !atual.classList.contains('bloco-CA')) {
             
