@@ -932,7 +932,9 @@
     //     idBlocoDestinoReferencia = null;
     // }
     function atualizarReferencias() {
-        const mapa = mapearNumeracao(); 
+        const mapaNumeros = mapearNumeracao(); 
+        const mapaDefinicoes = mapearDefinicoes(); // mapear conceitos
+        
         let quantidadeAtualizada = 0;
         let alertasParaExibir = []; // Guarda os avisos para mostrar no final
 
@@ -949,15 +951,38 @@
 
             // Descobre o número da cláusula que estamos a ler agora (para o aviso)
             let blocoAvo = editorDiv.closest('.bloco-CL');
-            let meuNumero = blocoAvo ? (mapa[blocoAvo.getAttribute('data-id')]?.texto_exibicao || "?") : "?";
+            let meuNumero = blocoAvo ? (mapaNumeros[blocoAvo.getAttribute('data-id')]?.texto_exibicao || "?") : "?";
 
             // Procura os nossos links lá dentro
             tempDiv.querySelectorAll('a.ref-cruzada').forEach(ref => {
                 let alvoId = ref.getAttribute('data-alvo-id');
+                let tipoRef = ref.getAttribute('data-tipo-ref');
                 
-                if (alvoId && mapa[alvoId]) {
-                    let textoCorreto = `${mapa[alvoId].texto_exibicao}`;
-                    // melhorar estilo dps
+                // Fallback de segurança para os links velhos que já estavam no banco de dados sem o data-tipo-ref
+                if (!tipoRef) {
+                    // Se o texto tiver só números e pontos (ex: 1.2.3), é número. Se tiver letras, é conceito.
+                    tipoRef = /^[0-9.]+$/.test(ref.innerText.trim()) ? 'numero' : 'conceito';
+                    ref.setAttribute('data-tipo-ref', tipoRef);
+                    mudouNesteBloco = true;
+                }
+
+                let textoCorreto = null;
+                let encontrouAlvo = false;
+
+                // Separação de comportamento
+                if (tipoRef === 'numero') {
+                    if (alvoId && mapaNumeros[alvoId]) {
+                        textoCorreto = `${mapaNumeros[alvoId].texto_exibicao}`;
+                        encontrouAlvo = true;
+                    }
+                } else if (tipoRef === 'conceito') {
+                    if (alvoId && mapaDefinicoes[alvoId]) {
+                        textoCorreto = `${mapaDefinicoes[alvoId]}`;
+                        encontrouAlvo = true;
+                    }
+                }
+
+                if (encontrouAlvo && textoCorreto) {
                     if (ref.innerText !== textoCorreto) {
                         ref.innerText = textoCorreto;
                         ref.style.color = "#0d6efd"; // Volta a ficar azul
@@ -1206,9 +1231,11 @@
 
         if (!alvoId || !idBlocoDestinoReferencia) return;
 
+        // definir o tipo para não confundir o html
+        const tipoRef = abaClausulasAtiva ? 'numero' : 'conceito';
+
         // O HTML da âncora
-        const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;
-        
+        const linkHTML = `<a href="#bloco-${alvoId}" class="ref-cruzada" data-alvo-id="${alvoId}" data-tipo-ref="${tipoRef}" style="color: #0d6efd; font-weight: bold; text-decoration: none;">${texto}</a>&nbsp;`;        
         let editorCorreto = null;
         for (let instanceName in CKEDITOR.instances) {
             let editor = CKEDITOR.instances[instanceName];
