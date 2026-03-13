@@ -56,12 +56,28 @@
       </div>
       <form action="{% url 'criar_novo_edital' %}" method="POST">
           {% csrf_token %}
-          <div class="modal-body">
+          <div class="modal-body">            
             <div class="mb-3">
                 <label class="form-label">Nome do Rascunho (Controle Interno)</label>
                 <input type="text" class="form-control" name="nome_interno" placeholder="Ex: Rascunho Porto de Santos V1" required>
                 <div class="form-text">Você preencherá os detalhes técnicos (Porto, Prazos) na próxima tela.</div>
             </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Usar como Base (Clonar de)</label>
+                <select class="form-select" name="minuta_base_id" required>
+                    <option value="matriz" selected>MINUTA PADRÃO - DO ZERO</option>
+                    
+                    {% if editais %}
+                    <optgroup label="Meus Editais Anteriores">
+                        {% for m in editais %}
+                            <option value="{{ m.id }}">{{ m.nome_interno|default:"Edital sem nome" }}</option>
+                        {% endfor %}
+                    </optgroup>
+                    {% endif %}
+                </select>
+            </div>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -354,54 +354,73 @@ def criar_clausula_ajax(request, minuta_id):
 
 # --- novas estruturas ---
 
-# função para mostrar a lista de editais
 def dashboard_editais(request):
     editais = MinutaGerada.objects.all().order_by('-criado_em')
-    return render(request, 'gerador_avancado/dashboard_editais.html', {'editais': editais})
 
-def dashboard_editais(request):
-    """
-    Exibe a lista de todos os editais criados (rascunhos).
-    """
-    editais = MinutaGerada.objects.all().order_by('-criado_em')
-    return render(request, 'gerador_avancado/dashboard.html', {'editais': editais})
+    contexto = {
+        'editais': editais,
+        'minutas': editais,
+    }
+    return render(request, 'gerador_avancado/dashboard.html', contexto)
 
 # função para criar um novo edital a partir do zero, clonando a estrutura da Biblioteca Padrão
 def criar_novo_edital(request):
     if request.method == 'POST':
         nome = request.POST.get('nome_interno', 'Novo Edital')
+        minuta_base_id = request.POST.get('minuta_base_id')
         
         # cria o registro vazio
         nova_minuta = MinutaGerada.objects.create(nome_interno=nome)
 
-        # Contar os textos para garantir bom funcionamento
-        contador_ordem_texto = 1
-        
-        # clona a Biblioteca Padrao para este novo edital
-        blocos_padrao = BlocoPadrao.objects.all()
-        for bloco in blocos_padrao:
-            # se for tx, a ordem será baixa
-            if bloco.tipo == 'TX':
-                ordem_final = contador_ordem_texto
-                contador_ordem_texto += 1
-            else:
-                ordem_final = bloco.ordem_padrao
-
-            BlocoDaMinuta.objects.create(
-                minuta=nova_minuta,
-                bloco_origem=bloco,
-                tipo=bloco.tipo,
-                titulo=bloco.titulo,
-                conteudo_editado=bloco.conteudo,
-                ordem=ordem_final,
-                bloco_pai=None
-            )
+        if minuta_base_id and minuta_base_id != 'matriz':
+            minuta_pai = get_object_or_404(MinutaGerada, id=minuta_base_id)
+            blocos_do_pai = BlocoDaMinuta.objects.filter(minuta=minuta_pai)
             
-        # Redireciona para a tela de edição que já construímos
+            novos_blocos = []
+            for bloco in blocos_do_pai:
+                novos_blocos.append(
+                    BlocoDaMinuta(
+                        minuta=nova_minuta,
+                        bloco_origem=bloco.bloco_origem,
+                        tipo=bloco.tipo,
+                        titulo=bloco.titulo,
+                        conteudo_editado=bloco.conteudo_editado, # Traz o texto alterado
+                        ordem=bloco.ordem,
+                        bloco_pai=bloco.bloco_pai
+                    )
+                )
+            
+            if novos_blocos:
+                BlocoDaMinuta.objects.bulk_create(novos_blocos)
+
+        # se for a padrão
+        else:
+            contador_ordem_texto = 1
+            # clona a Biblioteca Padrao para este novo edital
+            blocos_padrao = BlocoPadrao.objects.all()
+            
+            for bloco in blocos_padrao:
+                # se for tx, a ordem será baixa
+                if bloco.tipo == 'TX':
+                    ordem_final = contador_ordem_texto
+                    contador_ordem_texto += 1
+                else:
+                    ordem_final = bloco.ordem_padrao
+
+                BlocoDaMinuta.objects.create(
+                    minuta=nova_minuta,
+                    bloco_origem=bloco,
+                    tipo=bloco.tipo,
+                    titulo=bloco.titulo,
+                    conteudo_editado=bloco.conteudo,
+                    ordem=ordem_final,
+                    bloco_pai=None
+                )
+                
+        # Redireciona para a tela de edição que já está construida
         return redirect('editar_minuta', minuta_id=nova_minuta.id)
         
-    # Se alguém tentar aceder via GET, redireciona de volta para o dashboard
-    return redirect('dashboard_editais')
+    return redirect('dashboard')
 
 # função que salva dados do edital
 def salvar_dados_edital(request, minuta_id):
@@ -416,7 +435,7 @@ def salvar_dados_edital(request, minuta_id):
         minuta.save()
         return redirect('editar_minuta', minuta_id=minuta.id)
         
-    return redirect('dashboard_editais')
+    return redirect('dashboard')
 
 # editar a minuta padrão
 def editar_padrao_dashboard(request):
