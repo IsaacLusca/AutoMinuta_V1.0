@@ -35,4 +35,7 @@ urlpatterns = [
 
     # Rota para a Minuta Atual (Rascunho)
     path('minuta/<int:minuta_id>/criar-secao/', views.criar_secao_minuta_ajax, name='criar_secao_minuta_ajax'),
+
+    path('padrao/criar-subsecao/', views.criar_subsecao_padrao_ajax, name='criar_subsecao_padrao_ajax'),
+    path('padrao/salvar-titulo/<int:bloco_id>/', views.salvar_titulo_padrao_ajax, name='salvar_titulo_padrao_ajax'),
 ]

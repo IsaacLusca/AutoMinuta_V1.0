@@ -534,11 +534,25 @@ def criar_secao_padrao_ajax(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         capitulo = get_object_or_404(BlocoPadrao, id=data.get('capitulo_id'))
+        bloco_ref_id = data.get('bloco_referencia_id')
         
-        ultimo_filho = capitulo.sub_blocos.order_by('-ordem_padrao').first()
-        nova_ordem = (ultimo_filho.ordem_padrao + 10) if ultimo_filho else 10
-        
-        BlocoPadrao.objects.create(tipo='SE', titulo=data.get('titulo'), bloco_pai=capitulo, ordem_padrao=nova_ordem)
+        # Descobre a posição exata
+        if bloco_ref_id:
+            bloco_ref = get_object_or_404(BlocoPadrao, id=bloco_ref_id)
+            nova_ordem = bloco_ref.ordem_padrao + 1
+        else:
+            ultimo_filho = capitulo.sub_blocos.order_by('-ordem_padrao').first()
+            nova_ordem = (ultimo_filho.ordem_padrao + 10) if ultimo_filho else 10
+            
+        # Pega o título enviado pelo Modal OU usa um padrão se for o botão inline
+        titulo_padrao = data.get('titulo', 'NOVA SEÇÃO')
+            
+        BlocoPadrao.objects.create(
+            tipo='SE', 
+            titulo=titulo_padrao, 
+            bloco_pai=capitulo, 
+            ordem_padrao=nova_ordem
+        )
         return JsonResponse({'status': 'sucesso'})
 
 @csrf_exempt
@@ -612,3 +626,35 @@ def limpar_html_perfeito(html_sujo):
     )
     
     return html_limpo
+
+@csrf_exempt
+def criar_subsecao_padrao_ajax(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        capitulo = get_object_or_404(BlocoPadrao, id=data.get('capitulo_id'))
+        bloco_ref_id = data.get('bloco_referencia_id')
+        
+        if bloco_ref_id:
+            bloco_ref = get_object_or_404(BlocoPadrao, id=bloco_ref_id)
+            nova_ordem = bloco_ref.ordem_padrao + 1
+        else:
+            ultimo_filho = capitulo.sub_blocos.order_by('-ordem_padrao').first()
+            nova_ordem = (ultimo_filho.ordem_padrao + 10) if ultimo_filho else 10
+            
+        BlocoPadrao.objects.create(
+            tipo='SU', 
+            titulo="NOVA SUBSEÇÃO", 
+            conteudo="", 
+            bloco_pai=capitulo, 
+            ordem_padrao=nova_ordem
+        )
+        return JsonResponse({'status': 'sucesso'})
+
+@csrf_exempt
+def salvar_titulo_padrao_ajax(request, bloco_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        bloco = get_object_or_404(BlocoPadrao, id=bloco_id)
+        bloco.titulo = data.get('titulo', '')
+        bloco.save()
+        return JsonResponse({'status': 'sucesso'})

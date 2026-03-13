@@ -19,11 +19,15 @@
             min-height: 800px;
         }
 
-        .bloco-CA { counter-increment: capitulo; counter-reset: secao clausula; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 20px; }
+        .bloco-CA { counter-increment: capitulo; counter-reset: secao clausula subsecao; text-align: center; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 20px; }
         .bloco-CA .titulo-texto::before { content: "CAPÍTULO " counter(capitulo) " - "; }
 
-        .bloco-SE { counter-increment: secao; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+        .bloco-SE { counter-increment: secao; counter-reset: subsecao; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
         .bloco-SE .titulo-texto::before { content: "Seção " counter(secao, upper-roman) " - "; }
+
+        /* NOVO: Estilo para Subseção */
+        .bloco-SU { counter-increment: subsecao; font-weight: bold; margin-top: 15px; margin-bottom: 10px; margin-left: 20px; }
+        .bloco-SU .titulo-texto::before { content: "Subseção " counter(subsecao, lower-roman) " - "; }
 
         .bloco-CL { counter-increment: clausula; margin-bottom: 15px; text-align: justify; }
         .bloco-CL .titulo-texto::before { content: counter(capitulo) "." counter(clausula) ". "; font-weight: bold; margin-right: 5px; color: #000; }
@@ -32,6 +36,24 @@
         
         .bloco-AP { counter-increment: apendice; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
         .bloco-AP .titulo-texto::before { content: "Apêndice " counter(apendice) " - "; }
+
+        /* NOVO: Estilo visual para indicar que o título é editável */
+        .editable-title {
+            cursor: text;
+            border-bottom: 1px dashed transparent;
+            transition: all 0.2s;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .editable-title:hover {
+            border-bottom: 1px dashed #0d6efd;
+            background-color: #f8f9fa;
+        }
+        .editable-title:focus {
+            outline: none;
+            border-bottom: 1px solid #0d6efd;
+            background-color: #fff;
+        }
 
         .editor-clausula {
             display: block;
@@ -77,11 +99,15 @@
                 
                 <div class="bloco-CA capitulo-fixo nao-move mb-4" id="capitulo-doc-{{ capitulo.id }}">
                     <div class="d-flex justify-content-between align-items-center w-100 px-2">
-                        <div style="width: 32px;"></div> 
                         
-                        <span class="titulo-texto">{{ capitulo.titulo }}</span>
+                        <span class="titulo-texto" style="flex-grow: 1; text-align: left;">{{ capitulo.titulo }}</span>
                         
-                        <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo da Matriz">🗑️</button>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-secondary border-0 me-1" onclick="criarBlocoApos({{ capitulo.id }}, null, 'SE'); return false;" title="Adicionar Seção no Fim do Capítulo">📁 + Seção</button>
+                            <button class="btn btn-sm btn-outline-secondary border-0 me-1" onclick="criarBlocoApos({{ capitulo.id }}, null, 'CL'); return false;" title="Adicionar Cláusula no Fim do Capítulo">📄 + Cláusula</button>
+                            <button class="btn btn-sm btn-outline-secondary border-0 me-3" onclick="criarBlocoApos({{ capitulo.id }}, null, 'TX'); return false;" title="Adicionar Texto no Fim do Capítulo">📝 + Texto</button>
+                            <button class="btn btn-sm btn-outline-danger border-0" onclick="removerCapituloCompleto('{{ capitulo.id }}')" title="Apagar todo o conteúdo deste capítulo da Matriz">🗑️</button>
+                        </div>
                     </div>
                 </div>
 
@@ -90,32 +116,31 @@
                         
                         <div class="bloco-{{ bloco.tipo }} mb-2 p-2 border border-light" id="bloco-{{ bloco.id }}" data-id="{{ bloco.id }}">
                             <div class="d-flex justify-content-between align-items-center w-100">
-                                {% if bloco.tipo == 'SE' or bloco.tipo == 'AP' %}
-                                    <span class="titulo-texto text-dark" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo }}</span>
+                                
+                                {% if bloco.tipo == 'SE' or bloco.tipo == 'SU' or bloco.tipo == 'AP' %}
+                                    <span class="titulo-texto text-dark editable-title" contenteditable="true" data-id="{{ bloco.id }}" onblur="salvarTituloInline(this)" style="font-size: 1.1em; font-weight: bold;">{{ bloco.titulo|default:"SEM TÍTULO" }}</span>
                                 {% else %}
                                     <span class="titulo-texto text-muted" style="font-size: 0.9em;">{{ bloco.titulo|default_if_none:"" }}</span>
                                 {% endif %}
                                 
-                                <div class="d-flex align-items-center">
+                               <div class="d-flex align-items-center">
                                     
-                                    {% if bloco.tipo == 'AP' or bloco.tipo == 'TX' %}
-                                        <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;" title="Inserir Novo Texto logo abaixo">
-                                            📝 + Texto
-                                        </button>
+                                    <button class="btn btn-sm btn-outline-secondary me-1 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'SE'); return false;" title="Inserir Nova Seção logo abaixo">📁 + Seção</button>
+
+                                    {% if bloco.tipo == 'SE' %}
+                                        <button class="btn btn-sm btn-outline-secondary me-1 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'SU'); return false;" title="Inserir Subseção logo abaixo">📂 + Subseção</button>
                                     {% endif %}
 
-                                    {% if bloco.tipo == 'SE' or bloco.tipo == 'CL' %}
-                                        <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;" title="Inserir Nova Cláusula logo abaixo">
-                                            📄 + Cláusula
-                                        </button>
-                                    {% endif %}
+                                    <button class="btn btn-sm btn-outline-secondary me-1 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'TX'); return false;" title="Inserir Novo Texto logo abaixo">📝 + Texto</button>
+                                    
+                                    <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="criarBlocoApos({{ capitulo.id }}, '{{ bloco.id }}', 'CL'); return false;" title="Inserir Nova Cláusula logo abaixo">📄 + Cláusula</button>
 
                                     <span class="handle me-2" title="Arrastar para reordenar">⠿</span>
                                     <button class="btn btn-sm btn-outline-danger border-0" onclick="removerBloco('{{ bloco.id }}')" title="Remover este bloco da Matriz">🗑️</button>
                                 </div>
                             </div>
 
-                            {% if bloco.conteudo %}
+                            {% if bloco.conteudo or bloco.tipo == 'CL' or bloco.tipo == 'TX' %}
                                 <div class="mt-2 editor-clausula" contenteditable="true" data-id="{{ bloco.id }}">
                                     {{ bloco.conteudo|safe }}
                                 </div>
@@ -196,9 +221,8 @@
     function removerBloco(blocoId) {
         if (!confirm('Tem certeza que deseja apagar DEFINITIVAMENTE este bloco da Matriz?')) return;
         
-        const bloco = document.getElementById(`bloco-${blocoId}`);
-        const isSecao = bloco && bloco.classList.contains('bloco-SE');
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        document.body.style.cursor = 'wait'; // Mostra que está carregando
         
         fetch(`/padrao/remover/${blocoId}/`, {
             method: 'POST',
@@ -207,19 +231,43 @@
         .then(response => response.json())
         .then(data => {
             if (data.status === 'sucesso') {
-                if (bloco) {
-                    if (isSecao) {
-                        let nextEl = bloco.nextElementSibling;
-                        while (nextEl && nextEl.classList.contains('bloco-CL')) {
-                            const clToRemove = nextEl;
-                            nextEl = nextEl.nextElementSibling;
-                            clToRemove.remove();
-                        }
-                    }
-                    bloco.remove();
-                }
-            } else alert('Erro ao remover bloco.');
+                // Em vez de apagar os itens vizinhos pela posição no HTML,
+                // nós recarregamos a página para o Django nos dar a estrutura real e perfeita do banco!
+                window.location.reload();
+            } else {
+                document.body.style.cursor = 'default';
+                alert('Erro ao remover bloco.');
+            }
+        })
+        .catch(error => {
+            document.body.style.cursor = 'default';
+            console.error("Erro:", error);
         });
+    }
+
+    // NOVO: Função para Salvar os Títulos Inline
+    function salvarTituloInline(elemento) {
+        const blocoId = elemento.getAttribute('data-id');
+        const novoTitulo = elemento.innerText.trim();
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`/padrao/salvar-titulo/${blocoId}/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ titulo: novoTitulo })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                // Efeito visual verde indicando que salvou!
+                elemento.style.backgroundColor = "#e8f5e9";
+                setTimeout(() => elemento.style.backgroundColor = "transparent", 1000);
+            } else {
+                console.error('Erro ao salvar título');
+                elemento.style.borderBottom = "1px dashed red";
+            }
+        })
+        .catch(error => console.error("Erro:", error));
     }
 
     function salvarNoBanco(id, conteudo) {
@@ -319,14 +367,14 @@
         onStart: function(evt) {
             const item = evt.item;
 
-            if (item.classList.contains('bloco-SE')) {
+            if (item.classList.contains('bloco-SE') || item.classList.contains('bloco-SU')) {
                 document.querySelectorAll('.text-center.no-print').forEach(el => el.style.display = 'none');
 
                 let secaoAtual = null;
                 let clausulasDaSecao = [];
 
                 Array.from(areaMinuta.children).forEach(el => {
-                    if (el.classList.contains('bloco-CA') || el.classList.contains('bloco-SE')) {
+                    if (el.classList.contains('bloco-CA') || el.classList.contains('bloco-SE') || el.classList.contains('bloco-SU')) {
                         if (secaoAtual && clausulasDaSecao.length > 0) {
                             pacotesDeSecoes.push({ pai: secaoAtual, filhos: clausulasDaSecao });
                         }
@@ -428,7 +476,6 @@
         setInterval(removerAvisoVersion, 100);
     })();
 
-    // Funções de Criação - Agora conectadas aos Endpoints de Padrão
     function salvarNovaSecao() {
         const titulo = document.getElementById('tituloNovaSecao').value;
         const capituloId = document.getElementById('capituloPaiId').value;
@@ -464,7 +511,12 @@
     
     function criarBlocoApos(capituloId, blocoRefId, tipo) {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const url = tipo === 'TX' ? `/padrao/criar-texto/` : `/padrao/criar-clausula/`;
+        
+        let url = '';
+        if (tipo === 'TX') url = `/padrao/criar-texto/`;
+        else if (tipo === 'CL') url = `/padrao/criar-clausula/`;
+        else if (tipo === 'SU') url = `/padrao/criar-subsecao/`;
+        else if (tipo === 'SE') url = `/padrao/criar-secao/`; // <=== ADICIONE ESTA LINHA!
 
         fetch(url, {
             method: 'POST',
