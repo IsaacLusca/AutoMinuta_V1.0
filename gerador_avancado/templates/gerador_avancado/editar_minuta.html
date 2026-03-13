@@ -144,13 +144,22 @@
         <div class="col-md-4 painel-esquerdo">
             <ul class="nav nav-tabs mb-3" id="painelEsquerdoTabs" role="tablist">
                 <li class="nav-item" role="presentation" style="width: 50%;">
-                    <button class="nav-link active w-100 py-2 small fw-bold" id="tab-biblioteca" data-bs-toggle="tab" data-bs-target="#conteudo-biblioteca" type="button" role="tab" title="Biblioteca Matriz (Fonte)">
-                        Base
+                    <button class="nav-link active w-100 py-2 small fw-bold text-truncate" id="tab-biblioteca" data-bs-toggle="tab" data-bs-target="#conteudo-biblioteca" type="button" role="tab" title="Fonte de dados atual">
+                        {% if fonte_atual == 'matriz' %}
+                            🏛️ Matriz Padrão
+                        {% else %}
+                            {% for m in todas_minutas %}
+                                {% if m.id|stringformat:"s" == fonte_atual %}
+                                    📄 Base: {{ m.nome_interno|default:"Sem nome"|truncatechars:15 }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </button>
                 </li>
+
                 <li class="nav-item" role="presentation" style="width: 50%;">
-                    <button class="nav-link w-100 py-2 small fw-bold text-primary" id="tab-estrutura" data-bs-toggle="tab" data-bs-target="#conteudo-estrutura" type="button" role="tab" title="O seu documento atual">
-                        Minuta
+                    <button class="nav-link w-100 py-2 small fw-bold text-primary text-truncate" id="tab-estrutura" data-bs-toggle="tab" data-bs-target="#conteudo-estrutura" type="button" role="tab" title="O seu documento atual: {{ minuta.nome_interno }}">
+                        📝 Atual: {{ minuta.nome_interno|default:"Minuta"|truncatechars:15 }}
                     </button>
                 </li>
             </ul>
@@ -158,40 +167,82 @@
             <div class="tab-content" id="painelEsquerdoTabsContent">
                 
                 <div class="tab-pane fade show active" id="conteudo-biblioteca" role="tabpanel">
-                    <p class="text-muted small mb-2">Adicione blocos da base ao seu documento:</p>
-                    <div class="accordion" id="accordionBiblioteca">
-                        {% for capitulo in capitulos_padrao %}
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingBib-{{ capitulo.id }}">
-                                    <button class="accordion-button collapsed py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBib-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
-                                        <span class="titulo-texto-bib">{{ capitulo.titulo }}</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseBib-{{ capitulo.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionBiblioteca">
-                                    <div class="accordion-body p-0">
-                                        
-                                        <div class="p-2 text-center border-bottom bg-light">
-                                            <button class="btn btn-sm btn-outline-success w-100" onclick="adicionarCapituloCompleto('collapseBib-{{ capitulo.id }}', event)">
-                                                ++ Adicionar Capítulo Todo
-                                            </button>
-                                        </div>
+    
+                    <form method="GET" id="form-fonte-biblioteca" class="mb-3">
+                        <label class="text-muted small mb-1 fw-bold">Fonte da Biblioteca (Extrair de):</label>
+                        <select name="fonte" id="seletor-fonte" class="form-select form-select-sm border-primary" onchange="this.form.submit()">
+                            <option value="matriz" {% if fonte_atual == 'matriz' %}selected{% endif %}>🏛️ Biblioteca Matriz Oficial</option>
+                            
+                            <optgroup label="Meus Editais Anteriores">
+                                {% for m in todas_minutas %}
+                                    {% if m.id != minuta.id %}
+                                        <option value="{{ m.id }}" {% if fonte_atual == m.id|stringformat:"s" %}selected{% endif %}>
+                                            📄 {{ m.nome_interno|default:"Edital sem nome" }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                        </select>
+                    </form>
 
-                                        <ul class="list-group list-group-flush">
-                                            {% for secao in capitulo.sub_blocos.all %}
-                                                {% if secao.tipo == 'SE' or secao.tipo == 'AP' %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center p-2">
-                                                    <span class="{% if secao.tipo == 'AP' %}titulo-apendice-bib{% else %}titulo-secao-bib{% endif %} text-muted" style="font-size: 0.85em; cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})" title="Localizar na Minuta (se já adicionado)">
-                                                        {{ secao.titulo }}
-                                                    </span>
-                                                    <button class="btn btn-sm btn-outline-success btn-adicionar-secao py-0 px-2" onclick="adicionarBloco({{ minuta.id }}, {{ secao.id }})" title="Copiar para a minha minuta">+</button>
-                                                </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
+                    <div class="accordion" id="accordionBiblioteca">
+                        
+                        {% if fonte_atual == 'matriz' %}
+                            {% for capitulo in capitulos_padrao %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingBib-{{ capitulo.id }}">
+                                        <button class="accordion-button collapsed py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBib-{{ capitulo.id }}" onclick="rolarParaCapitulo({{ capitulo.id }})">
+                                            <span class="titulo-texto-bib">{{ capitulo.titulo }}</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseBib-{{ capitulo.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionBiblioteca">
+                                        <div class="accordion-body p-0">
+                                            <ul class="list-group list-group-flush">
+                                                {% for secao in capitulo.sub_blocos.all %}
+                                                    {% if secao.tipo == 'SE' or secao.tipo == 'AP' %}
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center p-2">
+                                                        <span class="{% if secao.tipo == 'AP' %}titulo-apendice-bib{% else %}titulo-secao-bib{% endif %} text-muted" style="font-size: 0.85em; cursor: pointer;" onclick="rolarParaSecao({{ secao.id }})">
+                                                            {{ secao.titulo }}
+                                                        </span>
+                                                        <button class="btn btn-sm btn-outline-success btn-adicionar-secao py-0 px-2" onclick="adicionarBloco({{ minuta.id }}, '{{ secao.id }}', 'matriz')">+</button>
+                                                    </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        
+                        {% else %}
+                            {% for capitulo in capitulos_clone %}
+                                <div class="accordion-item border-warning">
+                                    <h2 class="accordion-header" id="headingBib-{{ capitulo.id }}">
+                                        <button class="accordion-button collapsed py-2 bg-light text-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBib-{{ capitulo.id }}">
+                                            <span class="titulo-texto-bib fw-bold">{{ capitulo.titulo }} (Clone)</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseBib-{{ capitulo.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionBiblioteca">
+                                        <div class="accordion-body p-0">
+                                            <ul class="list-group list-group-flush">
+                                                {% for secao in capitulo.sub_blocos %}
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center p-2 border-warning bg-light">
+                                                        <span class="{% if secao.tipo == 'AP' %}titulo-apendice-bib{% else %}titulo-secao-bib{% endif %} text-dark" style="font-size: 0.85em; cursor: pointer;">
+                                                            {{ secao.titulo }}
+                                                        </span>
+                                                        <button class="btn btn-sm btn-warning btn-adicionar-secao py-0 px-2 text-dark fw-bold" onclick="adicionarBloco({{ minuta.id }}, '{{ secao.id }}', 'minuta')">+</button>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% if not capitulos_clone %}
+                                <div class="alert alert-warning text-center mt-3 small">Nenhuma seção numerada encontrada neste edital.</div>
+                            {% endif %}
+                        {% endif %}
+
                     </div>
                 </div>
 
@@ -476,14 +527,19 @@
         });
     }
 
-    function adicionarBloco(minutaId, blocoPadraoId) {
+    // Atualize a sua função adicionarBloco para isto:
+    function adicionarBloco(minutaId, blocoId, tipoFonte = 'matriz') {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        fetch(`/minuta/${minutaId}/adicionar-bloco/${blocoPadraoId}/`, {
+        
+        // Mostra que está carregando (opcional)
+        document.body.style.cursor = 'wait';
+
+        fetch(`/minuta/${minutaId}/adicionar-bloco/${blocoId}/`, {
             method: 'POST',
-            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' }
+            headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fonte: tipoFonte }) // Envia 'matriz' ou 'minuta' para o Python
         })
         .then(response => {
-            // se o Python devolver status 400 
             if (!response.ok && response.status === 400) {
                 return response.json().then(err => { throw new Error(err.mensagem); });
             }
@@ -491,11 +547,13 @@
         })
         .then(data => {
             if (data.status === 'sucesso') {
-                window.location.reload();
+                // Recarrega a página mantendo a fonte selecionada na URL!
+                const fonteAtual = document.getElementById('seletor-fonte').value;
+                window.location.href = `?fonte=${fonteAtual}`; 
             }
         })
         .catch(error => {
-            // Exibe o aviso no ecrã para o utilizador
+            document.body.style.cursor = 'default';
             alert("Aviso: " + error.message);
         });
     }

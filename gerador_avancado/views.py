@@ -15,24 +15,42 @@ from django.shortcuts import redirect
 import re
 
 def editar_minuta_dashboard(request, minuta_id):
-    # busca a minuta especificada ou retorna 404 se não existir
     minuta = get_object_or_404(MinutaGerada, id=minuta_id)
+    
     capitulos_padrao = BlocoPadrao.objects.filter(bloco_pai__isnull=True).order_by('ordem_padrao')
-
-    # busca os blocos da minuta, ordenados pela ordem definida
     blocos_da_minuta = minuta.blocos.order_by('ordem')
 
+    todas_minutas = MinutaGerada.objects.all().order_by('-id')
+    fonte_atual = request.GET.get('fonte', 'matriz')
+
+    capitulos_clone = []
+    if fonte_atual != 'matriz':
+        minuta_fonte = get_object_or_404(MinutaGerada, id=fonte_atual)
+        blocos_clone = BlocoDaMinuta.objects.filter(minuta=minuta_fonte).order_by('ordem')
+        
+        for cap_base in capitulos_padrao:
+            secoes_deste_cap = []
+            for bloco in blocos_clone:
+                if bloco.tipo in ['SE', 'AP']:
+                    origem = bloco.bloco_origem
+                    if origem and (origem.id == cap_base.id or (origem.bloco_pai and origem.bloco_pai.id == cap_base.id)):
+                        secoes_deste_cap.append(bloco)
+            
+            if secoes_deste_cap:
+                capitulos_clone.append({
+                    'id': cap_base.id, 
+                    'titulo': cap_base.titulo, 
+                    'sub_blocos': secoes_deste_cap
+                })
+
     campos_variaveis = []
-    
     campos_ignorados = ['id', 'nome_interno', 'criado_em', 'atualizado_em'] 
     
-    # Varre todos os campos que existem no seu modelo MinutaGerada
     for campo in minuta._meta.fields:
         if campo.name not in campos_ignorados:
             valor = getattr(minuta, campo.name)
             campos_variaveis.append({
                 'name': campo.name,
-                # O Django já transforma 'prazo_arrendamento' em 'Prazo arrendamento' automaticamente
                 'label': campo.verbose_name.title(), 
                 'valor': valor if valor is not None else ''
             })
@@ -41,54 +59,73 @@ def editar_minuta_dashboard(request, minuta_id):
         'minuta': minuta,
         'capitulos_padrao': capitulos_padrao,
         'blocos_da_minuta': blocos_da_minuta,
-        'campos_variaveis': campos_variaveis, # Passamos a nossa lista inteligente
+        'campos_variaveis': campos_variaveis,
+        'todas_minutas': todas_minutas,
+        'fonte_atual': str(fonte_atual),
+        'capitulos_clone': capitulos_clone,
     }
 
     return render(request, 'gerador_avancado/editar_minuta.html', context)
 
-def adicionar_bloco_ajax(request, minuta_id, bloco_padrao_id):
-    if request.method == 'POST':
-        minuta = get_object_or_404(MinutaGerada, id=minuta_id)
-        bloco_origem = get_object_or_404(BlocoPadrao, id=bloco_padrao_id)
+def adicionar_bloco_ajax(request, minuta_id, bloco_id): 
+    try:
+        if request.method != 'POST':
+            return JsonResponse({'status': 'erro', 'mensagem': 'Método inválido'}, status=400)
 
-        # impedir duplicidade
-        if BlocoDaMinuta.objects.filter(minuta=minuta, bloco_origem=bloco_origem).exists():
-            return JsonResponse({
-                'status': 'erro', 
-                'mensagem': 'Esta seção já foi adicionada a este edital!'
-            }, status=400)
+        minuta = get_object_or_404(MinutaGerada, id=minuta_id)
         
-        # Pega a última ordem do documento
+        try:
+            data = json.loads(request.body)
+            fonte_tipo = data.get('fonte', 'matriz')
+        except Exception:
+            fonte_tipo = 'matriz'
+
         ultima_ordem = minuta.blocos.aggregate(Max('ordem'))['ordem__max'] or 0
         ordem_atual = ultima_ordem + 10
-        
-        novo_bloco = BlocoDaMinuta.objects.create(
-            minuta=minuta,
-            bloco_origem=bloco_origem,
-            tipo=bloco_origem.tipo,
-            titulo=bloco_origem.titulo,
-            conteudo_editado=bloco_origem.conteudo,
-            ordem=ordem_atual
-        )
-        
-        filhos = BlocoPadrao.objects.filter(bloco_pai=bloco_origem).order_by('ordem_padrao')
-        
-        for filho in filhos:
-            ordem_atual += 10 
+
+        # bloco padrão
+        if fonte_tipo == 'matriz':
+            bloco_origem = get_object_or_404(BlocoPadrao, id=int(bloco_id))
+
+            if BlocoDaMinuta.objects.filter(minuta=minuta, bloco_origem=bloco_origem).exists():
+                return JsonResponse({'status': 'erro', 'mensagem': 'Esta seção já foi adicionada!'}, status=400)
             
-            BlocoDaMinuta.objects.create(
-                minuta=minuta,
-                bloco_origem=filho,
-                tipo=filho.tipo,
-                titulo=filho.titulo,
-                conteudo_editado=filho.conteudo,
-                bloco_pai=novo_bloco,
-                ordem=ordem_atual
+            novo_bloco = BlocoDaMinuta.objects.create(
+                minuta=minuta, bloco_origem=bloco_origem, tipo=bloco_origem.tipo,
+                titulo=bloco_origem.titulo, conteudo_editado=bloco_origem.conteudo, ordem=ordem_atual
             )
             
+            filhos = BlocoPadrao.objects.filter(bloco_pai=bloco_origem).order_by('ordem_padrao')
+            for filho in filhos:
+                ordem_atual += 10 
+                BlocoDaMinuta.objects.create(
+                    minuta=minuta, bloco_origem=filho, tipo=filho.tipo, titulo=filho.titulo,
+                    conteudo_editado=filho.conteudo, bloco_pai=novo_bloco, ordem=ordem_atual
+                )
+
+        # clone
+        else:
+            bloco_origem = get_object_or_404(BlocoDaMinuta, id=bloco_id)
+            
+            novo_bloco = BlocoDaMinuta.objects.create(
+                minuta=minuta, bloco_origem=bloco_origem.bloco_origem, tipo=bloco_origem.tipo,
+                titulo=bloco_origem.titulo, conteudo_editado=bloco_origem.conteudo_editado, ordem=ordem_atual
+            )
+            
+            # bisca filhos direto do pai
+            filhos = BlocoDaMinuta.objects.filter(bloco_pai=bloco_origem).order_by('ordem')
+
+            for filho in filhos:
+                ordem_atual += 10 
+                BlocoDaMinuta.objects.create(
+                    minuta=minuta, bloco_origem=filho.bloco_origem, tipo=filho.tipo, titulo=filho.titulo,
+                    conteudo_editado=filho.conteudo_editado, bloco_pai=novo_bloco, ordem=ordem_atual
+                )
+
         return JsonResponse({'status': 'sucesso'})
     
-    return JsonResponse({'status': 'erro', 'mensagem': 'Método inválido'}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'erro', 'mensagem': f'Erro no Servidor: {str(e)}'}, status=400)
 
 def remover_bloco_ajax(request, bloco_minuta_id):
     if request.method == 'POST':
@@ -372,32 +409,39 @@ def criar_novo_edital(request):
         # cria o registro vazio
         nova_minuta = MinutaGerada.objects.create(nome_interno=nome)
 
+        # se clonar edital anterior
         if minuta_base_id and minuta_base_id != 'matriz':
             minuta_pai = get_object_or_404(MinutaGerada, id=minuta_base_id)
-            blocos_do_pai = BlocoDaMinuta.objects.filter(minuta=minuta_pai)
             
-            novos_blocos = []
+            # não puxa os capitulos para não quebrar
+            blocos_do_pai = BlocoDaMinuta.objects.filter(minuta=minuta_pai).exclude(tipo='CA').order_by('ordem')
+            
+            mapa_de_pais = {}
+            
             for bloco in blocos_do_pai:
-                novos_blocos.append(
-                    BlocoDaMinuta(
-                        minuta=nova_minuta,
-                        bloco_origem=bloco.bloco_origem,
-                        tipo=bloco.tipo,
-                        titulo=bloco.titulo,
-                        conteudo_editado=bloco.conteudo_editado, # Traz o texto alterado
-                        ordem=bloco.ordem,
-                        bloco_pai=bloco.bloco_pai
-                    )
+                pai_na_minuta = None
+                if bloco.bloco_pai:
+                    pai_na_minuta = mapa_de_pais.get(bloco.bloco_pai.id)
+
+                novo_bloco = BlocoDaMinuta.objects.create(
+                    minuta=nova_minuta,
+                    bloco_origem=bloco.bloco_origem,
+                    tipo=bloco.tipo,
+                    titulo=bloco.titulo,
+                    conteudo_editado=bloco.conteudo_editado,
+                    ordem=bloco.ordem,
+                    bloco_pai=pai_na_minuta 
                 )
-            
-            if novos_blocos:
-                BlocoDaMinuta.objects.bulk_create(novos_blocos)
+                mapa_de_pais[bloco.id] = novo_bloco
 
         # se for a padrão
         else:
             contador_ordem_texto = 1
+            
             # clona a Biblioteca Padrao para este novo edital
-            blocos_padrao = BlocoPadrao.objects.all()
+            blocos_padrao = BlocoPadrao.objects.exclude(tipo='CA').order_by('ordem_padrao')
+            
+            mapa_de_pais = {} 
             
             for bloco in blocos_padrao:
                 # se for tx, a ordem será baixa
@@ -407,20 +451,27 @@ def criar_novo_edital(request):
                 else:
                     ordem_final = bloco.ordem_padrao
 
-                BlocoDaMinuta.objects.create(
+                pai_na_minuta = None
+                if bloco.bloco_pai:
+                    # Como o Capítulo não foi copiado, a Seção não vai achar aqui
+                    # O pai_na_minuta será None, e a Seção nascerá como "Raiz" da Minuta!
+                    pai_na_minuta = mapa_de_pais.get(bloco.bloco_pai.id)
+
+                novo_bloco = BlocoDaMinuta.objects.create(
                     minuta=nova_minuta,
                     bloco_origem=bloco,
                     tipo=bloco.tipo,
                     titulo=bloco.titulo,
                     conteudo_editado=bloco.conteudo,
                     ordem=ordem_final,
-                    bloco_pai=None
+                    bloco_pai=pai_na_minuta 
                 )
+                mapa_de_pais[bloco.id] = novo_bloco
                 
         # Redireciona para a tela de edição que já está construida
         return redirect('editar_minuta', minuta_id=nova_minuta.id)
         
-    return redirect('dashboard')
+    return redirect('dashboard_editais')
 
 # função que salva dados do edital
 def salvar_dados_edital(request, minuta_id):
@@ -435,7 +486,7 @@ def salvar_dados_edital(request, minuta_id):
         minuta.save()
         return redirect('editar_minuta', minuta_id=minuta.id)
         
-    return redirect('dashboard')
+    return redirect('dashboard_editais')
 
 # editar a minuta padrão
 def editar_padrao_dashboard(request):
