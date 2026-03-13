@@ -13,6 +13,7 @@ from django.forms.models import model_to_dict
 from django.template import Template, Context
 from django.shortcuts import redirect
 import re
+import bleach
 
 def editar_minuta_dashboard(request, minuta_id):
     minuta = get_object_or_404(MinutaGerada, id=minuta_id)
@@ -593,3 +594,21 @@ def criar_secao_minuta_ajax(request, minuta_id):
         )
 
         return JsonResponse({'status': 'sucesso'})
+
+
+def limpar_html_perfeito(html_sujo):
+    if not html_sujo:
+        return ""
+        
+    # tags que serão
+    tags_permitidas = ['b', 'strong', 'i', 'em', 'p', 'br', 'ul', 'ol', 'li']
+    
+    # bleach limpa os dados sujos
+    html_limpo = bleach.clean(
+        html_sujo, 
+        tags=tags_permitidas, 
+        attributes={}, # Nenhuma tag terá atributos
+        strip=True # Apaga as tags proibidas 
+    )
+    
+    return html_limpo
